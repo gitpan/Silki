@@ -1,6 +1,6 @@
 package Silki::View::Mason;
 BEGIN {
-  $Silki::View::Mason::VERSION = '0.01';
+  $Silki::View::Mason::VERSION = '0.02';
 }
 
 use strict;
@@ -11,7 +11,7 @@ use base 'Catalyst::View::Mason';
 {
     package Silki::Mason::Web;
 BEGIN {
-  $Silki::Mason::Web::VERSION = '0.01';
+  $Silki::Mason::Web::VERSION = '0.02';
 }
 
     use Data::Dumper;
@@ -80,7 +80,7 @@ Silki::View::Mason - A Mason-based view
 
 =head1 VERSION
 
-version 0.01
+version 0.02
 
 =head1 AUTHOR
 

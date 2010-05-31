@@ -1,6 +1,6 @@
 package Silki::Role::Controller::UploadHandler;
 BEGIN {
-  $Silki::Role::Controller::UploadHandler::VERSION = '0.01';
+  $Silki::Role::Controller::UploadHandler::VERSION = '0.02';
 }
 
 use strict;
@@ -140,7 +140,7 @@ Silki::Role::Controller::UploadHandler - Handles file uploads
 
 =head1 VERSION
 
-version 0.01
+version 0.02
 
 =head1 AUTHOR
 

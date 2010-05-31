@@ -1,6 +1,6 @@
 package Silki::Role::Schema::URIMaker;
 BEGIN {
-  $Silki::Role::Schema::URIMaker::VERSION = '0.01';
+  $Silki::Role::Schema::URIMaker::VERSION = '0.02';
 }
 
 use strict;
@@ -85,7 +85,7 @@ Silki::Role::Schema::URIMaker - Adds an $object->uri() method
 
 =head1 VERSION
 
-version 0.01
+version 0.02
 
 =head1 AUTHOR
 

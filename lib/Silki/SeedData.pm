@@ -1,6 +1,6 @@
 package Silki::SeedData;
 BEGIN {
-  $Silki::SeedData::VERSION = '0.01';
+  $Silki::SeedData::VERSION = '0.02';
 }
 
 use strict;
@@ -199,7 +199,7 @@ Silki::SeedData - Seeds a fresh database with data
 
 =head1 VERSION
 
-version 0.01
+version 0.02
 
 =head1 AUTHOR
 

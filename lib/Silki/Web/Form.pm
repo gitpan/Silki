@@ -1,6 +1,6 @@
 package Silki::Web::Form;
 BEGIN {
-  $Silki::Web::Form::VERSION = '0.01';
+  $Silki::Web::Form::VERSION = '0.02';
 }
 
 use strict;
@@ -223,10 +223,8 @@ sub _form_html_from_dom {
 # This bizarro bit seems to fix some tests. Sigh ...
 {
 
-    package HTML::DOM::Node;
-BEGIN {
-  $HTML::DOM::Node::VERSION = '0.01';
-}
+    package
+        HTML::DOM::Node;
 
     no warnings 'redefine';
 
@@ -251,7 +249,7 @@ Silki::Web::Form - Does post-processing on HTML forms
 
 =head1 VERSION
 
-version 0.01
+version 0.02
 
 =head1 AUTHOR
 

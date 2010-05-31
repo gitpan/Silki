@@ -1,6 +1,6 @@
 package Silki::Request;
 BEGIN {
-  $Silki::Request::VERSION = '0.01';
+  $Silki::Request::VERSION = '0.02';
 }
 
 use strict;
@@ -100,7 +100,7 @@ Silki::Request - A Catalyst::Request subclass which knows how to get user-provid
 
 =head1 VERSION
 
-version 0.01
+version 0.02
 
 =head1 AUTHOR
 

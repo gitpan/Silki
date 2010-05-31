@@ -1,6 +1,6 @@
 package Silki::Schema::PageFileLink;
 BEGIN {
-  $Silki::Schema::PageFileLink::VERSION = '0.01';
+  $Silki::Schema::PageFileLink::VERSION = '0.02';
 }
 
 use strict;
@@ -30,7 +30,7 @@ Silki::Schema::PageFileLink - Represents a link from a page to a file
 
 =head1 VERSION
 
-version 0.01
+version 0.02
 
 =head1 AUTHOR
 
