@@ -1,0 +1,8 @@
+<& /lib/forms/page.mas, %ARGS &>
+
+<%method title>
+<% loc( 'Create %1', $title ) %>
+<%args>
+$title
+</%args>
+</%method>

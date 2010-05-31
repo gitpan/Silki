@@ -1,0 +1,80 @@
+<div class="yui-gc">
+  <div class="yui-u first">
+    <h1><& SELF:title, %ARGS &></h1>
+
+    <% $html | n %>
+  </div>
+  <div class="yui-u">
+    <& tags.mas, page => $page, can_edit => $can_edit &>
+    <& incoming-links.mas, page => $page &>
+  </div>
+</div>
+
+% unless ($is_current_revision) {
+<p>
+  <a href="<% $page->uri() %>"><% loc('Back to current revision') %></a>
+</p>
+% }
+
+<div id="attribution">
+% if ( $revision->revision_number() > 1 ) {
+%   if ($is_current_revision) {
+<% loc( 'Last edited by <a href="%html(%1)">%html(%2)</a> %on_datetime(%3).',
+        $wiki->uri( view => 'user/' . $revision->user_id() ),
+        $revision->user()->best_name(),
+        $c->user->set_time_zone_for_dt( $revision->creation_datetime() ) ) | n %>
+%   } else {
+<% loc( 'This revision was created by <a href="%html(%1)">%html(%2)</a> %on_datetime(%3).',
+        $revision->user()->uri(),
+        $revision->user()->best_name(),
+        $c->user->set_time_zone_for_dt( $revision->creation_datetime() ) ) | n %>
+%   }
+<br />
+% }
+<% loc( 'Page created by <a href="%html(%1)">%html(%2)</a> %on_datetime(%3).',
+        $wiki->uri( view => 'user/' . $page->user_id() ),
+        $page->user()->best_name(),
+        $c->user->set_time_zone_for_dt( $page->creation_datetime() ) ) | n %>
+</div>
+
+% if ( $c->request()->params()->{debug} ) {
+<pre>
+<% $revision->content() %>
+</pre>
+% }
+
+% if ( $revision->revision_number() > 1 ) {
+<div id="compare-to-previous">
+  <a href="<% $page->uri( view => 'diff', query => { revision1 => $revision->revision_number() - 1, revision2 => $revision->revision_number() } ) %>"><% loc('Compare to previous revision') %></a>
+</div>
+% }
+
+<%args>
+$page
+$revision
+$is_current_revision
+$html
+</%args>
+
+<%init>
+my $wiki = $page->wiki();
+
+my $can_edit =
+    $c->user()->has_permission_in_wiki( wiki => $wiki, permission => Silki::Schema::Permission->Edit() );
+</%init>
+
+<%attr>
+show_title => 0
+</%attr>
+
+<%method title>
+<% $page->title() %>
+% unless ($is_current_revision) {
+(<% loc( 'Revision %1 of %2', $revision->revision_number(), $page->most_recent_revision()->revision_number() ) %>)
+% }
+<%args>
+$page
+$revision
+$is_current_revision
+</%args>
+</%method>

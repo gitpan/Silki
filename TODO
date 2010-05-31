@@ -1,0 +1,34 @@
+= Random features
+
+* Backlinks for attachments?
+** wikipedia implements attachments & images as special types of pages, I think
+
+* Determine wiki by path or hostname (dev.wiki.company.com or wiki.company.com/wiki/dev)?
+
+* AJAX suggestions for tags
+
+* FT search for attachment content
+
+* Per-wiki user lists, sortable by something interesting (# of pages
+  edited/created, recency of edit, etc).
+
+= Reporting
+
+* Logins?
+* Attachment views, edits?
+
+= Archiving feature
+
+* auto-archiving of unread content somehow
+** only shows up in search when explicitly asked for
+
+= Users
+
+* allow email aliases for purposes of logging in
+
+= Other
+
+* Remove all monkey-patching (Session plugin, ErrorHandling, HTTP::Body
+  filename preservation hack)
+** session unhacking would ideally involve building an alternate, much simpler
+   session mechanism

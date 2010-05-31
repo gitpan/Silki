@@ -1,0 +1,91 @@
+package Silki::Formatter::HTMLToWiki::Table::Cell;
+BEGIN {
+  $Silki::Formatter::HTMLToWiki::Table::Cell::VERSION = '0.01';
+}
+
+use strict;
+use warnings;
+use namespace::autoclean;
+
+use Silki::Types qw( Int Str Bool );
+
+use Moose;
+use Moose::Util::TypeConstraints;
+use MooseX::SemiAffordanceAccessor;
+use MooseX::StrictConstructor;
+
+has colspan => (
+    is      => 'ro',
+    isa     => Int,
+    default => 1,
+);
+
+has alignment => (
+    is      => 'ro',
+    isa     => enum( [ qw( left right center ) ] ),
+    default => 'left',
+);
+
+has is_header_cell => (
+    is      => 'ro',
+    isa     => Bool,
+    default => 0,
+);
+
+has content => (
+    traits  => ['String'],
+    is      => 'ro',
+    isa     => Str,
+    default => q{},
+    handles => {
+        append_content => 'append',
+    },
+    init_arg => undef,
+);
+
+sub formatted_content {
+    my $self  = shift;
+    my $width = shift;
+
+    $width += 4 * ( $self->colspan() - 1 );
+
+    my $format
+        = $self->alignment() eq 'left'  ? " %-${width}s   "
+        : $self->alignment() eq 'right' ? "   %${width}s "
+        :                                 "  %-${width}s  ";
+
+    my $content = $self->content();
+    $content =~ s/\n/ /g;
+
+    return sprintf( $format, $content );
+}
+
+__PACKAGE__->meta()->make_immutable();
+
+1;
+
+__END__
+=pod
+
+=head1 NAME
+
+Silki::Formatter::HTMLToWiki::Table::Cell
+
+=head1 VERSION
+
+version 0.01
+
+=head1 AUTHOR
+
+  Dave Rolsky <autarch@urth.org>
+
+=head1 COPYRIGHT AND LICENSE
+
+This software is Copyright (c) 2010 by Dave Rolsky.
+
+This is free software, licensed under:
+
+  The GNU Affero General Public License, Version 3, November 2007
+
+=cut
+
