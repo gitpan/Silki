@@ -1,4 +1,4 @@
-package Silki::Manual::Admin;
+package Silki::Manual::Devel;
 
 # ABSTRACT: Hack on Silki
 
@@ -8,11 +8,11 @@ __END__
 
 =head1 NAME
 
-Silki::Manual::Admin - Hack on Silki
+Silki::Manual::Devel - Hack on Silki
 
 =head1 VERSION
 
-version 0.02
+version 0.03
 
 =head1 POSTGRES
 

@@ -1,6 +1,6 @@
 package Silki::Role::Schema::DataValidator;
 BEGIN {
-  $Silki::Role::Schema::DataValidator::VERSION = '0.02';
+  $Silki::Role::Schema::DataValidator::VERSION = '0.03';
 }
 
 use strict;
@@ -167,7 +167,7 @@ Silki::Role::Schema::DataValidator - Does data validation on inserts and updates
 
 =head1 VERSION
 
-version 0.02
+version 0.03
 
 =head1 AUTHOR
 
