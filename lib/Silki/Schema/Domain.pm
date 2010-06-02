@@ -1,6 +1,6 @@
 package Silki::Schema::Domain;
 BEGIN {
-  $Silki::Schema::Domain::VERSION = '0.03';
+  $Silki::Schema::Domain::VERSION = '0.04';
 }
 
 use strict;
@@ -228,7 +228,7 @@ Silki::Schema::Domain - Represents a domain
 
 =head1 VERSION
 
-version 0.03
+version 0.04
 
 =head1 AUTHOR
 

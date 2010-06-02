@@ -1,6 +1,6 @@
 package Silki::AppRole::Domain;
 BEGIN {
-  $Silki::AppRole::Domain::VERSION = '0.03';
+  $Silki::AppRole::Domain::VERSION = '0.04';
 }
 
 use strict;
@@ -42,7 +42,7 @@ Silki::AppRole::Domain - Adds $c->domain() to the Catalyst object
 
 =head1 VERSION
 
-version 0.03
+version 0.04
 
 =head1 AUTHOR
 

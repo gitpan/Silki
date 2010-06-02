@@ -1,6 +1,6 @@
 package Silki::Schema::Page;
 BEGIN {
-  $Silki::Schema::Page::VERSION = '0.03';
+  $Silki::Schema::Page::VERSION = '0.04';
 }
 
 use strict;
@@ -33,6 +33,8 @@ with 'Silki::Role::Schema::SystemLogger' => { methods => ['delete'] };
 with 'Silki::Role::Schema::DataValidator' => {
     steps => [
         '_title_is_valid',
+        '_title_is_unique',
+        '_build_uri_path',
     ],
 };
 
@@ -91,11 +93,7 @@ has_one first_revision => (
     },
 );
 
-has incoming_link_count => (
-    metaclass   => 'FromSelect',
-    is          => 'ro',
-    isa         => Int,
-    lazy        => 1,
+query incoming_link_count => (
     select      => __PACKAGE__->_IncomingLinkCountSelect(),
     bind_params => sub { $_[0]->page_id() },
 );
@@ -106,11 +104,7 @@ has_many incoming_links => (
     bind_params => sub { $_[0]->page_id() },
 );
 
-has file_count => (
-    metaclass   => 'FromSelect',
-    is          => 'ro',
-    isa         => Int,
-    lazy        => 1,
+query file_count => (
     select      => __PACKAGE__->_FileCountSelect(),
     bind_params => sub { $_[0]->page_id() },
 );
@@ -238,8 +232,6 @@ sub insert_with_content {
             map  { $_->name() } $class->Table()->columns()
     );
 
-    $page_p{uri_path} = $class->TitleToURIPath( $page_p{title} );
-
     my $page;
     $class->SchemaClass()->RunInTransaction(
         sub {
@@ -305,6 +297,42 @@ sub _title_is_valid {
     return;
 }
 
+sub _title_is_unique {
+    my $self      = shift;
+    my $p         = shift;
+    my $is_insert = shift;
+
+    return unless exists $p->{title};
+
+    my $wiki_id = $p->{wiki_id} || $self->wiki_id();
+
+    return unless $wiki_id;
+
+    my $page = __PACKAGE__->new( title => $p->{title}, wiki_id => $wiki_id );
+
+    return unless $page;
+
+    return if ref $self && $page->page_id() == $self->page_id();
+
+    return {
+        message => loc(
+            q{The page title you have chosen (%1) is already in use in this wiki.},
+            $p->{title}
+        ),
+    };
+}
+
+sub _build_uri_path {
+    my $self = shift;
+    my $p    = shift;
+
+    return unless exists $p->{title};
+
+    $p->{uri_path} = $self->TitleToURIPath( $p->{title} );
+
+    return;
+}
+
 sub add_revision {
     my $self = shift;
     my %p    = @_;
@@ -335,10 +363,70 @@ sub add_file {
 
     $self->add_revision(
         content => $new_content,
-        user_id => $file->user_id(),
+        user_id => Silki::Schema::User->SystemUser()->user_id(),
+        comment =>
+            loc( 'Adding a link to a new file: %1', $file->filename() ),
     );
 
     return;
+}
+
+sub rename {
+    my $self = shift;
+    my ($title) = pos_validated_list( \@_, { isa => Str } );
+
+    return if $title eq $self->title();
+
+    die 'Cannot rename this page - ', $self->title(), "\n"
+        unless $self->can_be_renamed();
+
+    my $links = $self->incoming_links();
+
+    # XXX - there's a small race condition here, because there's a window
+    # between reading the content of the linking pages and updating it. This
+    # could be fixed by moving the read into the transaction and doing a
+    # SELECT ... FOR UPDATE, I think
+    my @pages;
+    while ( my $page = $links->next() ) {
+        push @pages,
+            [
+            $page,
+            $page->rewritten_content_for_rename( $self->title(), $title )
+            ];
+    }
+
+    my $update_title = sub {
+        my $old_title = $self->title();
+
+        $self->update( title => $title );
+
+        for my $pair (@pages) {
+            my ( $page, $content ) = @{$pair};
+
+            $page->add_revision(
+                content => $content,
+                user_id => Silki::Schema::User->SystemUser()->user_id(),
+                comment => loc(
+                    'Updating links because a page is being renamed from %1 to %2',
+                    $old_title, $title
+                ),
+            );
+        }
+    };
+
+    Silki::Schema->RunInTransaction($update_title);
+}
+
+sub rewritten_content_for_rename {
+    my $self = shift;
+    my $old_name = shift;
+    my $new_name = shift;
+
+    my $content = $self->content();
+
+    $content =~ s/\Q(($old_name))/(($new_name))/g;
+
+    return $content;
 }
 
 sub record_view {
@@ -474,13 +562,15 @@ sub _IncomingLinkSelect {
 sub _FileCountSelect {
     my $select = Silki::Schema->SQLFactoryClass()->new_select();
 
-    my $page_file_link_t = $Schema->table('PageFileLink');
-    my $count = Fey::Literal::Function->new( 'COUNT',
-        $page_file_link_t->column('file_id') );
+    my $file_t = $Schema->table('File');
+    my $count  = Fey::Literal::Function->new(
+        'COUNT',
+        $file_t->column('file_id')
+    );
 
     $select->select($count)
-           ->from($page_file_link_t)
-           ->where( $page_file_link_t->column('page_id'), '=',
+           ->from($file_t)
+           ->where( $file_t->column('page_id'), '=',
                     Fey::Placeholder->new() );
 
     return $select;
@@ -489,11 +579,11 @@ sub _FileCountSelect {
 sub _FileSelect {
     my $select = Silki::Schema->SQLFactoryClass()->new_select();
 
-    my ( $page_file_link_t, $file_t ) = $Schema->tables( 'PageFileLink', 'File' );
+    my $file_t = $Schema->table( 'File' );
 
     $select->select($file_t)
-           ->from( $page_file_link_t, $file_t )
-           ->where( $page_file_link_t->column('page_id'), '=',
+           ->from( $file_t )
+           ->where( $file_t->column('page_id'), '=',
                     Fey::Placeholder->new() )
            ->order_by( $file_t->column('filename') );
 
@@ -622,7 +712,7 @@ Silki::Schema::Page - Represents a page
 
 =head1 VERSION
 
-version 0.03
+version 0.04
 
 =head1 AUTHOR
 

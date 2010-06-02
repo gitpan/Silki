@@ -1,3 +1,21 @@
+0.04
+
+- *WARNING* - this release contains the first database migration for Silki. If
+  by some chance you actually have real data in Silki (did you not see the
+  alpha warning in the docs?), make a backup first.
+
+- Files are now attached to a page, not the wiki. This makes more sense, since
+  you may want to associate a set of files with a page, yet not link to all of
+  them directly from the page.
+
+- Implemented page renaming, at both the API and UI levels.
+
+- The revision created when adding a file to a page now has a comment, and is
+  created by the system user, not the user which uploaded the file.
+
+- Page history now shows a revision's comment, if it has one.
+
+
 0.03   2010-05-31
 
 - Doc and packaging fixes so this looks a little nicer on search.cpan.org.

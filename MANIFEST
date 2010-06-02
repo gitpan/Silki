@@ -22,6 +22,8 @@ inc/Silki/DBInstaller.pm
 inc/Silki/DZ/Plugin/ExtractPO.pm
 inc/Silki/DZ/Plugin/MakeTestSchema.pm
 inc/Silki/DZ/Plugin/WebFiles.pm
+inc/migrations/2/01-File-has-page_id.sql
+inc/migrations/2/02-update-Version.sql
 lib/Silki.pm
 lib/Silki/Action/REST.pm
 lib/Silki/AppRole/Domain.pm
@@ -66,7 +68,6 @@ lib/Silki/Plugin/Session/Store/Silki.pm
 lib/Silki/Request.pm
 lib/Silki/Role/Controller/Pager.pm
 lib/Silki/Role/Controller/RevisionsAtomFeed.pm
-lib/Silki/Role/Controller/UploadHandler.pm
 lib/Silki/Role/Controller/User.pm
 lib/Silki/Role/Controller/WikitextHandler.pm
 lib/Silki/Role/Schema/DataValidator.pm
@@ -81,7 +82,6 @@ lib/Silki/Schema/Domain.pm
 lib/Silki/Schema/File.pm
 lib/Silki/Schema/Locale.pm
 lib/Silki/Schema/Page.pm
-lib/Silki/Schema/PageFileLink.pm
 lib/Silki/Schema/PageLink.pm
 lib/Silki/Schema/PageRevision.pm
 lib/Silki/Schema/PageTag.pm
@@ -182,6 +182,7 @@ share/mason/page/diff
 share/mason/page/edit-form
 share/mason/page/history
 share/mason/page/incoming-links.mas
+share/mason/page/rename-form
 share/mason/page/tag-list.mas
 share/mason/page/tags.mas
 share/mason/page/view

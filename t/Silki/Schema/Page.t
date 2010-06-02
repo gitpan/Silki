@@ -75,6 +75,9 @@ my $user = Silki::Schema::User->GuestUser();
         $page->is_front_page(),
         'is_front_page is true for page where title is Front Page'
     );
+
+    throws_ok { $page->rename('foo') } qr/\QCannot rename this page - Front Page/,
+        'rename throws an exception for pages where can_be_renamed is false';
 }
 
 {
@@ -146,7 +149,7 @@ my $user = Silki::Schema::User->GuestUser();
         file_size => length $text,
         contents  => $text,
         user_id   => $user->user_id(),
-        wiki_id   => $wiki->wiki_id(),
+        page_id   => $page->page_id(),
     );
 
     $page->add_file($file1);
@@ -155,6 +158,18 @@ my $user = Silki::Schema::User->GuestUser();
     is(
         $revision->revision_number(), 3,
         'adding a file to a page creates a new revision'
+    );
+
+    is(
+        $revision->user_id(),
+        Silki::Schema::User->SystemUser()->user_id(),
+        'adding a file creates a revision from the system user',
+    );
+
+    is(
+        $revision->comment(),
+        'Adding a link to a new file: ' . $file1->filename(),
+        'adding a file leaves a comment on the revision it creates'
     );
 
     my $link = '{{file:' . $file1->filename() . '}}';
@@ -172,13 +187,18 @@ my $user = Silki::Schema::User->GuestUser();
         file_size => length $text,
         contents  => $text,
         user_id   => $user->user_id(),
-        wiki_id   => $wiki->wiki_id(),
+        page_id   => $page->page_id(),
     );
 
     $page->add_file($file2);
 
     # Creating this so that we know $page->files() doesn't just return all the
     # files in the wiki or some other wrong result.
+    my $other_page = Silki::Schema::Page->new(
+        title   => 'Front Page',
+        wiki_id => $wiki->wiki_id(),
+    );
+
     $text = "This is even more plain text.\n";
     my $file3 = Silki::Schema::File->insert(
         filename  => 'test3.txt',
@@ -186,7 +206,7 @@ my $user = Silki::Schema::User->GuestUser();
         file_size => length $text,
         contents  => $text,
         user_id   => $user->user_id(),
-        wiki_id   => $wiki->wiki_id(),
+        page_id   => $other_page->page_id(),
     );
 
     is( $page->file_count(), 2, 'file_count is 2' );
@@ -201,6 +221,29 @@ my $user = Silki::Schema::User->GuestUser();
     is( $page->incoming_link_count(), 1, 'page has one incoming link' );
     my @links = $page->incoming_links()->all();
     is( $links[0]->title(), 'Some Page', 'Some Page links to Pending Page' );
+
+    $page->rename('Formerly Pending Page');
+    is(
+        $page->title(), 'Formerly Pending Page',
+        'calling rename() updates the page title'
+    );
+
+    is( $page->incoming_link_count(), 1, 'page still has one incoming link' );
+    @links = $page->incoming_links()->all();
+    is( $links[0]->title(), 'Some Page', 'Some Page still links to the renamed Page' );
+
+    my $link_rev = $links[0]->most_recent_revision();
+    is(
+        $link_rev->comment(),
+        'Updating links because a page is being renamed from Pending Page to Formerly Pending Page',
+        'linking page has a new revision because of rename'
+    );
+
+    is(
+        $link_rev->user_id(),
+        Silki::Schema::User->SystemUser()->user_id(),
+        'new revision was created by the system user'
+    );
 }
 
 {

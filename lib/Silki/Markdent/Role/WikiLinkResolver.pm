@@ -1,12 +1,13 @@
 package Silki::Markdent::Role::WikiLinkResolver;
 BEGIN {
-  $Silki::Markdent::Role::WikiLinkResolver::VERSION = '0.03';
+  $Silki::Markdent::Role::WikiLinkResolver::VERSION = '0.04';
 }
 
 use strict;
 use warnings;
 use namespace::autoclean;
 
+use List::AllUtils qw( all );
 use Silki::I18N qw( loc );
 
 use Moose::Role;
@@ -18,20 +19,26 @@ has _wiki => (
     init_arg => 'wiki',
 );
 
+has _page => (
+    is       => 'ro',
+    isa      => 'Silki::Schema::Page',
+    init_arg => 'page',
+);
+
 sub _resolve_page_link {
     my $self         = shift;
-    my $link         = shift;
+    my $link_text    = shift;
     my $display_text = shift;
 
     my $wiki       = $self->_wiki();
-    my $page_title = $link;
+    my $page_title = $link_text;
 
-    if ( $link =~ m{^([^/]+)/([^/]+)$} ) {
+    if ( $link_text =~ m{^([^/]+)/([^/]+)$} ) {
         $wiki = Silki::Schema::Wiki->new( title => $1 )
             || Silki::Schema::Wiki->new( short_name => $1 );
 
         return {
-            text => loc( '(Link to non-existent wiki - %1)', $link ),
+            text => loc( '(Link to non-existent wiki - %1)', $link_text ),
             }
             unless $wiki;
 
@@ -86,17 +93,50 @@ sub _resolve_file_link {
 
     my $wiki = $self->_wiki();
 
-    return unless $link_text =~ m{^(?:([^/]+)/)?([^/]+)$};
+    return unless $link_text =~ m{^(?:([^/]+)/)?(?:([^/]+)/)?([^/]+)$};
 
-    if ($1) {
-        $wiki = Silki::Schema::Wiki->new( short_name => $1 )
-            or return;
+    my $filename = $3;
+
+    my $wiki_name;
+    my $page_name;
+
+    if ( all {defined} $1, $2, $3 ) {
+        $wiki_name = $1;
+        $page_name = $2;
+    }
+    elsif ( all { defined } $1, $3 ) {
+        $page_name = $1;
     }
 
-    my $filename = $2;
+    if ( defined $wiki_name ) {
+        $wiki = Silki::Schema::Wiki->new( title => $1 )
+            || Silki::Schema::Wiki->new( short_name => $1 );
+
+        return {
+            text => loc( '(Link to non-existent wiki - %1)', $link_text ),
+            }
+            unless $wiki;
+    }
+
+    my $page = $self->_page();
+
+    if ( defined $page_name ) {
+        $page = Silki::Schema::Page->new(
+            title   => $page_name,
+            wiki_id => $wiki->wiki_id(),
+        );
+
+        return {
+            text => loc( '(Link to non-existent page - %1)', $link_text ),
+            }
+            unless $page;
+    }
+
+    die "Cannot resolve file links without a page"
+        unless $page;
 
     my $file = Silki::Schema::File->new(
-        wiki_id  => $wiki->wiki_id(),
+        page_id  => $page->page_id(),
         filename => $filename,
     );
 
@@ -150,7 +190,7 @@ Silki::Markdent::Role::WikiLinkResolver - A role which resolves page/file/image 
 
 =head1 VERSION
 
-version 0.03
+version 0.04
 
 =head1 AUTHOR
 

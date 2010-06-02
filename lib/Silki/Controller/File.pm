@@ -1,6 +1,6 @@
 package Silki::Controller::File;
 BEGIN {
-  $Silki::Controller::File::VERSION = '0.03';
+  $Silki::Controller::File::VERSION = '0.04';
 }
 
 use strict;
@@ -23,7 +23,7 @@ sub _set_file : Chained('/wiki/_set_wiki') : PathPart('file') : CaptureArgs(1) {
 
     my $wiki = $c->stash()->{wiki};
     $c->redirect_and_detach( $wiki->uri( with_host => 1 ) )
-        unless $file && $file->wiki_id() == $wiki->wiki_id();
+        unless $file && $file->wiki()->wiki_id() == $wiki->wiki_id();
 
     $c->stash()->{file} = $file;
 }
@@ -186,7 +186,7 @@ Silki::Controller::File - Controller class for files
 
 =head1 VERSION
 
-version 0.03
+version 0.04
 
 =head1 AUTHOR
 

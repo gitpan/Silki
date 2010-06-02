@@ -1,6 +1,6 @@
 package Silki::Controller::Wiki;
 BEGIN {
-  $Silki::Controller::Wiki::VERSION = '0.03';
+  $Silki::Controller::Wiki::VERSION = '0.04';
 }
 
 use strict;
@@ -27,7 +27,6 @@ BEGIN { extends 'Silki::Controller::Base' }
 with qw(
     Silki::Role::Controller::Pager
     Silki::Role::Controller::RevisionsAtomFeed
-    Silki::Role::Controller::UploadHandler
     Silki::Role::Controller::User
     Silki::Role::Controller::WikitextHandler
 );
@@ -606,7 +605,7 @@ Silki::Controller::Wiki - Controller class for wikis
 
 =head1 VERSION
 
-version 0.03
+version 0.04
 
 =head1 AUTHOR
 

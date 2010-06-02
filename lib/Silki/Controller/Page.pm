@@ -1,12 +1,13 @@
 package Silki::Controller::Page;
 BEGIN {
-  $Silki::Controller::Page::VERSION = '0.03';
+  $Silki::Controller::Page::VERSION = '0.04';
 }
 
 use strict;
 use warnings;
 use namespace::autoclean;
 
+use File::MimeInfo qw( mimetype );
 use List::AllUtils qw( all );
 use Silki::I18N qw( loc );
 use Silki::Formatter::HTMLToWiki;
@@ -21,7 +22,6 @@ BEGIN { extends 'Silki::Controller::Base' }
 with qw(
     Silki::Role::Controller::Pager
     Silki::Role::Controller::RevisionsAtomFeed
-    Silki::Role::Controller::UploadHandler
     Silki::Role::Controller::WikitextHandler
 );
 
@@ -102,7 +102,7 @@ sub page_DELETE {
     $c->redirect_and_detach( $wiki->uri( with_host => 1 ) );
 }
 
-sub page_edit_form : Chained('_set_page') : PathPart('edit_form') : Args(0) {
+sub edit_form : Chained('_set_page') : PathPart('edit_form') : Args(0) {
     my $self = shift;
     my $c    = shift;
 
@@ -116,6 +116,17 @@ sub page_edit_form : Chained('_set_page') : PathPart('edit_form') : Args(0) {
     );
 
     $c->stash()->{template} = '/page/edit-form';
+}
+
+sub rename_form : Chained('_set_page') : PathPart('rename_form') : Args(0) {
+    my $self = shift;
+    my $c    = shift;
+
+    $self->_require_permission_for_wiki( $c, $c->stash()->{wiki}, 'Edit' );
+
+    my $page = $c->stash()->{page};
+
+    $c->stash()->{template} = '/page/rename-form';
 }
 
 sub page_PUT {
@@ -140,6 +151,30 @@ sub page_PUT {
         content => $wikitext,
         user_id => $c->user()->user_id(),
     );
+
+    $c->redirect_and_detach( $page->uri() );
+}
+
+sub page_title : Chained('_set_page') : PathPart('title') : Args(0) : ActionClass('+Silki::Action::REST') {
+}
+
+sub page_title_PUT {
+    my $self = shift;
+    my $c    = shift;
+
+    $self->_require_permission_for_wiki( $c, $c->stash()->{wiki} );
+
+    my $page = $c->stash()->{page};
+
+    eval { $page->rename( $c->request()->params()->{title} ) };
+
+    if ( my $e = $@ ) {
+        $c->redirect_with_error(
+            error     => $e,
+            uri       => $page->uri( view => 'rename_form' ),
+            form_data => $c->request()->params(),
+        );
+    }
 
     $c->redirect_and_detach( $page->uri() );
 }
@@ -282,6 +317,67 @@ sub file_collection_POST {
     $c->redirect_and_detach( $c->stash()->{page}->uri( view => 'attachments' ) );
 }
 
+sub _handle_upload {
+    my $self   = shift;
+    my $c      = shift;
+    my $upload = shift;
+    my $on_error = shift;
+
+    unless ($upload) {
+        $c->redirect_with_error(
+            error => loc('You did not select a file to upload.'),
+            uri   => $on_error,
+        );
+    }
+
+    if ( $upload->size() > Silki::Config->new()->max_upload_size() ) {
+        $c->redirect_with_error(
+            error => loc('The file you uploaded was too large.'),
+            uri   => $on_error,
+        );
+    }
+
+    if ( $upload->size() == 0 ) {
+        $c->redirect_with_error(
+            error => loc('The file you uploaded was empty.'),
+            uri   => $on_error,
+        );
+    }
+
+    # Copied the logic from Catalyst::Request::Upload without the last step of
+    # removing most characters.
+    my $basename = $upload->filename;
+    $basename =~ s|\\|/|g;
+    $basename = ( File::Spec::Unix->splitpath($basename) )[2];
+
+    my $file;
+    eval {
+        Silki::Schema->RunInTransaction(
+            sub {
+                $file = Silki::Schema::File->insert(
+                    filename  => $basename,
+                    mime_type => mimetype( $upload->tempname() ),
+                    file_size => $upload->size(),
+                    contents =>
+                        do { my $fh = $upload->fh(); local $/; <$fh> },
+                    user_id => $c->user()->user_id(),
+                    page_id => $c->stash()->{page}->page_id(),
+                );
+
+                $c->stash()->{page}->add_file($file)
+                    if $c->stash()->{page};
+            }
+        );
+    };
+
+    if ( my $e = $@ ) {
+        $c->redirect_with_error(
+            error => $e,
+            uri   => $on_error,
+        );
+    }
+}
+
 sub tag_collection : Chained('_set_page') : PathPart('tags') : Args(0) : ActionClass('+Silki::Action::REST') {
 }
 
@@ -370,6 +466,60 @@ sub delete_confirmation : Chained('_set_page') : PathPart('delete_confirmation')
     $c->stash()->{template} = '/page/delete-confirmation';
 }
 
+{
+    use HTTP::Body::MultiPart;
+    package
+        HTTP::Body::MultiPart;
+
+    no warnings 'redefine';
+sub handler {
+    my ( $self, $part ) = @_;
+
+    unless ( exists $part->{name} ) {
+
+        my $disposition = $part->{headers}->{'Content-Disposition'};
+        my ($name)      = $disposition =~ / name="?([^\";]+)"?/;
+        my ($filename)  = $disposition =~ / filename="?([^\"]*)"?/;
+        # Need to match empty filenames above, so this part is flagged as an upload type
+
+        $part->{name} = $name;
+
+        if ( defined $filename ) {
+            $part->{filename} = $filename;
+
+            if ( $filename ne "" ) {
+                # XXX - this is the monkey patch, adding the filename as a
+                # suffix so that we preserve the file's extension
+                my $fh = File::Temp->new( UNLINK => 0, DIR => $self->tmpdir, SUFFIX => q{-} . $filename );
+
+                $part->{fh}       = $fh;
+                $part->{tempname} = $fh->filename;
+            }
+        }
+    }
+
+    if ( $part->{fh} && ( my $length = length( $part->{data} ) ) ) {
+        $part->{fh}->write( substr( $part->{data}, 0, $length, '' ), $length );
+    }
+
+    if ( $part->{done} ) {
+
+        if ( exists $part->{filename} ) {
+            if ( $part->{filename} ne "" ) {
+                $part->{fh}->close if defined $part->{fh};
+
+                delete @{$part}{qw[ data done fh ]};
+
+                $self->upload( $part->{name}, $part );
+            }
+        }
+        else {
+            $self->param( $part->{name}, $part->{data} );
+        }
+    }
+}
+}
+
 __PACKAGE__->meta()->make_immutable();
 
 1;
@@ -385,7 +535,7 @@ Silki::Controller::Page - Controller class for pages
 
 =head1 VERSION
 
-version 0.03
+version 0.04
 
 =head1 AUTHOR
 

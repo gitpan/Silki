@@ -1,6 +1,6 @@
 package Silki::Schema::File;
 BEGIN {
-  $Silki::Schema::File::VERSION = '0.03';
+  $Silki::Schema::File::VERSION = '0.04';
 }
 
 use strict;
@@ -27,7 +27,7 @@ with 'Silki::Role::Schema::SystemLogger' => { methods => ['delete'] };
 
 with 'Silki::Role::Schema::DataValidator' => {
     steps => [
-        '_filename_is_unique_in_wiki',
+        '_filename_is_unique_for_page',
     ],
 };
 
@@ -39,7 +39,10 @@ has_table( $Schema->table('File') );
 
 has_one( $Schema->table('User') );
 
-has_one( $Schema->table('Wiki') );
+has_one page => (
+    table   => $Schema->table('Page'),
+    handles => ['wiki'],
+);
 
 has is_displayable_in_browser => (
     is       => 'ro',
@@ -96,11 +99,13 @@ sub _system_log_values_for_delete {
     my $msg
         = 'Deleted file, '
         . $self->filename()
-        . ', in wiki '
+        . ', attached to '
+        . $self->page()->title()
+        . ' in '
         . $self->wiki()->title();
 
     return (
-        wiki_id   => $self->wiki_id(),
+        page_id   => $self->page_id(),
         message   => $msg,
         data_blob => {
             filename => $self->filename(),
@@ -110,7 +115,7 @@ sub _system_log_values_for_delete {
     );
 }
 
-sub _filename_is_unique_in_wiki {
+sub _filename_is_unique_for_page {
     my $self      = shift;
     my $p         = shift;
     my $is_insert = shift;
@@ -125,12 +130,12 @@ sub _filename_is_unique_in_wiki {
     return
         unless __PACKAGE__->new(
         filename => $p->{filename},
-        wiki_id  => $p->{wiki_id},
+        page_id  => $p->{page_id},
         );
 
     return {
         message => loc(
-            'The filename you provided is already in use for another file in this wiki.'
+            'The filename you provided is already in use for another file on this page.'
         ),
     };
 }
@@ -275,7 +280,7 @@ Silki::Schema::File - Represents a file
 
 =head1 VERSION
 
-version 0.03
+version 0.04
 
 =head1 AUTHOR
 

@@ -1,6 +1,6 @@
 package Silki::Schema::Wiki;
 BEGIN {
-  $Silki::Schema::Wiki::VERSION = '0.03';
+  $Silki::Schema::Wiki::VERSION = '0.04';
 }
 
 use strict;
@@ -891,19 +891,19 @@ sub _MemberCountSelect {
     my $count
         = Fey::Literal::Function->new( 'COUNT', $uwr_t->column('user_id') );
 
-    my $file_count_select = Silki::Schema->SQLFactoryClass()->new_select();
-    $file_count_select
+    my $member_count_select = Silki::Schema->SQLFactoryClass()->new_select();
+    $member_count_select
         ->select($count)
         ->from($uwr_t)
         ->where( $uwr_t->column('wiki_id'), '=', Fey::Placeholder->new() );
 
-    return $file_count_select;
+    return $member_count_select;
 }
 
 sub _FileCountSelect {
     my $class = shift;
 
-    my $file_t = $Schema->table('File');
+    my ( $file_t, $page_t ) = $Schema->tables( 'File', 'Page' );
 
     my $count
         = Fey::Literal::Function->new( 'COUNT', $file_t->column('file_id') );
@@ -911,8 +911,8 @@ sub _FileCountSelect {
     my $file_count_select = Silki::Schema->SQLFactoryClass()->new_select();
     $file_count_select
         ->select($count)
-        ->from($file_t)
-        ->where( $file_t->column('wiki_id'), '=', Fey::Placeholder->new() );
+        ->from( $file_t, $page_t )
+        ->where( $page_t->column('wiki_id'), '=', Fey::Placeholder->new() );
 
     return $file_count_select;
 }
@@ -939,13 +939,13 @@ sub files {
 sub _BuildFilesSelect {
     my $class = shift;
 
-    my $file_t = $Schema->table('File');
+    my ( $file_t, $page_t ) = $Schema->tables( 'File', 'Page' );
 
     my $files_select = Silki::Schema->SQLFactoryClass()->new_select();
     $files_select
         ->select($file_t)
-        ->from($file_t)
-        ->where( $file_t->column('wiki_id'), '=', Fey::Placeholder->new() )
+        ->from( $file_t, $page_t )
+        ->where( $page_t->column('wiki_id'), '=', Fey::Placeholder->new() )
         ->order_by( $file_t->column('filename'), 'ASC' );
 
     return $files_select;
@@ -1488,7 +1488,7 @@ Silki::Schema::Wiki - Represents a wiki
 
 =head1 VERSION
 
-version 0.03
+version 0.04
 
 =head1 AUTHOR
 

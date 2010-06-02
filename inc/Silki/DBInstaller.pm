@@ -9,8 +9,9 @@ use lib 'lib';
 use DBI;
 use Fey::DBIManager::Source;
 use File::Slurp qw( read_file);
+use File::Spec;
 use File::Temp qw( tempdir);
-use Path::Class qw( file );
+use Path::Class qw( dir file );
 
 use Moose;
 use MooseX::StrictConstructor;
@@ -352,6 +353,48 @@ sub _seed_data {
         production => $self->production(),
         verbose    => !$self->quiet()
     );
+}
+
+sub _migrate_db {
+    my $self         = shift;
+    my $from_version = shift;
+    my $to_version   = shift;
+
+    my $tmp_file = dir( File::Spec->tmpdir(), "silki-db-dump-$$.sql" );
+
+    $self->_msg("Dumping Silki database to $tmp_file before running migrations");
+
+    system(
+        'pg_dump', $self->_psql_args(), '-C', $self->name(),
+        '-f',      $tmp_file
+    );
+
+    for my $version ( ( $from_version + 1 ) .. $to_version ) {
+        $self->_msg("Running database migration scripts to version $version");
+
+        my $dir = dir( 'inc', 'migrations', $version );
+        unless ( -d $dir ) {
+            warn "No migration direction for version $version (looked for $dir)!";
+            exit;
+        }
+
+        my @files = sort grep { ! $_->is_dir() } $dir->children();
+        unless (@files) {
+            warn "Migration directory exists but is empty ($dir)";
+            exit;
+        }
+
+        for my $file (@files) {
+            $self->_msg( "  running $file" );
+
+            if ( $file =~ /\.sql/ ) {
+                system( 'psql', $self->name(), $self->_psql_args(), '-q', '-w', '-f', $file );
+            }
+            else {
+                system($file);
+            }
+        }
+    }
 }
 
 sub _msg {

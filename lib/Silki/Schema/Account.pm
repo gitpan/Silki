@@ -1,6 +1,6 @@
 package Silki::Schema::Account;
 BEGIN {
-  $Silki::Schema::Account::VERSION = '0.03';
+  $Silki::Schema::Account::VERSION = '0.04';
 }
 
 use strict;
@@ -112,7 +112,7 @@ Silki::Schema::Account
 
 =head1 VERSION
 
-version 0.03
+version 0.04
 
 =head1 AUTHOR
 
