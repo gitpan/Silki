@@ -4,7 +4,7 @@
       "Dave Rolsky <autarch@urth.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 3.101500",
+   "generated_by" : "Dist::Zilla version 3.101520",
    "license" : "agpl_3",
    "meta-spec" : {
       "url" : "http://github.com/dagolden/cpan-meta/",
@@ -86,7 +86,7 @@
             "Lingua::EN::Inflect" : "0",
             "List::AllUtils" : "0",
             "Log::Dispatch" : "0",
-            "Markdent" : "0",
+            "Markdent" : "0.16",
             "Moose" : "0",
             "MooseX::ClassAttribute" : "0",
             "MooseX::MetaDescription" : "0",
@@ -125,6 +125,7 @@
          }
       }
    },
+   "release_status" : "stable",
    "resources" : {
       "bugtracker" : {
          "mailto" : "bug-silki@rt.cpan.org",
@@ -136,6 +137,6 @@
          "web" : "http://hg.urth.org/hg/Silki"
       }
    },
-   "version" : "0.04"
+   "version" : "0.05"
 }
 

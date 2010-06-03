@@ -1,6 +1,6 @@
 package Silki::Schema::SystemLog;
 BEGIN {
-  $Silki::Schema::SystemLog::VERSION = '0.04';
+  $Silki::Schema::SystemLog::VERSION = '0.05';
 }
 
 use strict;
@@ -88,7 +88,7 @@ Silki::Schema::SystemLog - Represents a system log entry
 
 =head1 VERSION
 
-version 0.04
+version 0.05
 
 =head1 AUTHOR
 

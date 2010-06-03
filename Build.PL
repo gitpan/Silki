@@ -20,7 +20,7 @@ my %module_build_args = (
     'Dave Rolsky <autarch@urth.org>'
   ],
   'dist_name' => 'Silki',
-  'dist_version' => '0.04',
+  'dist_version' => '0.05',
   'license' => 'open_source',
   'module_name' => 'Silki',
   'recommends' => {},
@@ -87,7 +87,7 @@ my %module_build_args = (
     'Lingua::EN::Inflect' => '0',
     'List::AllUtils' => '0',
     'Log::Dispatch' => '0',
-    'Markdent' => '0',
+    'Markdent' => '0.16',
     'Moose' => '0',
     'MooseX::ClassAttribute' => '0',
     'MooseX::MetaDescription' => '0',

@@ -1,6 +1,6 @@
 package Silki::Web::Javascript;
 BEGIN {
-  $Silki::Web::Javascript::VERSION = '0.04';
+  $Silki::Web::Javascript::VERSION = '0.05';
 }
 
 use strict;
@@ -80,7 +80,7 @@ Silki::Web::Javascript - Combines and minifies Javascript source files
 
 =head1 VERSION
 
-version 0.04
+version 0.05
 
 =head1 AUTHOR
 

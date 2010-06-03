@@ -10,7 +10,7 @@ build_requires:
 configure_requires:
   Module::Build: 0.3601
 dynamic_config: 0
-generated_by: 'Dist::Zilla version 3.101500, CPAN::Meta::Converter version 2.101461'
+generated_by: 'Dist::Zilla version 3.101520, CPAN::Meta::Converter version 2.101461'
 license: open_source
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -79,7 +79,7 @@ requires:
   Lingua::EN::Inflect: 0
   List::AllUtils: 0
   Log::Dispatch: 0
-  Markdent: 0
+  Markdent: 0.16
   Moose: 0
   MooseX::ClassAttribute: 0
   MooseX::MetaDescription: 0
@@ -111,4 +111,4 @@ requires:
 resources:
   bugtracker: http://rt.cpan.org/NoAuth/Bugs.html?Dist=Silki
   repository: http://hg.urth.org/hg/Silki
-version: 0.04
+version: 0.05

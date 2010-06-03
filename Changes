@@ -1,4 +1,22 @@
-0.04
+0.05  2010-06-03
+
+- The attachments list for a wiki is now paged, with 50 files shown per page.
+
+- Added paging to the orphan and wanted pages lists.
+
+- Show the attachment count next to the Attachments link when viewing a page.
+
+- Paging for application-wide user, wiki, and domain lists was broken.
+
+- The wiki dashboard's active users box now just looks for activity in the
+  past month. Otherwise, it has to look at all revision of all pages, which
+  can be very slow.
+
+- The site's "all users" list now defaults to showing only active users, but
+  offers an option to show disabled users as well.
+
+
+0.04  2010-06-01
 
 - *WARNING* - this release contains the first database migration for Silki. If
   by some chance you actually have real data in Silki (did you not see the

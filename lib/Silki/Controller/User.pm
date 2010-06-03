@@ -1,6 +1,6 @@
 package Silki::Controller::User;
 BEGIN {
-  $Silki::Controller::User::VERSION = '0.04';
+  $Silki::Controller::User::VERSION = '0.05';
 }
 
 use strict;
@@ -218,9 +218,17 @@ sub users_collection_GET_html {
 
     $self->_require_site_admin($c);
 
-    my ( $limit, $offset ) = $self->_make_pager( $c, Silki::Schema::User->Count() );
+    my $include_disabled = $c->request()->params()->{include_disabled};
 
-    $c->stash()->{users} = Silki::Schema::User->All(
+    my $count_meth = $include_disabled ? 'Count' : 'ActiveUserCount';
+
+    my ( $limit, $offset ) = $self->_make_pager( $c, Silki::Schema::User->$count_meth() );
+
+    my $meth = $include_disabled ? 'All' : 'ActiveUsers';
+
+    $c->stash()->{include_disabled} = $include_disabled;
+
+    $c->stash()->{users} = Silki::Schema::User->$meth(
         limit  => $limit,
         offset => $offset,
     );
@@ -290,7 +298,7 @@ Silki::Controller::User - Controller class for users
 
 =head1 VERSION
 
-version 0.04
+version 0.05
 
 =head1 AUTHOR
 

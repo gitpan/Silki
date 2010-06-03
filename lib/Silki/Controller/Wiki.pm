@@ -1,6 +1,6 @@
 package Silki::Controller::Wiki;
 BEGIN {
-  $Silki::Controller::Wiki::VERSION = '0.04';
+  $Silki::Controller::Wiki::VERSION = '0.05';
 }
 
 use strict;
@@ -170,8 +170,15 @@ sub attachments : Chained('_set_wiki') : PathPart('attachments') : Args(0) {
     my $self = shift;
     my $c    = shift;
 
-    $c->stash()->{file_count} = $c->stash()->{wiki}->file_count();
-    $c->stash()->{files} = $c->stash()->{wiki}->files();
+    my $count = $c->stash()->{wiki}->file_count();
+
+    my ( $limit, $offset ) = $self->_make_pager( $c, $count );
+
+    $c->stash()->{file_count} = $count;
+    $c->stash()->{files}      = $c->stash()->{wiki}->files(
+        limit  => $limit,
+        offset => $offset,
+    );
 
     $c->stash()->{template} = '/wiki/attachments';
 }
@@ -203,8 +210,17 @@ sub orphans : Chained('_set_wiki') : PathPart('orphans') : Args(0) {
 
     my $wiki = $c->stash()->{wiki};
 
-    $c->stash()->{orphan_count} = $wiki->orphaned_page_count();
-    $c->stash()->{orphans} = $wiki->orphaned_pages();
+    my $count = $wiki->orphaned_page_count();
+
+    my ( $limit, $offset ) = $self->_make_pager( $c, $count );
+
+    $c->stash()->{orphan_count} = $count;
+    $c->stash()->{orphans}      = $wiki->orphaned_pages(
+        limit  => $limit,
+        offset => $offset,
+    );
+
+    $c->stash()->{template} = '/wiki/orphans';
 }
 
 sub wanted : Chained('_set_wiki') : PathPart('wanted') : Args(0) {
@@ -213,8 +229,17 @@ sub wanted : Chained('_set_wiki') : PathPart('wanted') : Args(0) {
 
     my $wiki = $c->stash()->{wiki};
 
-    $c->stash()->{wanted_count} = $wiki->wanted_page_count();
-    $c->stash()->{wanted} = $wiki->wanted_pages();
+    my $count = $wiki->wanted_page_count();
+
+    my ( $limit, $offset ) = $self->_make_pager( $c, $count );
+
+    $c->stash()->{wanted_count} = $count;
+    $c->stash()->{wanted}       = $wiki->wanted_pages(
+        limit  => $limit,
+        offset => $offset,
+    );
+
+    $c->stash()->{template} = '/wiki/wanted';
 }
 
 sub settings : Chained('_set_wiki') : PathPart('settings') : Args(0) {
@@ -605,7 +630,7 @@ Silki::Controller::Wiki - Controller class for wikis
 
 =head1 VERSION
 
-version 0.04
+version 0.05
 
 =head1 AUTHOR
 
