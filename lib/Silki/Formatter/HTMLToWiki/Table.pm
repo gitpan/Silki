@@ -1,6 +1,6 @@
 package Silki::Formatter::HTMLToWiki::Table;
 BEGIN {
-  $Silki::Formatter::HTMLToWiki::Table::VERSION = '0.06';
+  $Silki::Formatter::HTMLToWiki::Table::VERSION = '0.07';
 }
 
 use strict;
@@ -290,7 +290,7 @@ Silki::Formatter::HTMLToWiki::Table
 
 =head1 VERSION
 
-version 0.06
+version 0.07
 
 =head1 AUTHOR
 

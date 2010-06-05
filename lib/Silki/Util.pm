@@ -1,6 +1,6 @@
 package Silki::Util;
 BEGIN {
-  $Silki::Util::VERSION = '0.06';
+  $Silki::Util::VERSION = '0.07';
 }
 
 use strict;
@@ -38,7 +38,7 @@ Silki::Util - A utility module
 
 =head1 VERSION
 
-version 0.06
+version 0.07
 
 =head1 AUTHOR
 

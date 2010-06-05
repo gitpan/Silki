@@ -1,6 +1,6 @@
 package Silki::Formatter::HTMLToWiki;
 BEGIN {
-  $Silki::Formatter::HTMLToWiki::VERSION = '0.06';
+  $Silki::Formatter::HTMLToWiki::VERSION = '0.07';
 }
 
 use strict;
@@ -462,7 +462,7 @@ Silki::Formatter::HTMLToWiki
 
 =head1 VERSION
 
-version 0.06
+version 0.07
 
 =head1 AUTHOR
 

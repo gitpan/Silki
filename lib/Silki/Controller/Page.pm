@@ -1,6 +1,6 @@
 package Silki::Controller::Page;
 BEGIN {
-  $Silki::Controller::Page::VERSION = '0.06';
+  $Silki::Controller::Page::VERSION = '0.07';
 }
 
 use strict;
@@ -14,6 +14,7 @@ use Silki::Formatter::HTMLToWiki;
 use Silki::Formatter::WikiToHTML;
 use Silki::Schema::Page;
 use Silki::Schema::PageRevision;
+use Silki::Util qw( string_is_empty );
 
 use Moose;
 
@@ -137,7 +138,22 @@ sub page_PUT {
 
     my $page = $c->stash()->{page};
 
-    my $wikitext = eval { $self->_wikitext_from_form( $c, $page->wiki() ) };
+
+    my $params = $c->request()->params();
+    my %p
+        = map { $_ => $params->{$_} }
+        grep { !string_is_empty( $params->{$_} ) }
+        qw( is_restoration_of_revision_number comment );
+
+    eval {
+        my $wikitext = $self->_wikitext_from_form( $c, $page->wiki() );
+
+        $page->add_revision(
+            content => $wikitext,
+            user_id => $c->user()->user_id(),
+            %p,
+        );
+    };
 
     if ( my $e = $@ ) {
         $c->redirect_with_error(
@@ -146,11 +162,6 @@ sub page_PUT {
             form_data => $c->request()->params(),
         );
     }
-
-    $page->add_revision(
-        content => $wikitext,
-        user_id => $c->user()->user_id(),
-    );
 
     $c->redirect_and_detach( $page->uri() );
 }
@@ -319,9 +330,9 @@ sub file_collection_POST {
 }
 
 sub _handle_upload {
-    my $self   = shift;
-    my $c      = shift;
-    my $upload = shift;
+    my $self     = shift;
+    my $c        = shift;
+    my $upload   = shift;
     my $on_error = shift;
 
     unless ($upload) {
@@ -536,7 +547,7 @@ Silki::Controller::Page - Controller class for pages
 
 =head1 VERSION
 
-version 0.06
+version 0.07
 
 =head1 AUTHOR
 

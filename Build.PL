@@ -20,7 +20,7 @@ my %module_build_args = (
     'Dave Rolsky <autarch@urth.org>'
   ],
   'dist_name' => 'Silki',
-  'dist_version' => '0.06',
+  'dist_version' => '0.07',
   'license' => 'open_source',
   'module_name' => 'Silki',
   'recommends' => {},

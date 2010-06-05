@@ -1,3 +1,13 @@
+0.07  2010-06-05
+
+- Fixed a stupid bug that prevented logging in.
+
+- Add a "restore this revision" button when viewing an older revision.
+
+- Added various revision-related links at the bottom of each page
+  (compare/view previous/next).
+
+
 0.06  2010-06-04
 
 - *WARNING* - Lots of database changes. Many varchar columns are now text or
