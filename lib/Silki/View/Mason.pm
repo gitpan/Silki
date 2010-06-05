@@ -1,6 +1,6 @@
 package Silki::View::Mason;
 BEGIN {
-  $Silki::View::Mason::VERSION = '0.05';
+  $Silki::View::Mason::VERSION = '0.06';
 }
 
 use strict;
@@ -11,12 +11,12 @@ use base 'Catalyst::View::Mason';
 {
     package Silki::Mason::Web;
 BEGIN {
-  $Silki::Mason::Web::VERSION = '0.05';
+  $Silki::Mason::Web::VERSION = '0.06';
 }
 
     use Data::Dumper;
     use HTML::Entities qw( encode_entities );
-    use Lingua::EN::Inflect qw( PL_N );
+    use Lingua::EN::Inflect qw( A PL_N );
     use Number::Format qw( format_bytes );
     use Silki::I18N qw( loc );
     use Silki::Util qw( string_is_empty english_list );
@@ -80,7 +80,7 @@ Silki::View::Mason - A Mason-based view
 
 =head1 VERSION
 
-version 0.05
+version 0.06
 
 =head1 AUTHOR
 

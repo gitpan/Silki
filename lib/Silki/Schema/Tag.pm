@@ -1,6 +1,6 @@
 package Silki::Schema::Tag;
 BEGIN {
-  $Silki::Schema::Tag::VERSION = '0.05';
+  $Silki::Schema::Tag::VERSION = '0.06';
 }
 
 use strict;
@@ -58,7 +58,7 @@ Silki::Schema::Tag - Represents a tag
 
 =head1 VERSION
 
-version 0.05
+version 0.06
 
 =head1 AUTHOR
 

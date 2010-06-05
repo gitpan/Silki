@@ -4,10 +4,26 @@
 </p>
 % }
 
+% if ( $user->is_disabled() ) {
+<p>
+<% loc( q{This user's account has been disabled by a site admin.} ) %>
+</p>
+% } elsif ( $user->requires_activation() ) {
+<p>
+<% loc( q{This user has not yet activated their account.} ) %>
+</p>
+% }
+
 % if ( $user->is_system_user() ) {
 <p>
   <% loc('This is a system user, created for use by the wiki software.') %>
 </p>
+
+%   return;
+% }
+
+% if ($wiki) {
+<& profile-in-wiki.mas, user => $user, wiki => $wiki &>
 % }
 
 % if ($user_wikis) {
@@ -20,6 +36,12 @@
 <h2><% loc('Wikis You and %1 Both Use', $user->best_name() ) %></h2>
 
 <& /lib/wiki-list.mas, wikis => $shared_wikis &>
+
+%   if ( ! $shared_wikis->index() ) {
+<p>
+<% loc( 'You and %1 do not share any wikis in common.', $user->best_name() ) %>
+</p>
+%   }
 % }
 
 <%args>

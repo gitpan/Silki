@@ -1,3 +1,28 @@
+0.06  2010-06-04
+
+- *WARNING* - Lots of database changes. Many varchar columns are now text or
+  citext. What's citext? It's contrib data type for case-insensitive text,
+  which means that sorts and equality are case-insensitive. Postgres 8.4 ships
+  citext, but 8.3 does not. If you are running 8.3 and install citext manually
+  into your contrib dir, this should work. Patches to make this all smoother
+  are welcome.
+
+  Did I mention that Silki is still alpha?
+
+* The search code blew up on multi-word searches. Now a multi-word search is
+  interpreted as requiring all the words.
+
+* Fixed links to user profiles inside a wiki so they point to the per-wiki
+  profile.
+
+* Per-wiki user profiles now show some information about the user that is
+  specific to the wiki.
+
+* When formatting a page link to another wiki's page, the links were leaking
+  information by showing whether or not the page existed. Now such links
+  simply show up as "Inacessible page" in the HTML output.
+
+
 0.05  2010-06-03
 
 - The attachments list for a wiki is now paged, with 50 files shown per page.

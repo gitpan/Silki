@@ -1,6 +1,6 @@
 package Silki::Controller::Page;
 BEGIN {
-  $Silki::Controller::Page::VERSION = '0.05';
+  $Silki::Controller::Page::VERSION = '0.06';
 }
 
 use strict;
@@ -280,6 +280,7 @@ sub diff : Chained('_set_page') : PathPart('diff') : Args(0) {
 
     $c->stash()->{formatter} = Silki::Formatter::WikiToHTML->new(
         user => $c->user(),
+        page => $c->stash()->{page},
         wiki => $c->stash()->{wiki},
     );
 
@@ -535,7 +536,7 @@ Silki::Controller::Page - Controller class for pages
 
 =head1 VERSION
 
-version 0.05
+version 0.06
 
 =head1 AUTHOR
 

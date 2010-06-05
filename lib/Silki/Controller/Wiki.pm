@@ -1,6 +1,6 @@
 package Silki::Controller::Wiki;
 BEGIN {
-  $Silki::Controller::Wiki::VERSION = '0.05';
+  $Silki::Controller::Wiki::VERSION = '0.06';
 }
 
 use strict;
@@ -240,6 +240,24 @@ sub wanted : Chained('_set_wiki') : PathPart('wanted') : Args(0) {
     );
 
     $c->stash()->{template} = '/wiki/wanted';
+}
+
+sub users : Chained('_set_wiki') : PathPart('users') : Args(0) {
+    my $self = shift;
+    my $c    = shift;
+
+    my $wiki = $c->stash()->{wiki};
+
+    my $count = $wiki->member_count();
+
+    my ( $limit, $offset ) = $self->_make_pager( $c, $count );
+
+    $c->stash()->{users} = $wiki->members(
+        limit  => $limit,
+        offset => $offset,
+    );
+
+    $c->stash()->{template} = '/wiki/users';
 }
 
 sub settings : Chained('_set_wiki') : PathPart('settings') : Args(0) {
@@ -507,7 +525,9 @@ sub search_GET_html {
     $c->redirect_and_detach( $wiki->uri() )
         if string_is_empty($search);
 
-    $c->stash()->{search_results} = $wiki->text_search( query => $search );
+    ( my $pg_query = $search ) =~ s/\s+/ & /g;
+
+    $c->stash()->{search_results} = $wiki->text_search( query => $pg_query );
     $c->stash()->{search} = $search;
 
     $c->stash()->{template} = '/wiki/search-results';
@@ -630,7 +650,7 @@ Silki::Controller::Wiki - Controller class for wikis
 
 =head1 VERSION
 
-version 0.05
+version 0.06
 
 =head1 AUTHOR
 

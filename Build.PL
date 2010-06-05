@@ -20,10 +20,11 @@ my %module_build_args = (
     'Dave Rolsky <autarch@urth.org>'
   ],
   'dist_name' => 'Silki',
-  'dist_version' => '0.05',
+  'dist_version' => '0.06',
   'license' => 'open_source',
   'module_name' => 'Silki',
   'recommends' => {},
+  'recursive_test_files' => 1,
   'requires' => {
     'Algorithm::Diff' => '0',
     'Apache2::ServerUtil' => '0',
@@ -65,7 +66,7 @@ my %module_build_args = (
     'Fey' => '0',
     'Fey::DBIManager' => '0',
     'Fey::Loader' => '0',
-    'Fey::ORM' => '0.32',
+    'Fey::ORM' => '0.33',
     'File::HomeDir' => '0',
     'File::MimeInfo' => '0',
     'File::Slurp' => '0',

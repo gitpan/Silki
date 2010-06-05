@@ -1,6 +1,6 @@
 package Silki::Schema::User;
 BEGIN {
-  $Silki::Schema::User::VERSION = '0.05';
+  $Silki::Schema::User::VERSION = '0.06';
 }
 
 use strict;
@@ -653,12 +653,11 @@ sub role_in_wiki {
     my $self = shift;
     my ($wiki) = pos_validated_list( \@_, { isa => 'Silki::Schema::Wiki' } );
 
+    return Silki::Schema::Role->Guest() if $self->is_guest();
+
     my $role_name = $self->_role_name_in_wiki($wiki);
 
-    $role_name ||=
-        $self->is_guest()
-        ? 'Guest'
-        : 'Authenticated';
+    $role_name ||= 'Authenticated';
 
     return Silki::Schema::Role->$role_name();
 }
@@ -1120,7 +1119,7 @@ Silki::Schema::User - Represents a user
 
 =head1 VERSION
 
-version 0.05
+version 0.06
 
 =head1 AUTHOR
 

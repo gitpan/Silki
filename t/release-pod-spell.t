@@ -49,6 +49,7 @@ Testserver
 UI
 Wikis
 antispam
+citext
 cgi
 changeme
 contrib

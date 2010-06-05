@@ -1,6 +1,6 @@
 package Silki::AppRole::RedirectWithError;
 BEGIN {
-  $Silki::AppRole::RedirectWithError::VERSION = '0.05';
+  $Silki::AppRole::RedirectWithError::VERSION = '0.06';
 }
 
 use strict;
@@ -69,7 +69,7 @@ Silki::AppRole::RedirectWithError - Adds $c->redirect_with_error() to the Cataly
 
 =head1 VERSION
 
-version 0.05
+version 0.06
 
 =head1 AUTHOR
 

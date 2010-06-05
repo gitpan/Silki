@@ -16,6 +16,7 @@ dev-bin/extract-po
 dev-bin/initialize-db
 dev-bin/make-test-schema
 dev-bin/populate-db
+dev-bin/run-migrations
 dist.ini
 inc/Silki/Build.pm
 inc/Silki/DBInstaller.pm
@@ -24,6 +25,9 @@ inc/Silki/DZ/Plugin/MakeTestSchema.pm
 inc/Silki/DZ/Plugin/WebFiles.pm
 inc/migrations/2/01-File-has-page_id.sql
 inc/migrations/2/02-update-Version.sql
+inc/migrations/3/01-import-citext
+inc/migrations/3/02-text-and-citext.sql
+inc/migrations/3/03-update-version.sql
 lib/Silki.pm
 lib/Silki/Action/REST.pm
 lib/Silki/AppRole/Domain.pm
@@ -192,11 +196,13 @@ share/mason/sidebar.mas
 share/mason/site/dashboard
 share/mason/site/help
 share/mason/user/activation-form
+share/mason/user/autohandler
 share/mason/user/login-form
 share/mason/user/new-user-form
 share/mason/user/pending-activation
 share/mason/user/preferences-form
 share/mason/user/profile
+share/mason/user/profile-in-wiki.mas
 share/mason/user/users
 share/mason/wiki/attachments
 share/mason/wiki/autohandler
@@ -214,6 +220,7 @@ share/mason/wiki/settings
 share/mason/wiki/tag
 share/mason/wiki/tag-as-li.mas
 share/mason/wiki/tags
+share/mason/wiki/users
 share/mason/wiki/wanted
 share/mason/wiki/wikis
 t/Silki/Config.t

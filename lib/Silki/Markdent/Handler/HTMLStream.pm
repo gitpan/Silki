@@ -1,6 +1,6 @@
 package Silki::Markdent::Handler::HTMLStream;
 BEGIN {
-  $Silki::Markdent::Handler::HTMLStream::VERSION = '0.05';
+  $Silki::Markdent::Handler::HTMLStream::VERSION = '0.06';
 }
 
 use strict;
@@ -59,6 +59,19 @@ sub _link_to_page {
     }
 
     my $page = $p->{page};
+
+    my $wiki = $p->{wiki} || $page->wiki();
+
+    unless (
+        $self->_user()->has_permission_in_wiki(
+            wiki       => $wiki,
+            permission => Silki::Schema::Permission->Read(),
+        )
+        ) {
+
+        $self->_stream()->text( loc('Inaccessible page') );
+        return;
+    }
 
     if ( $self->for_editor() ) {
         $page ||= Silki::Schema::Page->new(
@@ -189,7 +202,7 @@ Silki::Markdent::Handler::HTMLStream - A subclass of Markdent::Handler::HTMLStre
 
 =head1 VERSION
 
-version 0.05
+version 0.06
 
 =head1 AUTHOR
 

@@ -1,9 +1,9 @@
-/* Generated at 2010-06-03 15:28:28.0 America/Chicago */
+/* Generated at 2010-06-04 22:18:19.0 America/Chicago */
 
 var JSAN = { "use": function () {} };
 
 
-/* /home/autarch/projects/Silki-0.05/share/js-source/DOM/Ready.js */
+/* /home/autarch/projects/Silki/share/js-source/DOM/Ready.js */
 
 if ( typeof DOM == "undefined" ) {
     DOM = {};
@@ -214,7 +214,7 @@ GPL or the Perl Artistic license).
 */
 
 
-/* /home/autarch/projects/Silki-0.05/share/js-source/DOM/Utils.js */
+/* /home/autarch/projects/Silki/share/js-source/DOM/Utils.js */
 
 if ( typeof( DOM ) == 'undefined' ) {
     DOM = {};
@@ -269,7 +269,7 @@ document.getElementsByClass = function(className) {
 document.getElementsByClassName = document.getElementsByClass;
 
 
-/* /home/autarch/projects/Silki-0.05/share/js-source/Silki/FileView.js */
+/* /home/autarch/projects/Silki/share/js-source/Silki/FileView.js */
 
 JSAN.use('DOM.Utils');
 
@@ -295,7 +295,7 @@ Silki.FileView = function () {
 };
 
 
-/* /home/autarch/projects/Silki-0.05/share/js-source/DOM/Events.js */
+/* /home/autarch/projects/Silki/share/js-source/DOM/Events.js */
 
 (function () {
 	if(typeof DOM == "undefined") DOM = {};
@@ -437,7 +437,7 @@ Justin Constantino, <F<goflyapig@gmail.com>>.
 
 */
 
-/* /home/autarch/projects/Silki-0.05/share/js-source/DOM/Find.js */
+/* /home/autarch/projects/Silki/share/js-source/DOM/Find.js */
 
 if ( typeof DOM == "undefined") DOM = {};
 
@@ -581,7 +581,7 @@ Daniel, Aquino <mr.danielaquino@gmail.com>.
 */
 
 
-/* /home/autarch/projects/Silki-0.05/share/js-source/HTTP/Request.js */
+/* /home/autarch/projects/Silki/share/js-source/HTTP/Request.js */
 
 if ( typeof( Method ) == "undefined" ) {
     Method = {};
@@ -805,7 +805,7 @@ if ( typeof( HTTP.Request.Transport ) == "undefined" ) {
 }
 
 
-/* /home/autarch/projects/Silki-0.05/share/js-source/Silki/PageTags.js */
+/* /home/autarch/projects/Silki/share/js-source/Silki/PageTags.js */
 
 JSAN.use('DOM.Events');
 JSAN.use('DOM.Find');
@@ -925,7 +925,7 @@ Silki.PageTags.prototype._makeDeleteTagFunction = function (anchor) {
     return func;
 };
 
-/* /home/autarch/projects/Silki-0.05/share/js-source/DOM/Element.js */
+/* /home/autarch/projects/Silki/share/js-source/DOM/Element.js */
 
 try {
     JSAN.use( 'DOM.Utils' );
@@ -1023,7 +1023,7 @@ DOM.Element = {
 };
 
 
-/* /home/autarch/projects/Silki-0.05/share/js-source/Silki/SystemLogs.js */
+/* /home/autarch/projects/Silki/share/js-source/Silki/SystemLogs.js */
 
 JSAN.use('DOM.Element');
 JSAN.use('DOM.Events');
@@ -1083,7 +1083,7 @@ Silki.SystemLogs.prototype._makeToggleFunction = function (pre) {
 };
 
 
-/* /home/autarch/projects/Silki-0.05/share/js-source/HTTP/Cookies.js */
+/* /home/autarch/projects/Silki/share/js-source/HTTP/Cookies.js */
 
 // HTTP.Cookies by Burak Gürsoy <burak[at]cpan[dot]org>
 if (!HTTP) var HTTP = {};
@@ -1261,7 +1261,7 @@ HTTP.Cookies.Date.prototype.is_num = function (x) {
 }
 
 
-/* /home/autarch/projects/Silki-0.05/share/js-source/Silki/User.js */
+/* /home/autarch/projects/Silki/share/js-source/Silki/User.js */
 
 JSAN.use('HTTP.Cookies');
 JSAN.use('HTTP.Request');
@@ -1331,7 +1331,7 @@ Silki.User.prototype._handleFailure = function (trans) {
 };
 
 
-/* /home/autarch/projects/Silki-0.05/share/js-source/Silki.js */
+/* /home/autarch/projects/Silki/share/js-source/Silki.js */
 
 JSAN.use('DOM.Ready');
 JSAN.use('Silki.FileView');

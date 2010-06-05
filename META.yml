@@ -10,7 +10,7 @@ build_requires:
 configure_requires:
   Module::Build: 0.3601
 dynamic_config: 0
-generated_by: 'Dist::Zilla version 3.101520, CPAN::Meta::Converter version 2.101461'
+generated_by: 'Dist::Zilla version 4.101550, CPAN::Meta::Converter version 2.101461'
 license: open_source
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -57,7 +57,7 @@ requires:
   Fey: 0
   Fey::DBIManager: 0
   Fey::Loader: 0
-  Fey::ORM: 0.32
+  Fey::ORM: 0.33
   File::HomeDir: 0
   File::MimeInfo: 0
   File::Slurp: 0
@@ -111,4 +111,4 @@ requires:
 resources:
   bugtracker: http://rt.cpan.org/NoAuth/Bugs.html?Dist=Silki
   repository: http://hg.urth.org/hg/Silki
-version: 0.05
+version: 0.06
