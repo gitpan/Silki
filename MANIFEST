@@ -66,6 +66,7 @@ lib/Silki/Markdent/Event/ImageLink.pm
 lib/Silki/Markdent/Event/WikiLink.pm
 lib/Silki/Markdent/Handler/ExtractWikiLinks.pm
 lib/Silki/Markdent/Handler/HTMLStream.pm
+lib/Silki/Markdent/Handler/HeaderCount.pm
 lib/Silki/Markdent/Role/WikiLinkResolver.pm
 lib/Silki/Plugin/ErrorHandling.pm
 lib/Silki/Plugin/Session/Store/Silki.pm
@@ -232,6 +233,7 @@ t/Silki/I18N.t
 t/Silki/Localize/Format/Gettext.t
 t/Silki/Markdent/Dialect/Silki.t
 t/Silki/Markdent/Handler/HTMLStream.t
+t/Silki/Markdent/Handler/HeaderCount.t
 t/Silki/Schema.t
 t/Silki/Schema/Domain.t
 t/Silki/Schema/File.t

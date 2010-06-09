@@ -1,6 +1,6 @@
 package Silki::Controller::Page;
 BEGIN {
-  $Silki::Controller::Page::VERSION = '0.07';
+  $Silki::Controller::Page::VERSION = '0.08';
 }
 
 use strict;
@@ -77,8 +77,10 @@ sub page_GET_html {
     $c->stash()->{page}                = $page;
     $c->stash()->{revision}            = $revision;
     $c->stash()->{is_current_revision} = 1;
-    $c->stash()->{html}                = $revision->content_as_html(
-        user => $c->user(),
+
+    $c->stash()->{html} = $revision->content_as_html(
+        user        => $c->user(),
+        include_toc => 1,
     );
 
     $c->stash()->{template} = '/page/view';
@@ -108,13 +110,6 @@ sub edit_form : Chained('_set_page') : PathPart('edit_form') : Args(0) {
     my $c    = shift;
 
     $self->_require_permission_for_wiki( $c, $c->stash()->{wiki}, 'Edit' );
-
-    my $page = $c->stash()->{page};
-
-    $c->stash()->{html} = $page->most_recent_revision()->content_as_html(
-        user       => $c->user(),
-        for_editor => 1,
-    );
 
     $c->stash()->{template} = '/page/edit-form';
 }
@@ -216,8 +211,10 @@ sub revision : Chained('_set_page') : PathPart('revision') : Args(1) {
     $c->stash()->{page}                = $page;
     $c->stash()->{revision}            = $revision;
     $c->stash()->{is_current_revision} = 0;
-    $c->stash()->{html}                = $revision->content_as_html(
-        user => $c->user(),
+
+    $c->stash()->{html} = $revision->content_as_html(
+        user        => $c->user(),
+        include_toc => 1,
     );
 
     $c->stash()->{template} = '/page/view';
@@ -547,7 +544,7 @@ Silki::Controller::Page - Controller class for pages
 
 =head1 VERSION
 
-version 0.07
+version 0.08
 
 =head1 AUTHOR
 

@@ -1,12 +1,13 @@
 package Silki::Formatter::WikiToHTML;
 BEGIN {
-  $Silki::Formatter::WikiToHTML::VERSION = '0.07';
+  $Silki::Formatter::WikiToHTML::VERSION = '0.08';
 }
 
 use strict;
 use warnings;
 use namespace::autoclean;
 
+use Encode qw( decode );
 use Markdent::Handler::HTMLFilter;
 use Markdent::Parser;
 use Silki::Markdent::Dialect::Silki::BlockParser;
@@ -41,7 +42,7 @@ sub wiki_to_html {
     my $text = shift;
 
     my $buffer = q{};
-    open my $fh, '>', \$buffer;
+    open my $fh, '>:utf8', \$buffer;
 
     my $html = Silki::Markdent::Handler::HTMLStream->new(
         output => $fh,
@@ -59,7 +60,7 @@ sub wiki_to_html {
 
     $parser->parse( markdown => $text );
 
-    return $buffer;
+    return decode( 'utf8', $buffer );
 }
 
 __PACKAGE__->meta()->make_immutable();
@@ -78,7 +79,7 @@ Silki::Formatter::WikiToHTML - Turns wikitext into HTML
 
 =head1 VERSION
 
-version 0.07
+version 0.08
 
 =head1 AUTHOR
 

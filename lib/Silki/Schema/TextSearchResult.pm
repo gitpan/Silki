@@ -1,6 +1,6 @@
 package Silki::Schema::TextSearchResult;
 BEGIN {
-  $Silki::Schema::TextSearchResult::VERSION = '0.07';
+  $Silki::Schema::TextSearchResult::VERSION = '0.08';
 }
 
 use strict;
@@ -11,6 +11,7 @@ use HTML::Entities qw( encode_entities );
 use Silki::Schema::Page;
 use Silki::Schema::Wiki;
 use Silki::Types qw( Str );
+use Silki::Util qw( string_is_empty );
 
 use Moose;
 
@@ -47,17 +48,19 @@ sub title_for_display {
 sub body_for_display {
     my $self = shift;
 
-    my ( undef, $text ) = split /\n/, $self->_result(), 2;
+    my ( undef, $body ) = split /\n/, $self->_result(), 2;
+
+    return q{} if string_is_empty($body);
 
     my $marker = $self->HighlightMarker();
 
-    $text = encode_entities($text);
+    $body = encode_entities($body);
 
-    $text =~ s{\Q$marker\E(.+?)\Q$marker}{<strong>$1</strong>}g;
+    $body =~ s{\Q$marker\E(.+?)\Q$marker}{<strong>$1</strong>}g;
 
-    $text =~ s/\n\n/&nbsp;&nbsp;/g;
+    $body =~ s/\n\n/&nbsp;&nbsp;/g;
 
-    return $text;
+    return $body;
 }
 
 __PACKAGE__->meta()->make_immutable();
@@ -75,7 +78,7 @@ Silki::Schema::TextSearchResult - Represents a text search result
 
 =head1 VERSION
 
-version 0.07
+version 0.08
 
 =head1 AUTHOR
 

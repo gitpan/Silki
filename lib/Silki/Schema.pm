@@ -1,6 +1,6 @@
 package Silki::Schema;
 BEGIN {
-  $Silki::Schema::VERSION = '0.07';
+  $Silki::Schema::VERSION = '0.08';
 }
 
 use strict;
@@ -81,7 +81,7 @@ Silki::Schema - Represents the Silki schema
 
 =head1 VERSION
 
-version 0.07
+version 0.08
 
 =head1 AUTHOR
 
