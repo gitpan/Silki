@@ -1,6 +1,6 @@
 package Silki::Controller::File;
 BEGIN {
-  $Silki::Controller::File::VERSION = '0.08';
+  $Silki::Controller::File::VERSION = '0.09';
 }
 
 use strict;
@@ -13,6 +13,8 @@ use Silki::Schema::File;
 use Moose;
 
 BEGIN { extends 'Silki::Controller::Base' }
+
+with 'Silki::Role::Controller::File';
 
 sub _set_file : Chained('/wiki/_set_wiki') : PathPart('file') : CaptureArgs(1) {
     my $self    = shift;
@@ -132,34 +134,20 @@ sub small_image : Chained('_set_file') : PathPart('small') : Args(0) {
     my $self = shift;
     my $c    = shift;
 
-    $self->_serve_image( $c, 'small_image_file' );
+    $c->status_not_found()
+        unless $c->stash()->{file}->is_browser_displayable_image();
+
+    $self->_serve_image( $c, $c->stash()->{file}, 'small_image_file' );
 }
 
 sub thumbnail : Chained('_set_file') : PathPart('thumbnail') : Args(0) {
     my $self = shift;
     my $c    = shift;
 
-    $self->_serve_image( $c, 'thumbnail_file' );
-}
-
-sub _serve_image {
-    my $self = shift;
-    my $c    = shift;
-    my $meth = shift;
-
-    my $file = $c->stash()->{file};
-
     $c->status_not_found()
-        unless $file->is_browser_displayable_image();
+        unless $c->stash()->{file}->is_browser_displayable_image();
 
-    my $image = $file->$meth();
-
-    $c->response()->status(200);
-    $c->response()->content_type( $file->mime_type() );
-    $c->response()->content_length( -s $image );
-    $c->response()->header( 'X-Sendfile' => $image );
-
-    $c->detach();
+    $self->_serve_image( $c, $c->stash()->{file}, 'thumbnail_file' );
 }
 
 sub delete_confirmation : Chained('_set_file') : PathPart('delete_confirmation') : Args(0) {
@@ -186,7 +174,7 @@ Silki::Controller::File - Controller class for files
 
 =head1 VERSION
 
-version 0.08
+version 0.09
 
 =head1 AUTHOR
 

@@ -1,6 +1,6 @@
 package Silki::Formatter::HTMLToWiki::Table;
 BEGIN {
-  $Silki::Formatter::HTMLToWiki::Table::VERSION = '0.08';
+  $Silki::Formatter::HTMLToWiki::Table::VERSION = '0.09';
 }
 
 use strict;
@@ -280,29 +280,3 @@ sub print {
 __PACKAGE__->meta()->make_immutable();
 
 1;
-
-__END__
-=pod
-
-=head1 NAME
-
-Silki::Formatter::HTMLToWiki::Table
-
-=head1 VERSION
-
-version 0.08
-
-=head1 AUTHOR
-
-  Dave Rolsky <autarch@urth.org>
-
-=head1 COPYRIGHT AND LICENSE
-
-This software is Copyright (c) 2010 by Dave Rolsky.
-
-This is free software, licensed under:
-
-  The GNU Affero General Public License, Version 3, November 2007
-
-=cut
-

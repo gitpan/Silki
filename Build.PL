@@ -20,7 +20,7 @@ my %module_build_args = (
     'Dave Rolsky <autarch@urth.org>'
   ],
   'dist_name' => 'Silki',
-  'dist_version' => '0.08',
+  'dist_version' => '0.09',
   'license' => 'open_source',
   'module_name' => 'Silki',
   'recommends' => {},
@@ -125,7 +125,9 @@ my %module_build_args = (
     'bin/silki_fastcgi.pl',
     'bin/silki_test.pl'
   ],
-  'share_dir' => 'share'
+  'share_dir' => {
+    'dist' => 'share'
+  }
 );
 
 

@@ -1,6 +1,6 @@
 package Silki::Schema::User;
 BEGIN {
-  $Silki::Schema::User::VERSION = '0.08';
+  $Silki::Schema::User::VERSION = '0.09';
 }
 
 use strict;
@@ -53,6 +53,11 @@ has_policy 'Silki::Schema::Policy';
 has_table( $Schema->table('User') );
 
 has_one 'creator' => ( table => $Schema->table('User') );
+
+has_one 'image' => (
+    table => $Schema->table('UserImage'),
+    undef => 1,
+);
 
 has_many 'pages' => ( table => $Schema->table('Page') );
 
@@ -1119,7 +1124,7 @@ Silki::Schema::User - Represents a user
 
 =head1 VERSION
 
-version 0.08
+version 0.09
 
 =head1 AUTHOR
 

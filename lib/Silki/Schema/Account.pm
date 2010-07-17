@@ -1,6 +1,6 @@
 package Silki::Schema::Account;
 BEGIN {
-  $Silki::Schema::Account::VERSION = '0.08';
+  $Silki::Schema::Account::VERSION = '0.09';
 }
 
 use strict;
@@ -102,29 +102,3 @@ sub _BuildAllAccountSelect {
 __PACKAGE__->meta()->make_immutable();
 
 1;
-
-__END__
-=pod
-
-=head1 NAME
-
-Silki::Schema::Account
-
-=head1 VERSION
-
-version 0.08
-
-=head1 AUTHOR
-
-  Dave Rolsky <autarch@urth.org>
-
-=head1 COPYRIGHT AND LICENSE
-
-This software is Copyright (c) 2010 by Dave Rolsky.
-
-This is free software, licensed under:
-
-  The GNU Affero General Public License, Version 3, November 2007
-
-=cut
-

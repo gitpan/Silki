@@ -1,6 +1,6 @@
 package Silki::Config;
 BEGIN {
-  $Silki::Config::VERSION = '0.08';
+  $Silki::Config::VERSION = '0.09';
 }
 
 use strict;
@@ -329,6 +329,13 @@ has thumbnails_dir => (
     builder => '_build_thumbnails_dir',
 );
 
+has mini_image_dir => (
+    is      => 'ro',
+    isa     => Dir,
+    lazy    => 1,
+    builder => '_build_mini_image_dir',
+);
+
 has static_path_prefix => (
     is      => 'rw',
     isa     => Str,
@@ -543,37 +550,36 @@ sub _build_cache_dir {
 sub _build_files_dir {
     my $self = shift;
 
-    my $cache = $self->cache_dir();
-
-    my $files_dir = $cache->subdir('files');
-
-    $self->_ensure_dir($files_dir);
-
-    return $files_dir;
+    return $self->_cache_subdir('files');
 }
 
 sub _build_small_image_dir {
     my $self = shift;
 
-    my $cache = $self->cache_dir();
-
-    my $small_image_dir = $cache->subdir('small-image');
-
-    $self->_ensure_dir($small_image_dir);
-
-    return $small_image_dir;
+    return $self->_cache_subdir('small-image');
 }
 
 sub _build_thumbnails_dir {
     my $self = shift;
 
-    my $cache = $self->cache_dir();
+    return $self->_cache_subdir('thumbnails');
+}
 
-    my $thumbnails_dir = $cache->subdir('thumbnails');
+sub _build_mini_image_dir {
+    my $self = shift;
 
-    $self->_ensure_dir($thumbnails_dir);
+    return $self->_cache_subdir('mini-image');
+}
 
-    return $thumbnails_dir;
+sub _cache_subdir {
+    my $self = shift;
+    my $name = shift;
+
+    my $subdir = $self->cache_dir()->subdir($name);
+
+    $self->_ensure_dir($subdir);
+
+    return $subdir;
 }
 
 sub _dir {
@@ -916,7 +922,7 @@ Silki::Config - Configuration information for Silki
 
 =head1 VERSION
 
-version 0.08
+version 0.09
 
 =head1 AUTHOR
 

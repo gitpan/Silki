@@ -1,0 +1,10 @@
+<a href="<% $uri %>"><& /lib/user-image.mas, user => $user &> <% $user->best_name() %></a>
+
+<%args>
+$user
+$wiki => undef
+</%args>
+
+<%init>
+my $uri = $wiki ? $wiki->uri_for_member($user) : $user->uri();
+</%init>

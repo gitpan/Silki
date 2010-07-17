@@ -28,6 +28,9 @@ inc/migrations/2/02-update-Version.sql
 inc/migrations/3/01-import-citext
 inc/migrations/3/02-text-and-citext.sql
 inc/migrations/3/03-update-version.sql
+inc/migrations/4/01-user-image-table.sql
+inc/migrations/4/02-update-version.sql
+inc/migrations/fixup.sql
 lib/Silki.pm
 lib/Silki/Action/REST.pm
 lib/Silki/AppRole/Domain.pm
@@ -43,6 +46,7 @@ lib/Silki/Controller/Page.pm
 lib/Silki/Controller/Root.pm
 lib/Silki/Controller/Site.pm
 lib/Silki/Controller/User.pm
+lib/Silki/Controller/UserImage.pm
 lib/Silki/Controller/Wiki.pm
 lib/Silki/Email.pm
 lib/Silki/Exceptions.pm
@@ -71,11 +75,13 @@ lib/Silki/Markdent/Role/WikiLinkResolver.pm
 lib/Silki/Plugin/ErrorHandling.pm
 lib/Silki/Plugin/Session/Store/Silki.pm
 lib/Silki/Request.pm
+lib/Silki/Role/Controller/File.pm
 lib/Silki/Role/Controller/Pager.pm
 lib/Silki/Role/Controller/RevisionsAtomFeed.pm
 lib/Silki/Role/Controller/User.pm
 lib/Silki/Role/Controller/WikitextHandler.pm
 lib/Silki/Role/Schema/DataValidator.pm
+lib/Silki/Role/Schema/File.pm
 lib/Silki/Role/Schema/SystemLogger.pm
 lib/Silki/Role/Schema/URIMaker.pm
 lib/Silki/Role/Web/CombinedStaticFiles.pm
@@ -99,6 +105,7 @@ lib/Silki/Schema/Tag.pm
 lib/Silki/Schema/TextSearchResult.pm
 lib/Silki/Schema/TimeZone.pm
 lib/Silki/Schema/User.pm
+lib/Silki/Schema/UserImage.pm
 lib/Silki/Schema/UserWikiRole.pm
 lib/Silki/Schema/WantedPage.pm
 lib/Silki/Schema/Wiki.pm
@@ -178,6 +185,8 @@ share/mason/lib/forms/page.mas
 share/mason/lib/forms/user.mas
 share/mason/lib/table/attachments-table.mas
 share/mason/lib/table/pager.mas
+share/mason/lib/user-image.mas
+share/mason/lib/user-link.mas
 share/mason/lib/wiki-list.mas
 share/mason/log/logs
 share/mason/page/attachments
@@ -255,6 +264,11 @@ t/release-no-tabs.t
 t/release-pod-coverage.t
 t/release-pod-spell.t
 t/release-pod.t
+t/schema/Silki.sql.v1
+t/schema/Silki.sql.v2
+t/schema/Silki.sql.v3
+t/schema/Silki.sql.v4
+t/schema/migrations.t
 t/share/data/test.jpg
 t/share/data/test.tif
 t/share/mason/email/test.html
