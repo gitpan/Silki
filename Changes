@@ -1,3 +1,20 @@
+0.10  2010-07-20
+
+- Silki::Manual::Admin now describes deploying Silki with Apache 2 & Starman,
+  a setup I've actually been able to make work. I thought I had mod_fastcgid
+  working, but I didn't.
+
+- Added bin/silki.psgi
+
+- Added a sample init script (which works on Ubuntu 10.04) at
+  eg/ubuntu-init.d/silki.
+
+- Attempting to log in with a non-existent username caused a server error. Now
+  it simply returns a sane error to the user.
+
+- Improved the layout wherever user image thumbnails are used, and added a
+  default user icon to make the UI more consistent.
+
 0.09  2010-07-16
 
 - The migrations in previous releases were buggy. If you've migrated a schema,

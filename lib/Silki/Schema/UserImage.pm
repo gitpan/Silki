@@ -1,6 +1,6 @@
 package Silki::Schema::UserImage;
 BEGIN {
-  $Silki::Schema::UserImage::VERSION = '0.09';
+  $Silki::Schema::UserImage::VERSION = '0.10';
 }
 
 use strict;

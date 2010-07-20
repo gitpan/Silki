@@ -1,4 +1,5 @@
 Build.PL
+CREDITS
 Changes
 LICENSE
 MANIFEST
@@ -7,17 +8,20 @@ META.yml
 README
 SIGNATURE
 TODO
+bin/silki.psgi
 bin/silki_cgi.pl
 bin/silki_create.pl
 bin/silki_fastcgi.pl
 bin/silki_server.pl
 bin/silki_test.pl
+dev-bin/crypted-pw
 dev-bin/extract-po
 dev-bin/initialize-db
 dev-bin/make-test-schema
 dev-bin/populate-db
 dev-bin/run-migrations
 dist.ini
+eg/ubuntu-init.d/silki
 inc/Silki/Build.pm
 inc/Silki/DBInstaller.pm
 inc/Silki/DZ/Plugin/ExtractPO.pm
@@ -148,6 +152,7 @@ share/images/icons/text_list_bullets.png
 share/images/icons/text_list_numbers.png
 share/images/icons/world_link.png
 share/images/spinner.gif
+share/images/user_gray.png
 share/images/vegguide-logo.png
 share/js-source/DOM/Element.js
 share/js-source/DOM/Events.js
@@ -260,7 +265,6 @@ t/lib/Silki/Test/FakeSchema.pm
 t/lib/Silki/Test/RealSchema.pm
 t/release-eol.t
 t/release-kwalitee.t
-t/release-no-tabs.t
 t/release-pod-coverage.t
 t/release-pod-spell.t
 t/release-pod.t

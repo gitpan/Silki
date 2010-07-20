@@ -20,7 +20,7 @@ my %module_build_args = (
     'Dave Rolsky <autarch@urth.org>'
   ],
   'dist_name' => 'Silki',
-  'dist_version' => '0.09',
+  'dist_version' => '0.10',
   'license' => 'open_source',
   'module_name' => 'Silki',
   'recommends' => {},
@@ -122,6 +122,7 @@ my %module_build_args = (
     'bin/silki_create.pl',
     'bin/silki_server.pl',
     'bin/silki_cgi.pl',
+    'bin/silki.psgi',
     'bin/silki_fastcgi.pl',
     'bin/silki_test.pl'
   ],

@@ -1,6 +1,6 @@
 package Silki::Controller::User;
 BEGIN {
-  $Silki::Controller::User::VERSION = '0.09';
+  $Silki::Controller::User::VERSION = '0.10';
 }
 
 use strict;
@@ -131,27 +131,31 @@ sub authentication_POST {
             username => $username,
         );
 
-        if ( $user->is_disabled() ) {
-            undef $user;
+        if ($user) {
+            if ( $user->is_disabled() ) {
+                undef $user;
 
-            push @errors,
-                loc('This user account has been disabled by a site admin.');
-        }
-        else {
-            undef $user unless $user->check_password($pw);
-
-            if ($user) {
-                $c->redirect_and_detach(
-                    $user->activation_uri(
-                        view      => 'status',
-                        with_host => 1,
-                    )
-                ) if $user->requires_activation();
+                push @errors,
+                    loc(
+                    'This user account has been disabled by a site admin.');
             }
+            else {
+                undef $user unless $user->check_password($pw);
 
-            push @errors,
-                loc('The username or password you provided was not valid.')
-                unless $user;
+                if ($user) {
+                    $c->redirect_and_detach(
+                        $user->activation_uri(
+                            view      => 'status',
+                            with_host => 1,
+                        )
+                    ) if $user->requires_activation();
+                }
+
+                push @errors,
+                    loc(
+                    'The username or password you provided was not valid.')
+                    unless $user;
+            }
         }
     }
 
@@ -316,7 +320,7 @@ Silki::Controller::User - Controller class for users
 
 =head1 VERSION
 
-version 0.09
+version 0.10
 
 =head1 AUTHOR
 
