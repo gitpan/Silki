@@ -1,6 +1,6 @@
 package Silki::Request;
 BEGIN {
-  $Silki::Request::VERSION = '0.10';
+  $Silki::Request::VERSION = '0.11';
 }
 
 use strict;
@@ -21,6 +21,11 @@ sub user_params {
     my %p = $self->_params_for_classes('Silki::Schema::User');
     $p{password2} = $params->{password2}
         unless string_is_empty( $params->{password2} );
+
+    for my $field (qw( is_admin is_system_user is_disabled )) {
+        delete $p{$field}
+            unless exists $params->{$field};
+    }
 
     return %p;
 }
@@ -100,7 +105,7 @@ Silki::Request - A Catalyst::Request subclass which knows how to get user-provid
 
 =head1 VERSION
 
-version 0.10
+version 0.11
 
 =head1 AUTHOR
 

@@ -1,3 +1,23 @@
+0.11  2010-07-22
+
+- The PSGI feature did not list Plack::Middleware::ReverseProxy as a prereq.
+
+- Improved the example ubuntu init script. It no longer runs as root, and the
+  pid is stored in a directory under /var/run owned by the $USER in the init
+  script (www-data).
+
+- When a user without edit permission viewed a page with no tags, the tags box
+  was just empty, which looks weird.
+
+- You can now pass --hostname to the Build.PL to pick the default web hostname
+  for your Silki installation.
+
+- Editing a user's preferences set their is_admin flag to false if the user
+  doing the editing was also an admin.
+
+- The list of all users (/users) was broken.
+
+
 0.10  2010-07-20
 
 - Silki::Manual::Admin now describes deploying Silki with Apache 2 & Starman,

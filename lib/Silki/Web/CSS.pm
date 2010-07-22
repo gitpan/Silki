@@ -1,6 +1,6 @@
 package Silki::Web::CSS;
 BEGIN {
-  $Silki::Web::CSS::VERSION = '0.10';
+  $Silki::Web::CSS::VERSION = '0.11';
 }
 
 use strict;
@@ -77,7 +77,7 @@ sub _build_lessc_path {
     my $self = shift;
 
     my $bin = which('lessc');
-    returm $bin if $bin;
+    return $bin if $bin;
 
     my $default = '/var/lib/gems/1.8/bin/lessc';
     return $default if -f $default;
@@ -100,7 +100,7 @@ Silki::Web::CSS - Combines and minifies CSS source files
 
 =head1 VERSION
 
-version 0.10
+version 0.11
 
 =head1 AUTHOR
 

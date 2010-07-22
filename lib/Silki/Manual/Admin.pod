@@ -12,7 +12,7 @@ Silki::Manual::Admin - Admin manual for Silki
 
 =head1 VERSION
 
-version 0.10
+version 0.11
 
 =head1 INSTALLATION
 
@@ -58,6 +58,16 @@ prefer a different location, you can specify an alternate location.
 
 At runtime, Silki needs a directory for generate cache files. This defaults to
 F</var/cache/silki>.
+
+=item * --hostname
+
+The default hostname for the web application. Set this to the (first) hostname
+through which you will access Silki. Silki can be installed once for multiple
+hostnames, but to do this, you need to access the web UI. To access the web
+UI, Silki needs to know what hostname it is listening on.
+
+By default, Silki will simply use the system hostname as returned by
+L<Sys::Hostname>.
 
 =back
 
@@ -111,13 +121,12 @@ path on your server, like "http://example.com/wikis".
 
 When running in production mode, Silki expects that all static files (images,
 javascript, CSS, etc) will be served by a front-end web server. However, if
-you explicitly set this to a true value, Silki will be able to serve all
-static content.
+you explicitly set this to a true value, Silki will serve all static content.
 
 =item * secret
 
 This is used as salt when generating digests for things like user
-authentication cookie MACs. It is also used for generating some URIs.  If you
+authentication cookie MACs. It is also used for generating some URIs. If you
 change it, existing cookies and URIs will become invalid.
 
 There's no good reason to change this unless you believe that server security
@@ -212,13 +221,13 @@ C<SILKI_CONFIG> environment variable.
 =head1 GETTING STARTED
 
 When you first install Silki, it will create a single admin user and a wiki
-for you. It assumes that the wiki will be run using the hostname of the system
-on which it is installed. Don't worry, you can change this.
+for you.
 
-The user account is "admin@E<lt>domainE<gt>". The default password is "changeme".
+The user account is "admin@E<lt>domainE<gt>". The default password is
+"changeme".
 
 Once you log in, you can change the account's email, name, and password. You
-can also switch to usign an OpenID login if you prefer.
+can also switch to using an OpenID login if you prefer.
 
 Wikis cannot be renamed, but you can delete the wiki Silki created for you,
 called "My Wiki".

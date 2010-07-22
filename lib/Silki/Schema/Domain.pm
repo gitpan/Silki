@@ -1,6 +1,6 @@
 package Silki::Schema::Domain;
 BEGIN {
-  $Silki::Schema::Domain::VERSION = '0.10';
+  $Silki::Schema::Domain::VERSION = '0.11';
 }
 
 use strict;
@@ -127,7 +127,8 @@ sub EnsureRequiredDomainsExist {
 sub _FindOrCreateDefaultDomain {
     my $class = shift;
 
-    my $hostname = Silki::Config->new()->system_hostname();
+    my $hostname = $ENV{SILKI_HOSTNAME}
+        || Silki::Config->new()->system_hostname();
 
     my $domain = $class->new( web_hostname => $hostname );
     return $domain if $domain;
@@ -228,7 +229,7 @@ Silki::Schema::Domain - Represents a domain
 
 =head1 VERSION
 
-version 0.10
+version 0.11
 
 =head1 AUTHOR
 

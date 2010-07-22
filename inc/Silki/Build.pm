@@ -24,9 +24,10 @@ sub new {
         PSGI => {
             description => 'PSGI app (silki.psgi)',
             requires    => {
-                'Catalyst::Engine::PSGI' => '0',
-                'Plack'                  => '0',
-                'Plack::Builder'         => '0',
+                'Catalyst::Engine::PSGI'          => '0',
+                'Plack'                           => '0',
+                'Plack::Builder'                  => '0',
+                'Plack::Middleware::ReverseProxy' => '0',
             },
         },
     };
@@ -55,6 +56,7 @@ sub _update_from_existing_config {
     return unless $config;
 
     my %map = (
+        Silki    => { hostname => 'hostname' },
         database => {
             name     => 'db-name',
             username => 'db-username',
@@ -130,6 +132,11 @@ sub ACTION_database {
         ( my $no_prefix = $key ) =~ s/^db-//;
         $db_config{$no_prefix} = $args{$key};
     }
+
+    my $hostname = $self->args('hostname');
+
+    local $ENV{SILKI_HOSTNAME} = $hostname
+        if defined $hostname && $hostname ne q{};
 
     Silki::DBInstaller->new(
         %db_config,
