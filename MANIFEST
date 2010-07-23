@@ -183,6 +183,7 @@ share/mason/file/view-in-frame
 share/mason/footer.mas
 share/mason/header.mas
 share/mason/lib/filter/form.mas
+share/mason/lib/filter/skip-empty-table.mas
 share/mason/lib/filter/unlink-current.mas
 share/mason/lib/forms/attachment-upload.mas
 share/mason/lib/forms/domain.mas

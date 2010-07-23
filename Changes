@@ -1,3 +1,17 @@
+0.12  2010-07-22
+
+- The mason cache directory will be deleted when Silki is installed, to ensure
+  that templates are re-read.
+
+- Several pages that linked to users did not show the user's image. Now all
+  links to a user should include the user's image.
+
+- Small improvement to diff display.
+
+- When a search didn't find any results, the search page did not make this
+  clear.
+
+
 0.11  2010-07-22
 
 - The PSGI feature did not list Plack::Middleware::ReverseProxy as a prereq.

@@ -1,6 +1,6 @@
 package Silki::Markdent::Event::ImageLink;
 BEGIN {
-  $Silki::Markdent::Event::ImageLink::VERSION = '0.11';
+  $Silki::Markdent::Event::ImageLink::VERSION = '0.12';
 }
 
 use strict;
@@ -35,7 +35,7 @@ Silki::Markdent::Event::ImageLink - Represents a link to an image (to be embedde
 
 =head1 VERSION
 
-version 0.11
+version 0.12
 
 =head1 AUTHOR
 
