@@ -109,21 +109,7 @@ sub _clean_tables {
         push @tables, $table;
     }
 
-    while ( my $table = shift @tables ) {
-        # This is a hack because foreign keys may not let us delete from table
-        # A while table B has rows.
-        #
-        # XXX - If this goes wrong, it'll loop forever. Not sure how best to
-        # detect a cycle.
-        #
-        # Using TRUNCATE "Foo" CASCADE avoids this problem but seems to be a
-        # lot slower.
-        eval { $dbh->do( "DELETE FROM $table" ) };
-
-        if ($@) {
-            push @tables, $table;
-        }
-    }
+    $dbh->do( 'TRUNCATE ' . ( join ', ', @tables ) . ' CASCADE' );
 }
 
 {

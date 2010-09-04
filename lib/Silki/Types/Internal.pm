@@ -1,6 +1,6 @@
 package Silki::Types::Internal;
 BEGIN {
-  $Silki::Types::Internal::VERSION = '0.12';
+  $Silki::Types::Internal::VERSION = '0.13';
 }
 
 use strict;
@@ -14,9 +14,12 @@ use MooseX::Types -declare => [
         ErrorForSession
         URIStr
         ValidPermissionType
+        Tarball
         )
 ];
 use MooseX::Types::Moose qw( Int Str Defined );
+use MooseX::Types::Path::Class qw( File );
+use Path::Class ();
 
 subtype PosInt,
     as Int,
@@ -50,6 +53,14 @@ subtype ValidPermissionType,
     as NonEmptyStr,
     where {qr/^(?:public|public-read|private)$/};
 
+subtype Tarball,
+    as File,
+    where { $_[0]->basename() =~ /\.(tar|tar\.gz|tgz)/ };
+
+coerce Tarball,
+    from Str,
+    via { Path::Class::file($_) };
+
 1;
 
 # ABSTRACT: Silki-specific types
@@ -63,7 +74,7 @@ Silki::Types::Internal - Silki-specific types
 
 =head1 VERSION
 
-version 0.12
+version 0.13
 
 =head1 AUTHOR
 

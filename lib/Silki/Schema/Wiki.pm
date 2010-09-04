@@ -1,21 +1,27 @@
 package Silki::Schema::Wiki;
 BEGIN {
-  $Silki::Schema::Wiki::VERSION = '0.12';
+  $Silki::Schema::Wiki::VERSION = '0.13';
 }
 
 use strict;
 use warnings;
 use namespace::autoclean;
+use autodie;
 
+use Archive::Tar::Wrapper;
 use Data::Dumper qw( Dumper );
 use DateTime::Format::Pg;
 use Fey::Literal;
 use Fey::Object::Iterator::FromSelect;
 use Fey::SQL;
+use File::Spec;
 use List::AllUtils qw( uniq );
+use Path::Class qw( dir file );
 use Silki::Config;
 use Silki::I18N qw( loc );
+use Silki::JSON;
 use Silki::Schema;
+use Silki::Schema::Account;
 use Silki::Schema::Domain;
 use Silki::Schema::File;
 use Silki::Schema::Page;
@@ -25,7 +31,9 @@ use Silki::Schema::TextSearchResult;
 use Silki::Schema::UserWikiRole;
 use Silki::Schema::WantedPage;
 use Silki::Schema::WikiRolePermission;
-use Silki::Types qw( Bool HashRef Int Str ValidPermissionType );
+use Silki::Wiki::Exporter;
+use Silki::Wiki::Importer;
+use Silki::Types qw( Bool CodeRef File HashRef Int Str ValidPermissionType );
 
 use Fey::ORM::Table;
 use MooseX::ClassAttribute;
@@ -260,6 +268,8 @@ query file_count => (
     bind_params => sub { $_[0]->wiki_id() },
 );
 
+with 'Silki::Role::Schema::Serializes';
+
 my $FrontPage = <<'EOF';
 Welcome to your new wiki.
 
@@ -291,25 +301,29 @@ around insert => sub {
 
     my $wiki;
 
+    my $skip_default = delete $p{skip_default_pages};
+
     $class->SchemaClass()->RunInTransaction(
         sub {
             $wiki = $class->$orig(%p);
 
-            Silki::Schema::Page->insert_with_content(
-                title          => 'Front Page',
-                content        => $FrontPage,
-                wiki_id        => $wiki->wiki_id(),
-                user_id        => $wiki->user_id(),
-                can_be_renamed => 0,
-            );
+            unless ($skip_default) {
+                Silki::Schema::Page->insert_with_content(
+                    title          => 'Front Page',
+                    content        => $FrontPage,
+                    wiki_id        => $wiki->wiki_id(),
+                    user_id        => $wiki->user_id(),
+                    can_be_renamed => 0,
+                );
 
-            Silki::Schema::Page->insert_with_content(
-                title          => 'Scratch Pad',
-                content        => $Scratch,
-                wiki_id        => $wiki->wiki_id(),
-                user_id        => $wiki->user_id(),
-                can_be_renamed => 0,
-            );
+                Silki::Schema::Page->insert_with_content(
+                    title          => 'Scratch Pad',
+                    content        => $Scratch,
+                    wiki_id        => $wiki->wiki_id(),
+                    user_id        => $wiki->user_id(),
+                    can_be_renamed => 0,
+                );
+            }
         }
     );
 
@@ -529,49 +543,12 @@ sub _build_permissions {
         },
     );
 
-    my $Delete = Silki::Schema->SQLFactoryClass()->new_delete();
-    $Delete->from( $Schema->table('WikiRolePermission') )
-           ->where(
-            $Schema->table('WikiRolePermission')->column('wiki_id'),
-            '=',
-            Fey::Placeholder->new()
-        );
-
     sub set_permissions {
         my $self = shift;
         my ($type)
             = pos_validated_list( \@_, { isa => ValidPermissionType } );
 
-        my $set = $Sets{$type};
-
-        my @inserts;
-        for my $role_name ( keys %{$set} ) {
-            my $role = Silki::Schema::Role->$role_name();
-
-            for my $perm_name ( @{ $set->{$role_name} } ) {
-                my $perm = Silki::Schema::Permission->$perm_name();
-
-                push @inserts,
-                    {
-                    wiki_id       => $self->wiki_id(),
-                    role_id       => $role->role_id(),
-                    permission_id => $perm->permission_id(),
-                    };
-            }
-        }
-
-        my $dbh = Silki::Schema->DBIManager()->source_for_sql($Delete)->dbh();
-        my $trans = sub {
-            $dbh->do( $Delete->sql($dbh), {}, $self->wiki_id() );
-            Silki::Schema::WikiRolePermission->insert_many(@inserts);
-        };
-
-        Silki::Schema->RunInTransaction($trans);
-
-        $self->_clear_permissions();
-        $self->_clear_permissions_name();
-
-        return;
+        $self->_set_permissions_from_set( $Sets{$type} );
     }
 
     my %SetsAsHashes;
@@ -594,6 +571,48 @@ sub _build_permissions {
         }
 
         return 'custom';
+    }
+}
+
+{
+    my $Delete = Silki::Schema->SQLFactoryClass()->new_delete();
+    $Delete->from( $Schema->table('WikiRolePermission') )->where(
+        $Schema->table('WikiRolePermission')->column('wiki_id'),
+        '=',
+        Fey::Placeholder->new()
+    );
+
+    sub _set_permissions_from_set {
+        my $self = shift;
+        my $set  = shift;
+
+        my @inserts;
+        for my $role_name ( keys %{$set} ) {
+            my $role = Silki::Schema::Role->$role_name();
+
+            for my $perm_name ( @{ $set->{$role_name} } ) {
+                my $perm = Silki::Schema::Permission->$perm_name();
+
+                push @inserts, {
+                    wiki_id       => $self->wiki_id(),
+                    role_id       => $role->role_id(),
+                    permission_id => $perm->permission_id(),
+                    };
+            }
+        }
+
+        my $dbh = Silki::Schema->DBIManager()->source_for_sql($Delete)->dbh();
+        my $trans = sub {
+            $dbh->do( $Delete->sql($dbh), {}, $self->wiki_id() );
+            Silki::Schema::WikiRolePermission->insert_many(@inserts);
+        };
+
+        Silki::Schema->RunInTransaction($trans);
+
+        $self->_clear_permissions();
+        $self->_clear_permissions_name();
+
+        return;
     }
 }
 
@@ -1082,7 +1101,7 @@ sub _BuildActiveUsersSelect {
                 DateTime->today()->subtract( months => 1 )
             )
         )
-        ->order_by( $order_by );
+        ->order_by($order_by);
 
     return $users_select;
 }
@@ -1420,16 +1439,19 @@ sub _BuildPagesEditedByUserSelect {
 
     my $select = Silki::Schema->SQLFactoryClass()->new_select();
 
-    my $max_revision = $class->_MaxRevisionSelect();
-
     my ( $page_t, $page_revision_t )
         = $Schema->tables( 'Page', 'PageRevision' );
+
+    my $max_revision = $class->_MaxRevisionSelect()->clone();
+    $max_revision->and(
+        $page_revision_t->column('user_id'), '=',
+        Fey::Placeholder->new()
+    );
 
     $select
         ->select( $page_t, $page_revision_t )
         ->from( $page_t, $page_revision_t )
         ->where( $page_t->column('wiki_id'), '=', Fey::Placeholder->new() )
-        ->and  ( $page_revision_t->column('user_id'), '=', Fey::Placeholder->new() )
         ->and  ( $page_revision_t->column('revision_number'),
                  '=', $max_revision )
         ->order_by( $page_revision_t->column('creation_datetime'), 'DESC',
@@ -1712,6 +1734,23 @@ sub _BuildMinRevisionSelect {
     return $min_revision;
 }
 
+sub export {
+    my $self = shift;
+
+    return Silki::Wiki::Exporter->new(
+        @_,
+        wiki => $self,
+    )->tarball();
+}
+
+sub import_tarball {
+    my $self = shift;
+
+    return Silki::Wiki::Importer->new(
+        @_,
+    )->imported_wiki();
+}
+
 __PACKAGE__->meta()->make_immutable();
 
 1;
@@ -1727,7 +1766,7 @@ Silki::Schema::Wiki - Represents a wiki
 
 =head1 VERSION
 
-version 0.12
+version 0.13
 
 =head1 AUTHOR
 

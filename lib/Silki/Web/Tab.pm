@@ -1,6 +1,6 @@
 package Silki::Web::Tab;
 BEGIN {
-  $Silki::Web::Tab::VERSION = '0.12';
+  $Silki::Web::Tab::VERSION = '0.13';
 }
 
 use strict;
@@ -57,7 +57,7 @@ Silki::Web::Tab - A tab in the web UI
 
 =head1 VERSION
 
-version 0.12
+version 0.13
 
 =head1 AUTHOR
 

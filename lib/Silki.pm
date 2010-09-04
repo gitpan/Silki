@@ -1,6 +1,6 @@
 package Silki;
 BEGIN {
-  $Silki::VERSION = '0.12';
+  $Silki::VERSION = '0.13';
 }
 
 use strict;
@@ -12,6 +12,7 @@ use Catalyst::Runtime 5.8;
 use CatalystX::RoleApplicator;
 use Catalyst::Plugin::Session 0.27;
 use Catalyst::Request::REST::ForBrowsers;
+use HTTP::Body 1.09; # for temp file upload suffix preservation
 use Silki::Config;
 use Silki::I18N ();
 use Silki::Request;
@@ -74,7 +75,7 @@ Silki - Silki is a Catalyst-based wiki hosting platform
 
 =head1 VERSION
 
-version 0.12
+version 0.13
 
 =head1 DESCRIPTION
 

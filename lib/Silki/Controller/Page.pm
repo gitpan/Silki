@@ -1,6 +1,6 @@
 package Silki::Controller::Page;
 BEGIN {
-  $Silki::Controller::Page::VERSION = '0.12';
+  $Silki::Controller::Page::VERSION = '0.13';
 }
 
 use strict;
@@ -133,7 +133,6 @@ sub page_PUT {
 
     my $page = $c->stash()->{page};
 
-
     my $params = $c->request()->params();
     my %p
         = map { $_ => $params->{$_} }
@@ -185,7 +184,7 @@ sub page_title_PUT {
     $c->redirect_and_detach( $page->uri() );
 }
 
-sub revision : Chained('_set_page') : PathPart('revision') : Args(1) {
+sub _set_revision : Chained('_set_page') : PathPart('revision') : CaptureArgs(1) {
     my $self            = shift;
     my $c               = shift;
     my $revision_number = shift;
@@ -204,13 +203,24 @@ sub revision : Chained('_set_page') : PathPart('revision') : Args(1) {
         $c->redirect_and_detach( $page->uri( with_host => 1 ) );
     }
 
-    if ( $revision->revision_number() == $page->most_recent_revision()->revision_number() ) {
-        $c->redirect_and_detach( $page->uri( with_host => 1 ) );
-    }
-
     $c->stash()->{page}                = $page;
     $c->stash()->{revision}            = $revision;
     $c->stash()->{is_current_revision} = 0;
+}
+
+sub revision : Chained('_set_revision') : PathPart('') : Args(0) : ActionClass('+Silki::Action::REST') {
+}
+
+sub revision_GET_html {
+    my $self = shift;
+    my $c    = shift;
+
+    my $revision = $c->stash()->{revision};
+    my $page = $revision->page();
+
+    $c->redirect_and_detach( $page->uri( with_host => 1 ) )
+        if $revision->revision_number()
+            == $page->most_recent_revision()->revision_number();
 
     $c->stash()->{html} = $revision->content_as_html(
         user        => $c->user(),
@@ -218,6 +228,30 @@ sub revision : Chained('_set_page') : PathPart('revision') : Args(1) {
     );
 
     $c->stash()->{template} = '/page/view';
+}
+
+sub revision_DELETE {
+    my $self = shift;
+    my $c    = shift;
+
+    $self->_require_permission_for_wiki( $c, $c->stash()->{wiki}, 'Manage' );
+
+    my $revision = $c->stash()->{revision};
+    my $num = $revision->revision_number();
+
+    $revision->delete( user => $c->user() );
+
+    $c->session_object()->add_message( loc('Revision %1 has been deleted.', $num ) );
+    $c->redirect_and_detach( $c->stash()->{page}->uri() );
+}
+
+sub revision_delete_confirmation : Chained('_set_revision') : PathPart('delete_confirmation') : Args(0) {
+    my $self = shift;
+    my $c    = shift;
+
+    $self->_require_permission_for_wiki( $c, $c->stash()->{wiki}, 'Manage' );
+
+    $c->stash()->{template} = '/page/revision-delete-confirmation';
 }
 
 sub history : Chained('_set_page') : PathPart('history') : Args(0) {
@@ -475,60 +509,6 @@ sub delete_confirmation : Chained('_set_page') : PathPart('delete_confirmation')
     $c->stash()->{template} = '/page/delete-confirmation';
 }
 
-{
-    use HTTP::Body::MultiPart;
-    package
-        HTTP::Body::MultiPart;
-
-    no warnings 'redefine';
-sub handler {
-    my ( $self, $part ) = @_;
-
-    unless ( exists $part->{name} ) {
-
-        my $disposition = $part->{headers}->{'Content-Disposition'};
-        my ($name)      = $disposition =~ / name="?([^\";]+)"?/;
-        my ($filename)  = $disposition =~ / filename="?([^\"]*)"?/;
-        # Need to match empty filenames above, so this part is flagged as an upload type
-
-        $part->{name} = $name;
-
-        if ( defined $filename ) {
-            $part->{filename} = $filename;
-
-            if ( $filename ne "" ) {
-                # XXX - this is the monkey patch, adding the filename as a
-                # suffix so that we preserve the file's extension
-                my $fh = File::Temp->new( UNLINK => 0, DIR => $self->tmpdir, SUFFIX => q{-} . $filename );
-
-                $part->{fh}       = $fh;
-                $part->{tempname} = $fh->filename;
-            }
-        }
-    }
-
-    if ( $part->{fh} && ( my $length = length( $part->{data} ) ) ) {
-        $part->{fh}->write( substr( $part->{data}, 0, $length, '' ), $length );
-    }
-
-    if ( $part->{done} ) {
-
-        if ( exists $part->{filename} ) {
-            if ( $part->{filename} ne "" ) {
-                $part->{fh}->close if defined $part->{fh};
-
-                delete @{$part}{qw[ data done fh ]};
-
-                $self->upload( $part->{name}, $part );
-            }
-        }
-        else {
-            $self->param( $part->{name}, $part->{data} );
-        }
-    }
-}
-}
-
 __PACKAGE__->meta()->make_immutable();
 
 1;
@@ -544,7 +524,7 @@ Silki::Controller::Page - Controller class for pages
 
 =head1 VERSION
 
-version 0.12
+version 0.13
 
 =head1 AUTHOR
 

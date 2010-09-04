@@ -1,4 +1,4 @@
-/* Generated at 2010-07-22 23:53:02.0 America/Chicago */
+/* Generated at 2010-09-04 15:19:43.0 America/Chicago */
 
 var JSAN = { "use": function () {} };
 
@@ -866,7 +866,7 @@ Silki.PageTags.prototype._submitForm = function () {
 
 Silki.PageTags.prototype._parameters = function () {
     return "tags=" + encodeURIComponent( this.text.value );
-}
+};
 
 Silki.PageTags.prototype._updateTagList = function (trans) {
     var resp = eval( "(" + trans.responseText + ")" );
@@ -892,8 +892,6 @@ Silki.PageTags.prototype._instrumentDeleteURIs = function () {
     if ( ! anchors.length ) {
         return;
     }
-
-    var self = this;
 
     for ( var i = 0; i < anchors.length; i++ ) {
         var func = this._makeDeleteTagFunction();
@@ -1020,6 +1018,142 @@ DOM.Element = {
                 DOM.Element.remove(node);
         }
     }
+};
+
+
+/* /home/autarch/projects/Silki/share/js-source/Silki/URI.js */
+
+Silki.URI = {};
+
+Silki.URI.dynamicURI = function (path) {
+    var uri = Silki.URI._dynamicURIRoot == "/" ? "" : Silki.URI._dynamicURIRoot;
+
+    if ( uri.length ) {
+        uri = uri + "/" + path;
+    }
+    else {
+        uri = path;
+    }
+
+    return uri;
+};
+
+Silki.URI.staticURI = function (path) {
+    var uri = Silki.URI._staticURIRoot == "/" ? "" : Silki.URI._staticURIRoot;
+
+    if ( uri.length ) {
+        uri = uri + "/" + path;
+    }
+    else {
+        uri = path;
+    }
+
+    return uri;
+};
+
+
+/* /home/autarch/projects/Silki/share/js-source/Silki/ProcessStatus.js */
+
+JSAN.use('DOM.Element');
+JSAN.use('Silki.URI');
+
+if ( typeof Silki == "undefined" ) {
+    Silki = {};
+}
+
+Silki.ProcessStatus = function () {
+    var status = $("process-status");
+    var complete = $("process-complete");
+
+    if ( ! ( status && complete ) ) {
+        return;
+    }
+
+    var process_id = ( /js-process-id-(\d+)/.exec( status.className) )[1];
+    if ( ! process_id ) {
+        return;
+    }
+
+    var process_type = ( /js-process-type-(\w+)/.exec( status.className ) )[1];
+    if ( ! process_type ) {
+        return;
+    }
+
+    this._process_id = process_id;
+    this._process_type = process_type;
+    this._uri = Silki.URI.dynamicURI( "/process/" + this._process_id );
+    this._status_div = status;
+    this._complete_div = complete;
+    this._last_status = "";
+    this._last_status_change = ( new Date() ).getTime();
+    this._spinner = '<img src="' + Silki.URI.staticURI( "/images/small-spinner.gif" ) + '" />';
+
+    this._setupInterval();
+};
+
+Silki.ProcessStatus.prototype._setupInterval = function () {
+    var self = this;
+    var func = function () { self._getProcessStatus(); };
+
+    this._interval_id = setInterval( func, 1000 );
+};
+
+Silki.ProcessStatus.prototype._getProcessStatus = function () {
+    /* Processing large tarballs can take a lot of time. */
+    if ( ( new Date() ).getTime() - this._last_status_change > ( 60 * 20 * 1000 ) ) {
+        this._status_div.innerHTML = this._process_type + " appears to have stalled on the server. Giving up.";
+        return;
+    }
+
+    var self = this;
+
+    var on_success = function (trans) {
+        self._updateStatus(trans);
+    };
+
+    var on_failure = function (trans) {
+        self._handleFailure();
+    };
+
+    new HTTP.Request( {
+        "uri":       this._uri,
+        "method":    "get",
+        "onSuccess": on_success,
+        "onFailure": on_failure
+    } );
+};
+
+Silki.ProcessStatus.prototype._updateStatus = function (trans) {
+    var process = eval( "(" + trans.responseText + ")" );
+
+    if ( process.is_complete ) {
+        clearInterval( this._interval_id );
+
+        if ( process.was_successful ) {
+            this._status_div.innerHTML = this._process_type + " is complete.";
+
+            this._complete_div.innerHTML = this._complete_div.innerHTML.replace( "@result@", process.final_result );
+
+            DOM.Element.show( this._complete_div );
+        }
+        else {
+            this._status_div.innerHTML = this._process_type + " failed.";
+        }
+    }
+    else if ( process.status.length ) {
+        if ( this._last_status != process.status ) {
+            this._last_status_change = ( new Date() ).getTime();
+            this._last_status = process.status;
+        }
+
+        this._status_div.innerHTML = this._spinner + " " + this._process_type + " is in progress - " + process.status + ".";
+    }
+};
+
+Silki.ProcessStatus.prototype._handleFailure = function (trans) {
+    clearInterval( this._interval_id );
+
+    this._status_div.innerHTML = "Cannot retrieve process status from server.";
 };
 
 
@@ -1272,7 +1406,7 @@ if ( typeof Silki == "undefined" ) {
 
 Silki.User = function (user_id) {
     if ( typeof user_id == "undefined" ) {
-        var cookies = new HTTP.Cookies;
+        var cookies = new HTTP.Cookies ();
         var user_cookie = cookies.read("Silki-user");
         var match = user_cookie.match( /user_id\&(\d+)/ );
 
@@ -1336,7 +1470,9 @@ Silki.User.prototype._handleFailure = function (trans) {
 JSAN.use('DOM.Ready');
 JSAN.use('Silki.FileView');
 JSAN.use('Silki.PageTags');
+JSAN.use('Silki.ProcessStatus');
 JSAN.use('Silki.SystemLogs');
+JSAN.use('Silki.URI');
 JSAN.use('Silki.User');
 
 if ( typeof Silki == "undefined" ) {
@@ -1346,6 +1482,7 @@ if ( typeof Silki == "undefined" ) {
 Silki.instrumentAll = function () {
     new Silki.FileView ();
     new Silki.PageTags ();
+    new Silki.ProcessStatus ();
     new Silki.SystemLogs ();
 };
 

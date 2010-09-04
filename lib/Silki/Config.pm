@@ -1,6 +1,6 @@
 package Silki::Config;
 BEGIN {
-  $Silki::Config::VERSION = '0.12';
+  $Silki::Config::VERSION = '0.13';
 }
 
 use strict;
@@ -10,6 +10,7 @@ use autodie qw( :all );
 
 use File::HomeDir;
 use File::Slurp qw( write_file );
+use File::Spec;
 use File::Temp qw( tempdir );
 use Net::Interface;
 use Path::Class;
@@ -336,6 +337,13 @@ has mini_image_dir => (
     builder => '_build_mini_image_dir',
 );
 
+has temp_dir => (
+    is      => 'ro',
+    isa     => Dir,
+    lazy    => 1,
+    default => sub { dir( File::Spec->tmpdir() )->subdir('silki') },
+);
+
 has static_path_prefix => (
     is      => 'rw',
     isa     => Str,
@@ -443,7 +451,7 @@ sub _build_is_production {
         +Silki::Plugin::Session::Store::Silki
         RedirectAndDetach
         SubRequest
-        Unicode
+        Unicode::Encoding
     );
 
     sub _build_catalyst_imports {
@@ -656,6 +664,8 @@ sub _build_catalyst_config {
             path       => '/',
             mac_secret => $self->secret(),
         },
+
+        encoding => 'UTF-8',
 
         'Log::Dispatch' => $self->_log_config(),
     );
@@ -922,7 +932,7 @@ Silki::Config - Configuration information for Silki
 
 =head1 VERSION
 
-version 0.12
+version 0.13
 
 =head1 AUTHOR
 

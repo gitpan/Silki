@@ -1,6 +1,6 @@
 package Silki::Role::Schema::DataValidator;
 BEGIN {
-  $Silki::Role::Schema::DataValidator::VERSION = '0.12';
+  $Silki::Role::Schema::DataValidator::VERSION = '0.13';
 }
 
 use strict;
@@ -95,7 +95,6 @@ sub validate_for_update {
 
 role {
     my $params = shift;
-    my %extra  = @_;
 
     if ( $params->validate_on_insert() ) {
         around 'insert' => sub {
@@ -167,7 +166,7 @@ Silki::Role::Schema::DataValidator - Does data validation on inserts and updates
 
 =head1 VERSION
 
-version 0.12
+version 0.13
 
 =head1 AUTHOR
 

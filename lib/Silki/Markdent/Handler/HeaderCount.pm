@@ -1,6 +1,6 @@
 package Silki::Markdent::Handler::HeaderCount;
 BEGIN {
-  $Silki::Markdent::Handler::HeaderCount::VERSION = '0.12';
+  $Silki::Markdent::Handler::HeaderCount::VERSION = '0.13';
 }
 
 use strict;

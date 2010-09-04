@@ -1,3 +1,22 @@
+0.13  2010-09-04
+
+- Renamed a number of files in bin, and moved some of them to dev-bin.
+
+- Added export and import features, along with silki-export and silki-import
+  scripts. This feature is also available to site admins via the web UI.
+
+- Searching for a word with leading or trailing space caused a SQL error.
+
+- Moved some of the wiki subnav items to the dashboard (all attachments,
+  orphans, & wanted pages), since they're not all that important.
+
+- The display of pages recently edited in their profile was broken.
+
+- Added a revision purge feature available to wiki admins. This destroys a
+  revision completely, renumbering any subsequent revisions. This is useful
+  for removing spam and other bogus changes.
+
+
 0.12  2010-07-22
 
 - The mason cache directory will be deleted when Silki is installed, to ensure

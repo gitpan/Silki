@@ -10,7 +10,7 @@ build_requires:
 configure_requires:
   Module::Build: 0.3601
 dynamic_config: 0
-generated_by: 'Dist::Zilla version 4.101900, CPAN::Meta::Converter version 2.101670'
+generated_by: 'Dist::Zilla version 4.102340, CPAN::Meta::Converter version 2.101670'
 license: open_source
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -29,7 +29,7 @@ requires:
   Catalyst::Plugin::Session::State::URI: 0
   Catalyst::Plugin::Session::Store::DBI: 0
   Catalyst::Plugin::SubRequest: 0
-  Catalyst::Plugin::Unicode: 0
+  Catalyst::Plugin::Unicode::Encoding: 0
   Catalyst::Runtime: 5.8
   Catalyst::View::Mason: 0
   CatalystX::RoleApplicator: 0
@@ -55,7 +55,7 @@ requires:
   Email::Valid: 0
   Exception::Class: 0
   Fey: 0
-  Fey::DBIManager: 0
+  Fey::DBIManager: 0.13
   Fey::Loader: 0
   Fey::ORM: 0.33
   File::HomeDir: 0
@@ -68,6 +68,7 @@ requires:
   HTML::FormatText: 0
   HTML::Mason: 0
   HTML::TreeBuilder: 0
+  HTTP::Body: 1.09
   HTTP::Status: 0
   IPC::System::Simple: 0
   Image::Magick: 0
@@ -99,7 +100,7 @@ requires:
   String::Diff: 0
   Sub::Exporter: 0
   Text::Autoformat: 0
-  Text::TOC: 0.04
+  Text::TOC: 0.06
   Tie::IxHash: 0
   Time::HiRes: 0
   URI: 0
@@ -111,4 +112,4 @@ requires:
 resources:
   bugtracker: http://rt.cpan.org/NoAuth/Bugs.html?Dist=Silki
   repository: http://hg.urth.org/hg/Silki
-version: 0.12
+version: 0.13

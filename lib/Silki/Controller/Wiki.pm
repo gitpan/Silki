@@ -1,23 +1,26 @@
 package Silki::Controller::Wiki;
 BEGIN {
-  $Silki::Controller::Wiki::VERSION = '0.12';
+  $Silki::Controller::Wiki::VERSION = '0.13';
 }
 
 use strict;
 use warnings;
 use namespace::autoclean;
+use autodie;
 
 use DateTime::Format::W3CDTF 0.05;
 use Email::Address;
 use File::Basename qw( dirname );
-use Path::Class ();
+use File::MimeInfo qw( mimetype );
+use Path::Class qw( dir file );
 use Silki::Config;
 use Silki::Formatter::HTMLToWiki;
 use Silki::I18N qw( loc );
 use Silki::Schema::Page;
+use Silki::Schema::Process;
 use Silki::Schema::Role;
 use Silki::Schema::Wiki;
-use Silki::Util qw( string_is_empty );
+use Silki::Util qw( detach_and_run string_is_empty );
 use XML::Atom::SimpleFeed;
 
 use Moose;
@@ -90,6 +93,63 @@ sub delete_confirmation : Chained('_set_wiki') : PathPart('delete_confirmation')
     $self->_require_site_admin($c);
 
     $c->stash()->{template} = '/wiki/delete-confirmation';
+}
+
+sub export : Chained('_set_wiki') : PathPart('export') : Args(0) {
+    my $self = shift;
+    my $c    = shift;
+
+    my $wiki = $c->stash()->{wiki};
+
+    $self->_require_permission_for_wiki( $c, $wiki, 'Manage' );
+
+    my $process = Silki::Schema::Process->insert( wiki_id => $wiki->wiki_id() );
+
+    my $dir = Silki::Config->temp_dir()->subdir( 'wiki-' . $wiki->wiki_id() );
+    $dir->mkpath( 0, 0700 );
+    my $file = $dir->file( $wiki->short_name() . '.tar.gz' );
+
+    detach_and_run(
+        'silki-export',
+        '--wiki',    $wiki->short_name(),
+        '--file',    $file,
+        '--process', $process->process_id(),
+    );
+
+    $c->stash()->{download_uri} = $wiki->uri( view => 'tempfile/' . $file->basename() );
+    $c->stash()->{process} = $process;
+
+    $c->stash()->{template} = '/wiki/export';
+}
+
+sub tempfile : Chained('_set_wiki') : PathPart('tempfile') : Args(1) {
+    my $self     = shift;
+    my $c        = shift;
+    my $filename = shift;
+
+    my $wiki = $c->stash()->{wiki};
+
+    $self->_require_permission_for_wiki( $c, $wiki, 'Manage' );
+
+    my $file = Silki::Config->temp_dir()->subdir( 'wiki-' . $wiki->wiki_id() )
+        ->file($filename);
+
+    unless ( -f $file ) {
+        $c->response()->status(404);
+        $c->detach();
+    }
+
+    my $basename = $file->basename();
+
+    $c->response()->status(200);
+    $c->response()->content_type( mimetype( $file->stringify() ) );
+    $c->response()
+        ->header(
+        'Content-Disposition' => qq{attachment; filename="$basename"} );
+    $c->response()->content_length( -s $file );
+    $c->response()->header( 'X-Sendfile' => $file );
+
+    $c->detach();
 }
 
 sub wiki_DELETE {
@@ -525,6 +585,8 @@ sub search_GET_html {
     $c->redirect_and_detach( $wiki->uri() )
         if string_is_empty($search);
 
+    $search =~ s/^\s+|\s+$//g;
+
     ( my $pg_query = $search ) =~ s/\s+/ & /g;
 
     $c->stash()->{search_results} = $wiki->text_search( query => $pg_query );
@@ -567,13 +629,22 @@ sub tag_GET_html {
     $c->stash()->{template} = '/wiki/tag';
 }
 
-sub new_wiki_form : Path('/new_wiki_form') : Args(0) {
+sub new_wiki_form : Path('/wikis/new_wiki_form') : Args(0) {
     my $self = shift;
     my $c    = shift;
 
     $self->_require_site_admin($c);
 
     $c->stash()->{template} = '/wiki/new-wiki-form';
+}
+
+sub import_wiki_form : Path('/wikis/import_wiki_form') : Args(0) {
+    my $self = shift;
+    my $c    = shift;
+
+    $self->_require_site_admin($c);
+
+    $c->stash()->{template} = '/wiki/import-wiki-form';
 }
 
 sub wiki_collection : Path('/wikis') : Args(0) : ActionClass('+Silki::Action::REST') {
@@ -600,6 +671,44 @@ sub wiki_collection_POST {
     my $c    = shift;
 
     $self->_require_site_admin($c);
+
+    if ( $c->request()->params()->{tarball} ) {
+        $self->_import_wiki($c);
+    }
+    else {
+        $self->_create_wiki($c);
+    }
+}
+
+sub _import_wiki {
+    my $self = shift;
+    my $c    = shift;
+
+    # We can't insert with _no_ values, so this is a hack to make the insert
+    # work.
+    my $process = Silki::Schema::Process->insert( status => q{} );
+
+    my $file = file( $c->request()->upload('tarball')->tempname() );
+    my $tarball = Silki::Config->new()->temp_dir()->file( $file->basename );
+
+    rename $file => $tarball;
+
+    detach_and_run(
+        'silki-import',
+        '--process', $process->process_id(),
+        '--domain',  $c->domain()->web_hostname(),
+        '--tarball', $tarball,
+    );
+
+
+    $c->stash()->{process} = $process;
+
+    $c->stash()->{template} = '/wiki/import';
+}
+
+sub _create_wiki {
+    my $self = shift;
+    my $c    = shift;
 
     my %form_data = $c->request()->wiki_params();
     my $perms = $c->request()->params()->{permissions};
@@ -650,7 +759,7 @@ Silki::Controller::Wiki - Controller class for wikis
 
 =head1 VERSION
 
-version 0.12
+version 0.13
 
 =head1 AUTHOR
 

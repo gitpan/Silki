@@ -20,7 +20,7 @@ my %module_build_args = (
     'Dave Rolsky <autarch@urth.org>'
   ],
   'dist_name' => 'Silki',
-  'dist_version' => '0.12',
+  'dist_version' => '0.13',
   'license' => 'open_source',
   'module_name' => 'Silki',
   'recommends' => {},
@@ -38,7 +38,7 @@ my %module_build_args = (
     'Catalyst::Plugin::Session::State::URI' => '0',
     'Catalyst::Plugin::Session::Store::DBI' => '0',
     'Catalyst::Plugin::SubRequest' => '0',
-    'Catalyst::Plugin::Unicode' => '0',
+    'Catalyst::Plugin::Unicode::Encoding' => '0',
     'Catalyst::Runtime' => '5.8',
     'Catalyst::View::Mason' => '0',
     'CatalystX::RoleApplicator' => '0',
@@ -64,7 +64,7 @@ my %module_build_args = (
     'Email::Valid' => '0',
     'Exception::Class' => '0',
     'Fey' => '0',
-    'Fey::DBIManager' => '0',
+    'Fey::DBIManager' => '0.13',
     'Fey::Loader' => '0',
     'Fey::ORM' => '0.33',
     'File::HomeDir' => '0',
@@ -77,6 +77,7 @@ my %module_build_args = (
     'HTML::FormatText' => '0',
     'HTML::Mason' => '0',
     'HTML::TreeBuilder' => '0',
+    'HTTP::Body' => '1.09',
     'HTTP::Status' => '0',
     'IPC::System::Simple' => '0',
     'Image::Magick' => '0',
@@ -108,7 +109,7 @@ my %module_build_args = (
     'String::Diff' => '0',
     'Sub::Exporter' => '0',
     'Text::Autoformat' => '0',
-    'Text::TOC' => '0.04',
+    'Text::TOC' => '0.06',
     'Tie::IxHash' => '0',
     'Time::HiRes' => '0',
     'URI' => '0',
@@ -119,12 +120,12 @@ my %module_build_args = (
     'namespace::autoclean' => '0'
   },
   'script_files' => [
-    'bin/silki_create.pl',
-    'bin/silki_server.pl',
-    'bin/silki_cgi.pl',
+    'bin/silki-export',
+    'bin/silki-server',
+    'bin/silki-cgi',
+    'bin/silki-import',
     'bin/silki.psgi',
-    'bin/silki_fastcgi.pl',
-    'bin/silki_test.pl'
+    'bin/silki-fastcgi'
   ],
   'share_dir' => {
     'dist' => 'share'

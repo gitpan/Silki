@@ -1,6 +1,6 @@
 package Silki::Schema::PageRevision;
 BEGIN {
-  $Silki::Schema::PageRevision::VERSION = '0.12';
+  $Silki::Schema::PageRevision::VERSION = '0.13';
 }
 
 use strict;
@@ -31,9 +31,12 @@ use Storable qw( nfreeze thaw );
 use Text::TOC::HTML;
 
 use Fey::ORM::Table;
+use MooseX::ClassAttribute;
 use MooseX::Params::Validate qw( validated_list validated_hash );
 
 with 'Silki::Role::Schema::URIMaker';
+
+with 'Silki::Role::Schema::SystemLogger' => { methods => ['delete'] };
 
 my $Schema = Silki::Schema->Schema();
 
@@ -43,7 +46,7 @@ has_table( $Schema->table('PageRevision') );
 
 has_one page => (
     table   => $Schema->table('Page'),
-    handles => ['domain'],
+    handles => [ qw( domain wiki_id ) ],
 );
 
 has_one( $Schema->table('User') );
@@ -54,22 +57,114 @@ transform content => deflate {
     return $_[1];
 };
 
+class_has _RenumberHigherRevisionsSQL => (
+    is      => 'ro',
+    isa     => 'Fey::SQL::Update',
+    lazy    => 1,
+    builder => '_BuildRenumberHigherRevisionsSQL',
+);
+
+with 'Silki::Role::Schema::Serializes';
+
 around insert => sub {
     my $orig  = shift;
     my $class = shift;
 
-    my $revision = $class->$orig(@_);
+    my $revision;
 
-    $revision->_post_change();
+    my @args = @_;
+
+    Silki::Schema->RunInTransaction(
+        sub {
+            $revision = $class->$orig(@args);
+            $revision->_post_change();
+        }
+    );
 
     return $revision;
 };
 
-after update => sub {
+around update => sub {
+    my $orig = shift;
     my $self = shift;
 
-    $self->_post_change();
+    my @args = @_;
+
+    Silki::Schema->RunInTransaction(
+        sub {
+            $self->$orig(@args);
+            $self->_post_change();
+        }
+    );
 };
+
+around delete => sub {
+    my $orig = shift;
+    my $self = shift;
+
+    my @args = @_;
+
+    Silki::Schema->RunInTransaction(
+        sub {
+            my $rev = $self->revision_number();
+
+            my $page = $self->page();
+            my $is_most_recent
+                = $rev == $page->most_recent_revision()->revision_number();
+
+            $self->$orig(@args);
+
+            $page->_clear_most_recent_revision();
+
+            $self->_renumber_higher_revisions($rev);
+
+            $page->most_recent_revision()->_post_change()
+                if $is_most_recent;
+        }
+    );
+};
+
+sub _renumber_higher_revisions {
+    my $self = shift;
+    my $rev  = shift;
+
+    my $update = $self->_RenumberHigherRevisionsSQL();
+
+    my $dbh = Silki::Schema->DBIManager()->source_for_sql($update)->dbh();
+
+    $dbh->do(
+        $update->sql($dbh),
+        {},
+        $self->page_id(),
+        $rev,
+    );
+
+    return;
+}
+
+sub _BuildRenumberHigherRevisionsSQL {
+    my $class = shift;
+
+    my $update = Silki::Schema->SQLFactoryClass()->new_update();
+
+    my $page_rev_t = $Schema->table('PageRevision');
+
+    my $minus_one = Fey::Literal::Term->new(
+        $page_rev_t->column('revision_number'),
+        ' - 1'
+    );
+
+    $update
+        ->update($page_rev_t)
+        ->set( $page_rev_t->column('revision_number'),
+               $minus_one )
+        ->where( $page_rev_t->column('page_id'), '=',
+                 Fey::Placeholder->new() )
+        ->and  ( $page_rev_t->column('revision_number'), '>',
+                 Fey::Placeholder->new() );
+
+    return $update;
+}
 
 our $SkipPostChangeHack;
 
@@ -78,7 +173,7 @@ sub _post_change {
 
     return if $SkipPostChangeHack;
 
-    my ( $existing, $pending, $files, $capture )
+    my ( $existing, $pending, $capture )
         = $self->_process_extracted_links();
 
     my $delete_existing = Silki::Schema->SQLFactoryClass()->new_delete();
@@ -109,31 +204,27 @@ sub _post_change {
     my $dbh = Silki::Schema->DBIManager()->source_for_sql($delete_existing)
         ->dbh();
 
-    my $updates = sub {
-        $dbh->do(
-            $delete_existing->sql($dbh),
-            {},
-            $delete_existing->bind_params()
-        );
-        $dbh->do(
-            $delete_pending->sql($dbh),
-            {},
-            $delete_pending->bind_params()
-        );
+    $dbh->do(
+        $delete_existing->sql($dbh),
+        {},
+        $delete_existing->bind_params()
+    );
+    $dbh->do(
+        $delete_pending->sql($dbh),
+        {},
+        $delete_pending->bind_params()
+    );
 
-        my $sth = $dbh->prepare( $update_cached_content->sql($dbh) );
-        my @bind = $update_cached_content->bind_params();
-        $sth->bind_param( 1, $bind[0], { pg_type => DBD::Pg::PG_BYTEA() } );
-        $sth->bind_param( 2, $bind[1] );
-        $sth->execute();
+    my $sth  = $dbh->prepare( $update_cached_content->sql($dbh) );
+    my @bind = $update_cached_content->bind_params();
+    $sth->bind_param( 1, $bind[0], { pg_type => DBD::Pg::PG_BYTEA() } );
+    $sth->bind_param( 2, $bind[1] );
+    $sth->execute();
 
-        Silki::Schema::PageLink->insert_many( @{$existing} )
-            if @{$existing};
-        Silki::Schema::PendingPageLink->insert_many( @{$pending} )
-            if @{$pending};
-    };
-
-    Silki::Schema->RunInTransaction($updates);
+    Silki::Schema::PageLink->insert_many( @{$existing} )
+        if @{$existing};
+    Silki::Schema::PendingPageLink->insert_many( @{$pending} )
+        if @{$pending};
 }
 
 sub _process_extracted_links {
@@ -180,16 +271,33 @@ sub _process_extracted_links {
         grep { $links->{$_}{title} && !$links->{$_}{page} }
         keys %{$links};
 
-    my @files = map {
-        {
-            page_id => $self->page_id(),
-            file_id => $links->{$_}{file}->file_id(),
-        }
-        }
-        grep { $links->{$_}{file} }
-        keys %{$links};
+    return \@existing, \@pending, $capture;
+}
 
-    return \@existing, \@pending, \@files, $capture;
+sub _system_log_values_for_delete {
+    my $self = shift;
+
+    my $page = $self->page();
+
+    my $msg
+        = 'Deleted revision '
+        . $self->revision_number()
+        . ' of the '
+        . $page->title()
+        . ' page, in wiki '
+        . $page->wiki()->title();
+
+    return (
+        wiki_id   => $self->wiki_id(),
+        page_id   => $self->page_id(),
+        message   => $msg,
+        data_blob => {
+            revision_number   => $self->revision_number(),
+            content           => $self->content(),
+            user_id           => $self->user_id(),
+            creation_datetime => $self->creation_datetime_raw(),
+        },
+    );
 }
 
 sub _base_uri_path {
@@ -325,7 +433,7 @@ Silki::Schema::PageRevision - Represents a page revision
 
 =head1 VERSION
 
-version 0.12
+version 0.13
 
 =head1 AUTHOR
 

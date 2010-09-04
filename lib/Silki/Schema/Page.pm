@@ -1,6 +1,6 @@
 package Silki::Schema::Page;
 BEGIN {
-  $Silki::Schema::Page::VERSION = '0.12';
+  $Silki::Schema::Page::VERSION = '0.13';
 }
 
 use strict;
@@ -143,6 +143,10 @@ class_has _PendingPageLinkDeleteSQL => (
     lazy    => 1,
     builder => '_BuildPendingPageLinkDeleteSQL',
 );
+
+with 'Silki::Role::Schema::Serializes' => {
+    skip => ['cached_content'],
+};
 
 sub _base_uri_path {
     my $self = shift;
@@ -304,7 +308,9 @@ sub _title_is_unique {
 
     return unless exists $p->{title};
 
-    my $wiki_id = $p->{wiki_id} || $self->wiki_id();
+    my $wiki_id = $p->{wiki_id};
+    $wiki_id = $self->wiki_id()
+        unless $wiki_id || $is_insert;
 
     return unless $wiki_id;
 
@@ -312,7 +318,7 @@ sub _title_is_unique {
 
     return unless $page;
 
-    return if ref $self && $page->page_id() == $self->page_id();
+    return if !$is_insert && $page->page_id() == $self->page_id();
 
     return {
         message => loc(
@@ -712,7 +718,7 @@ Silki::Schema::Page - Represents a page
 
 =head1 VERSION
 
-version 0.12
+version 0.13
 
 =head1 AUTHOR
 

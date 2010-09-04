@@ -1,6 +1,6 @@
 package Silki::View::Mason;
 BEGIN {
-  $Silki::View::Mason::VERSION = '0.12';
+  $Silki::View::Mason::VERSION = '0.13';
 }
 
 use strict;
@@ -11,7 +11,7 @@ use base 'Catalyst::View::Mason';
 {
     package Silki::Mason::Web;
 BEGIN {
-  $Silki::Mason::Web::VERSION = '0.12';
+  $Silki::Mason::Web::VERSION = '0.13';
 }
 
     use Data::Dumper;
@@ -20,7 +20,7 @@ BEGIN {
     use Number::Format qw( format_bytes );
     use Silki::I18N qw( loc );
     use Silki::Util qw( string_is_empty english_list );
-    use Silki::URI qw( static_uri );
+    use Silki::URI qw( dynamic_uri static_uri );
     use URI::Escape qw( uri_escape );
 }
 
@@ -80,7 +80,7 @@ Silki::View::Mason - A Mason-based view
 
 =head1 VERSION
 
-version 0.12
+version 0.13
 
 =head1 AUTHOR
 

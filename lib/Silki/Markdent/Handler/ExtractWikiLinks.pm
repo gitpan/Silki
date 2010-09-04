@@ -1,6 +1,6 @@
 package Silki::Markdent::Handler::ExtractWikiLinks;
 BEGIN {
-  $Silki::Markdent::Handler::ExtractWikiLinks::VERSION = '0.12';
+  $Silki::Markdent::Handler::ExtractWikiLinks::VERSION = '0.13';
 }
 
 use strict;
@@ -27,21 +27,13 @@ has links => (
     },
 );
 
-my @types = map { 'Silki::Markdent::Event::' . $_ } qw( WikiLink FileLink ImageLink );
-
 sub handle_event {
     my $self  = shift;
     my $event = shift;
 
-    return unless any {  $event->isa($_) } @types;
+    return unless $event->isa('Silki::Markdent::Event::WikiLink');
 
-    my $link_data;
-    if ( $event->isa('Silki::Markdent::Event::WikiLink') ) {
-        $link_data = $self->_resolve_page_link( $event->link_text() );
-    }
-    else {
-        $link_data = $self->_resolve_file_link( $event->link_text() );
-    }
+    my $link_data = $self->_resolve_page_link( $event->link_text() );
 
     return unless $link_data && $link_data->{wiki};
 
@@ -65,7 +57,7 @@ Silki::Markdent::Handler::ExtractWikiLinks - Extracts all links from a Silki Mar
 
 =head1 VERSION
 
-version 0.12
+version 0.13
 
 =head1 AUTHOR
 

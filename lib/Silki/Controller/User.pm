@@ -1,6 +1,6 @@
 package Silki::Controller::User;
 BEGIN {
-  $Silki::Controller::User::VERSION = '0.12';
+  $Silki::Controller::User::VERSION = '0.13';
 }
 
 use strict;
@@ -320,7 +320,7 @@ Silki::Controller::User - Controller class for users
 
 =head1 VERSION
 
-version 0.12
+version 0.13
 
 =head1 AUTHOR
 

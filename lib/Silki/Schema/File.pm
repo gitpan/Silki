@@ -1,6 +1,6 @@
 package Silki::Schema::File;
 BEGIN {
-  $Silki::Schema::File::VERSION = '0.12';
+  $Silki::Schema::File::VERSION = '0.13';
 }
 
 use strict;
@@ -56,6 +56,10 @@ has is_browser_displayable_image => (
 );
 
 with 'Silki::Role::Schema::File';
+
+with 'Silki::Role::Schema::Serializes' => {
+    skip => ['contents'],
+};
 
 sub _system_log_values_for_delete {
     my $self = shift;
@@ -185,7 +189,7 @@ Silki::Schema::File - Represents a file
 
 =head1 VERSION
 
-version 0.12
+version 0.13
 
 =head1 AUTHOR
 

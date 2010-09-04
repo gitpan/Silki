@@ -63,6 +63,19 @@ my $user = Silki::Schema::User->GuestUser();
         $revision->revision_number(), 1,
         'most_recent_revision returns revision 1'
     );
+
+    is_deeply(
+        $page->serialize(), {
+            page_id        => $page->page_id(),
+            wiki_id        => $page->wiki_id(),
+            title          => 'Some Page',
+            uri_path       => 'Some_Page',
+            user_id        => $user->user_id(),
+            is_archived    => 0,
+            can_be_renamed => 1,
+        },
+        'serialize method'
+    );
 }
 
 {

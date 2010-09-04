@@ -1,6 +1,6 @@
 package Silki::Localize::Format::Gettext;
 BEGIN {
-  $Silki::Localize::Format::Gettext::VERSION = '0.12';
+  $Silki::Localize::Format::Gettext::VERSION = '0.13';
 }
 
 use strict;
@@ -35,6 +35,7 @@ sub quant {
     $num += 0;
 
     my @forms = @{$args};
+    s/^\s+|\s+$//g for @forms;
 
     die "quant can only be called with 2 or 3 forms"
         unless @forms == 2 || @forms == 3;
@@ -216,7 +217,7 @@ Silki::Localize::Format::Gettext - Provides functions for localization, like %da
 
 =head1 VERSION
 
-version 0.12
+version 0.13
 
 =head1 AUTHOR
 

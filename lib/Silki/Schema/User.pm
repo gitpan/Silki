@@ -1,6 +1,6 @@
 package Silki::Schema::User;
 BEGIN {
-  $Silki::Schema::User::VERSION = '0.12';
+  $Silki::Schema::User::VERSION = '0.13';
 }
 
 use strict;
@@ -206,6 +206,10 @@ class_has _AllUsersSelect => (
         bind_params => sub { ( $_[0]->user_id() ) x 3 },
     );
 }
+
+with 'Silki::Role::Schema::Serializes' => {
+    skip => ['password'],
+};
 
 my $DisabledPW = '*disabled*';
 around insert => sub {
@@ -1124,7 +1128,7 @@ Silki::Schema::User - Represents a user
 
 =head1 VERSION
 
-version 0.12
+version 0.13
 
 =head1 AUTHOR
 

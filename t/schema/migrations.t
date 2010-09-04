@@ -6,6 +6,7 @@ use lib 'inc';
 use File::Slurp qw( read_file );
 use File::Temp qw( tempdir );
 use FindBin qw( $Bin );
+use List::AllUtils qw( max );
 use Path::Class qw( dir file );
 use Silki::DBInstaller;
 
@@ -15,17 +16,18 @@ use Test::More;
 BEGIN {
     unless ( $ENV{RELEASE_TESTING} ) {
         require Test::More;
-        Test::More::plan( skip_all => 'these tests are for $msg' );
+        Test::More::plan( skip_all => "These tests are for release testing" );
     }
 }
 
+my $testdir = dir($Bin);
+
 my $min_version = 1;
-my $max_version = 4;
+my $max_version = max map { /\.v(\d+)/; $1 } glob "$testdir/*.v*";
 
 my $inst
     = Silki::DBInstaller->new( name => 'SilkiMigrationTest', quiet => 1, );
 
-my $testdir = dir($Bin);
 my $tempdir = dir( tempdir( CLEANUP => 1 ) );
 
 my %fresh;
