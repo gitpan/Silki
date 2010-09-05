@@ -94,6 +94,7 @@ lib/Silki/Role/Controller/User.pm
 lib/Silki/Role/Controller/WikitextHandler.pm
 lib/Silki/Role/OptionalLog.pm
 lib/Silki/Role/Schema/DataValidator.pm
+lib/Silki/Role/Schema/DebugUTF8.pm
 lib/Silki/Role/Schema/File.pm
 lib/Silki/Role/Schema/Serializes.pm
 lib/Silki/Role/Schema/SystemLogger.pm

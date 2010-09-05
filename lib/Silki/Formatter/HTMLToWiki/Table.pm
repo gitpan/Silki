@@ -1,6 +1,6 @@
 package Silki::Formatter::HTMLToWiki::Table;
 BEGIN {
-  $Silki::Formatter::HTMLToWiki::Table::VERSION = '0.13';
+  $Silki::Formatter::HTMLToWiki::Table::VERSION = '0.14';
 }
 
 use strict;
@@ -181,14 +181,25 @@ sub finalize {
     }
 
     unless ( $self->_has_thead() ) {
-        for my $tbody ( @{ $self->_tbodies() } ) {
-            for my $row ( @{$tbody} ) {
-                if ( all { $_->is_header_cell() } @{$row} ) {
-                    $self->_add_thead_row( shift @{$tbody} );
+        my $tbody = $self->_tbodies()->[0];
+
+        while ( my $row = shift @{$tbody} ) {
+            # If all the cells in a row are <th> cells, _or_ all the content
+            # in each cell is bold, it's a header row.
+            if (   ( all { $_->is_header_cell() } @{$row} )
+                || ( all { $_->content() =~ /^\s*\*\*.+\*\*\s*$/ } @{$row} ) )
+            {
+                for my $cell (@{$row} ) {
+                    my $content = $cell->content();
+                    $content =~ s/^(\s*)\*\*(.+)\*\*(\s*)$/$1$2$3/;
+                    $cell->set_content($content);
                 }
-                else {
-                    last;
-                }
+
+                $self->_add_thead_row($row);
+            }
+            else {
+                unshift @{$tbody}, $row;
+                last;
             }
         }
     }
@@ -240,7 +251,7 @@ sub _markdown_for_row {
 
     my @cells;
     for my $cell ( @{$row} ) {
-        # A multi-column cell needs to be as wide as all the column it spans
+        # A multi-column cell needs to be as wide as all the columns it spans
         my $width = sum( splice @widths, 0, $cell->colspan() );
 
         $md .= $cell->formatted_content($width);

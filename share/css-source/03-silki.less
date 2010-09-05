@@ -95,11 +95,6 @@ a {
     font-size: 120%;
 }
 
-#hd {
-    background-color: @light-blue;
-    padding-top: 1em;
-}
-
 #ft {
     background-color: white;
     color: black;
@@ -108,23 +103,28 @@ a {
 }
 
 #global-nav {
-    display: inline;
-    float: right;
-    font-size: 80%;
-}
+    text-align: right;
 
-#global-nav li {
-    display: inline;
-    list-style: none;
-}
+    ul {
+        font-size: 80%;
 
-#global-nav li a {
-    color: #111;
-    padding-left: 1.1em;
+        li {
+            display: inline;
+            list-style: none;
+
+            a {
+                color: #111;
+                padding-left: 1.1em;
+            }
+        }
+    }
 }
 
 #tabs {
+    background-color: @light-blue;
     line-height: 1.2;
+    padding-top: 2em;
+    .rounded-corners-top(6px);
 
     ul {
         border-bottom: 8px solid @dark-blue;
@@ -138,6 +138,7 @@ a {
         font-variant: small-caps;
         list-style: none;
         margin-right: 0.3em;
+        overflow: hidden;
         padding: 0;
 
         a {
@@ -244,29 +245,32 @@ img.user-image-mini {
     margin-top: 1em;
 }
 
-#page-content table {
-    border-top: 1px solid @dark-purple;
-    border-right: 1px solid @dark-purple;
-    border-bottom: 1px solid @dark-purple;
-    border-left: 5px solid @dark-purple;
-
-    th, td {
-        border: none;
-        border-right: 1px dotted #999;
-        vertical-align: top;
-    }
-
-    td {
-        padding: 0.3em 0.5em;
-    }
-
-    thead tr {
-        background-color: @dark-purple;
-        color: white;
-    }
-
-    tbody tr {
+#page-content {
+    table {
+        border-top: 1px solid @dark-purple;
+        border-right: 1px solid @dark-purple;
         border-bottom: 1px solid @dark-purple;
+        border-left: 5px solid @dark-purple;
+
+        th, td {
+            border: none;
+            border-right: 1px dotted #999;
+            text-align: left;
+            vertical-align: top;
+        }
+
+        td {
+            padding: 0.3em 0.5em;
+        }
+
+        thead tr {
+            background-color: @dark-purple;
+            color: white;
+        }
+
+        tbody tr {
+            border-bottom: 1px solid @dark-purple;
+        }
     }
 }
 

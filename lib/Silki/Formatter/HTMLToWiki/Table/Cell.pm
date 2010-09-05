@@ -1,6 +1,6 @@
 package Silki::Formatter::HTMLToWiki::Table::Cell;
 BEGIN {
-  $Silki::Formatter::HTMLToWiki::Table::Cell::VERSION = '0.13';
+  $Silki::Formatter::HTMLToWiki::Table::Cell::VERSION = '0.14';
 }
 
 use strict;
@@ -34,7 +34,7 @@ has is_header_cell => (
 
 has content => (
     traits  => ['String'],
-    is      => 'ro',
+    is      => 'rw',
     isa     => Str,
     default => q{},
     handles => {
