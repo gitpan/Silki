@@ -20,7 +20,7 @@ my %module_build_args = (
     'Dave Rolsky <autarch@urth.org>'
   ],
   'dist_name' => 'Silki',
-  'dist_version' => '0.14',
+  'dist_version' => '0.15',
   'license' => 'open_source',
   'module_name' => 'Silki',
   'recommends' => {},
@@ -28,6 +28,7 @@ my %module_build_args = (
   'requires' => {
     'Algorithm::Diff' => '0',
     'Apache2::ServerUtil' => '0',
+    'Archive::Tar::Wrapper' => '0',
     'Authen::Passphrase' => '0',
     'CSS::Minifier' => '0',
     'Catalyst::Action::REST' => '0',

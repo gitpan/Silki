@@ -1,6 +1,6 @@
 package Silki::Wiki::Importer;
 BEGIN {
-  $Silki::Wiki::Importer::VERSION = '0.14';
+  $Silki::Wiki::Importer::VERSION = '0.15';
 }
 
 use strict;

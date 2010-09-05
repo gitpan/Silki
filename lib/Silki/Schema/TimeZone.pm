@@ -1,6 +1,6 @@
 package Silki::Schema::TimeZone;
 BEGIN {
-  $Silki::Schema::TimeZone::VERSION = '0.14';
+  $Silki::Schema::TimeZone::VERSION = '0.15';
 }
 
 use strict;
@@ -78,7 +78,7 @@ Silki::Schema::TimeZone - Represents a time zone
 
 =head1 VERSION
 
-version 0.14
+version 0.15
 
 =head1 AUTHOR
 

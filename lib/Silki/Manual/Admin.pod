@@ -12,7 +12,7 @@ Silki::Manual::Admin - Admin manual for Silki
 
 =head1 VERSION
 
-version 0.14
+version 0.15
 
 =head1 INSTALLATION
 
@@ -265,7 +265,7 @@ You must be a logged-in wiki member to edit the wiki.
 =back
 
 Regardless of the privacy setting, only a wiki admin can delete pages and
-attachments, or invite new members to the wiki.
+attachments or invite new members to the wiki.
 
 Of course, a site admin has access to all wikis.
 
@@ -274,7 +274,7 @@ Of course, a site admin has access to all wikis.
 A wiki admin can invite new users to the wiki. If the user already has an
 account in the Silki installation, they are immediately added.
 
-If they don't have an account, they receive an invitation email, and are asked
+If they don't have an account, they receive an invitation email and are asked
 to confirm their account's information (name, email, etc.). Once they do this,
 they are full members of that wiki.
 
@@ -323,8 +323,9 @@ wiki.
 
 Silki will throw an error if you attempt to access it from a domain it does
 not know about. If the default domain chosen when the system was installed is
-not being used, you can edit the domain from the C<psql> tool. In the future,
-the default domain will be made configurable during the installation process.
+not being used, you can edit the domain manually using the C<psql> command
+line tool. In the future, the default domain will be made configurable during
+the installation process.
 
 =head2 Multiple Domains
 

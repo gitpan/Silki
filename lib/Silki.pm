@@ -1,6 +1,6 @@
 package Silki;
 BEGIN {
-  $Silki::VERSION = '0.14';
+  $Silki::VERSION = '0.15';
 }
 
 use strict;
@@ -75,7 +75,7 @@ Silki - Silki is a Catalyst-based wiki hosting platform
 
 =head1 VERSION
 
-version 0.14
+version 0.15
 
 =head1 DESCRIPTION
 
@@ -114,7 +114,7 @@ Silki requires the following software:
 =item * Postgres 8.4+
 
 Silki has been tested with Postgres 8.3 and 8.4. Silki uses the built-in
-Postgress full text search engine, which was integrated into the Postgres core
+Postgres full text search engine, which was integrated into the Postgres core
 in 8.3. It may be possible to use Silki with an earlier version of Postgres,
 using the full text search included as a contrib module.
 

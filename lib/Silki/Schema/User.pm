@@ -1,6 +1,6 @@
 package Silki::Schema::User;
 BEGIN {
-  $Silki::Schema::User::VERSION = '0.14';
+  $Silki::Schema::User::VERSION = '0.15';
 }
 
 use strict;
@@ -1128,7 +1128,7 @@ Silki::Schema::User - Represents a user
 
 =head1 VERSION
 
-version 0.14
+version 0.15
 
 =head1 AUTHOR
 

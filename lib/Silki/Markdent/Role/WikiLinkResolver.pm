@@ -1,6 +1,6 @@
 package Silki::Markdent::Role::WikiLinkResolver;
 BEGIN {
-  $Silki::Markdent::Role::WikiLinkResolver::VERSION = '0.14';
+  $Silki::Markdent::Role::WikiLinkResolver::VERSION = '0.15';
 }
 
 use strict;
@@ -190,7 +190,7 @@ Silki::Markdent::Role::WikiLinkResolver - A role which resolves page/file/image 
 
 =head1 VERSION
 
-version 0.14
+version 0.15
 
 =head1 AUTHOR
 
