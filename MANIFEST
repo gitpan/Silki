@@ -179,11 +179,11 @@ share/js-source/HTTP/Cookies.js
 share/js-source/HTTP/Request.js
 share/js-source/Silki.js
 share/js-source/Silki/Browser.js
-share/js-source/Silki/FileUpload.js
 share/js-source/Silki/FileView.js
 share/js-source/Silki/PageEdit.js
 share/js-source/Silki/PageTags.js
 share/js-source/Silki/ProcessStatus.js
+share/js-source/Silki/QuickSearch.js
 share/js-source/Silki/SystemLogs.js
 share/js-source/Silki/URI.js
 share/js-source/Silki/User.js
@@ -224,7 +224,6 @@ share/mason/page/revision-delete-confirmation
 share/mason/page/tag-list.mas
 share/mason/page/tags.mas
 share/mason/page/view
-share/mason/quick-search.mas
 share/mason/recently-viewed.mas
 share/mason/sidebar.mas
 share/mason/site/dashboard

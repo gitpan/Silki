@@ -1,6 +1,6 @@
 package Silki::Localize::Gettext;
 BEGIN {
-  $Silki::Localize::Gettext::VERSION = '0.15';
+  $Silki::Localize::Gettext::VERSION = '0.16';
 }
 
 use strict;
@@ -76,7 +76,7 @@ Silki::Localize::Gettext - A subclass of Data::Localize::Gettext
 
 =head1 VERSION
 
-version 0.15
+version 0.16
 
 =head1 AUTHOR
 

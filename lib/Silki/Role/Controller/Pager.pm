@@ -1,6 +1,6 @@
 package Silki::Role::Controller::Pager;
 BEGIN {
-  $Silki::Role::Controller::Pager::VERSION = '0.15';
+  $Silki::Role::Controller::Pager::VERSION = '0.16';
 }
 
 use strict;
@@ -44,7 +44,7 @@ Silki::Role::Controller::Pager - Provides a pager to controllers
 
 =head1 VERSION
 
-version 0.15
+version 0.16
 
 =head1 AUTHOR
 

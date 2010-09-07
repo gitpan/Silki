@@ -1,6 +1,6 @@
 package Silki::Markdent::Handler::HTMLStream;
 BEGIN {
-  $Silki::Markdent::Handler::HTMLStream::VERSION = '0.15';
+  $Silki::Markdent::Handler::HTMLStream::VERSION = '0.16';
 }
 
 use strict;
@@ -91,7 +91,13 @@ sub _link_to_page {
 
     my $class = $page ? 'existing-page' : 'new-page';
 
-    $self->_stream()->tag( a => ( href => $uri, class => $class ) );
+    my $title
+        = $page
+        ? loc( 'Read %1', $page->title() )
+        : loc('This page has not yet been created');
+
+    $self->_stream()
+        ->tag( a => ( href => $uri, class => $class, title => $title ) );
     $self->_stream()->text( $p->{text} );
     $self->_stream()->tag('_a');
 
@@ -202,7 +208,7 @@ Silki::Markdent::Handler::HTMLStream - A subclass of Markdent::Handler::HTMLStre
 
 =head1 VERSION
 
-version 0.15
+version 0.16
 
 =head1 AUTHOR
 

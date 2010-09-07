@@ -1,6 +1,6 @@
 package Silki::Role::Controller::RevisionsAtomFeed;
 BEGIN {
-  $Silki::Role::Controller::RevisionsAtomFeed::VERSION = '0.15';
+  $Silki::Role::Controller::RevisionsAtomFeed::VERSION = '0.16';
 }
 
 use strict;
@@ -88,7 +88,7 @@ Silki::Role::Controller::RevisionsAtomFeed - Generates an atom feed from a set o
 
 =head1 VERSION
 
-version 0.15
+version 0.16
 
 =head1 AUTHOR
 

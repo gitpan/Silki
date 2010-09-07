@@ -1,6 +1,6 @@
 package Silki::Schema::Process;
 BEGIN {
-  $Silki::Schema::Process::VERSION = '0.15';
+  $Silki::Schema::Process::VERSION = '0.16';
 }
 
 use strict;
@@ -38,7 +38,7 @@ Silki::Schema::Process - Represents a separate process
 
 =head1 VERSION
 
-version 0.15
+version 0.16
 
 =head1 AUTHOR
 

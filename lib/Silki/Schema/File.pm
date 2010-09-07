@@ -1,6 +1,6 @@
 package Silki::Schema::File;
 BEGIN {
-  $Silki::Schema::File::VERSION = '0.15';
+  $Silki::Schema::File::VERSION = '0.16';
 }
 
 use strict;
@@ -189,7 +189,7 @@ Silki::Schema::File - Represents a file
 
 =head1 VERSION
 
-version 0.15
+version 0.16
 
 =head1 AUTHOR
 

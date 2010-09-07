@@ -1,4 +1,4 @@
-/* Generated at 2010-09-05 11:39:29.0 America/Chicago */
+/* Generated at 2010-09-07 15:41:36.0 America/Chicago */
 
 var JSAN = { "use": function () {} };
 
@@ -1157,6 +1157,38 @@ Silki.ProcessStatus.prototype._handleFailure = function (trans) {
 };
 
 
+/* /home/autarch/projects/Silki/share/js-source/Silki/QuickSearch.js */
+
+JSAN.use('DOM.Events');
+
+if ( typeof Silki == "undefined" ) {
+    Silki = {};
+}
+
+if ( typeof Silki.QuickSearch == "undefined" ) {
+    Silki.QuickSearch = {};
+}
+
+Silki.QuickSearch = function () {
+    var input = $("quick-search-input");
+
+    if ( ! input ) {
+        return;
+    }
+
+    var match = input.className.match( /js-default-text-(\w+)/ );
+    var default_val = match[1];
+
+    DOM.Events.addListener( input,
+                            "focus",
+                            function () {
+                                if ( input.value == default_val ) {
+                                    input.value = "";
+                                }
+                            }
+                          );
+};
+
 /* /home/autarch/projects/Silki/share/js-source/Silki/SystemLogs.js */
 
 JSAN.use('DOM.Element');
@@ -1471,6 +1503,7 @@ JSAN.use('DOM.Ready');
 JSAN.use('Silki.FileView');
 JSAN.use('Silki.PageTags');
 JSAN.use('Silki.ProcessStatus');
+JSAN.use('Silki.QuickSearch');
 JSAN.use('Silki.SystemLogs');
 JSAN.use('Silki.URI');
 JSAN.use('Silki.User');
@@ -1483,6 +1516,7 @@ Silki.instrumentAll = function () {
     new Silki.FileView ();
     new Silki.PageTags ();
     new Silki.ProcessStatus ();
+    new Silki.QuickSearch ();
     new Silki.SystemLogs ();
 };
 

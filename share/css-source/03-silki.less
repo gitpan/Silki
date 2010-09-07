@@ -103,9 +103,25 @@ a {
 }
 
 #global-nav {
+    margin-bottom: 0.2em;
     text-align: right;
 
+    #quick-search {
+        display: inline;
+        font-size: 90%;
+        text-align: left;
+
+        input {
+            color: #999;
+
+            :focus {
+                color: black;
+            }
+        }
+    }
+
     ul {
+        display: inline;
         font-size: 80%;
 
         li {
@@ -138,7 +154,6 @@ a {
         font-variant: small-caps;
         list-style: none;
         margin-right: 0.3em;
-        overflow: hidden;
         padding: 0;
 
         a {
@@ -157,7 +172,6 @@ a {
     }
 
     li.selected {
-
         a {
             background-color: @dark-blue;
             color: white;
@@ -214,18 +228,14 @@ a {
 }
 
 #sidebar {
-    margin-top: 0.5em;
-    padding-left: 0.5em;
+    margin-top: 1.5em;
+}
+
+.sidebar-box {
+    .rounded-box(6px, @dark-green);
 
     h2 {
-        color: @dark-green;
-        margin: 0.5em 0 0.1em 0;
-    }
-    h2 + ul {
-        margin-top: 0.5em;
-    }
-    h2 + form {
-        margin-top: 0.5em;
+        .rounded-box-h2(@dark-green);
     }
 }
 
@@ -272,42 +282,25 @@ img.user-image-mini {
             border-bottom: 1px solid @dark-purple;
         }
     }
-}
 
-#tags, #incoming-links {
-    .rounded-box(6px, @dark-green);
-    margin-left: 1em;
-
-    h2 {
-        .rounded-box-h2(@dark-green);
+    a.new-page {
+        :after {
+            color: red;
+            content: "?";
+            font-size: 80%;
+            vertical-align: top;
+        }
     }
 }
 
 #tags {
-    margin-top: 0.5em;
-
     ul, form {
         margin-right: 1em;
         margin-left: 1em;
     }
+
     form {
         margin-bottom: 1em;
-    }
-}
-
-#incoming-links {
-    ul {
-        margin-left: 1em;
-        padding-left: 0;
-
-        li {
-            list-style: none;
-        }
-    }
-
-    p {
-        font-size: 80%;
-        margin-left: 1em;
     }
 }
 
@@ -334,6 +327,14 @@ img.user-image-mini {
     font-size: 80%;
     p {
         margin: 0 0 0.1em 0;
+    }
+}
+
+#incoming-links {
+    p {
+        font-size: 80%;
+        margin-right: 1em;
+        margin-left: 1em;
     }
 }
 
@@ -387,6 +388,7 @@ img.user-image-mini {
 
     li {
         list-style: none;
+        margin-bottom: 0.2em;
     }
 }
 
