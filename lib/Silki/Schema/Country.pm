@@ -1,6 +1,6 @@
 package Silki::Schema::Country;
 BEGIN {
-  $Silki::Schema::Country::VERSION = '0.16';
+  $Silki::Schema::Country::VERSION = '0.17';
 }
 
 use strict;
@@ -61,7 +61,7 @@ Silki::Schema::Country - Represents a country
 
 =head1 VERSION
 
-version 0.16
+version 0.17
 
 =head1 AUTHOR
 

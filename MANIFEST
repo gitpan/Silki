@@ -8,6 +8,7 @@ META.yml
 README
 SIGNATURE
 TODO
+bench/profile-parser
 bin/silki-cgi
 bin/silki-export
 bin/silki-fastcgi
@@ -88,6 +89,7 @@ lib/Silki/Plugin/Session/Store/Silki.pm
 lib/Silki/Request.pm
 lib/Silki/Role/CLI/HasOptionalProcess.pm
 lib/Silki/Role/Controller/File.pm
+lib/Silki/Role/Controller/PagePreview.pm
 lib/Silki/Role/Controller/Pager.pm
 lib/Silki/Role/Controller/RevisionsAtomFeed.pm
 lib/Silki/Role/Controller/User.pm
@@ -181,12 +183,15 @@ share/js-source/Silki.js
 share/js-source/Silki/Browser.js
 share/js-source/Silki/FileView.js
 share/js-source/Silki/PageEdit.js
+share/js-source/Silki/PageEdit/Preview.js
+share/js-source/Silki/PageEdit/Toolbar.js
 share/js-source/Silki/PageTags.js
 share/js-source/Silki/ProcessStatus.js
 share/js-source/Silki/QuickSearch.js
 share/js-source/Silki/SystemLogs.js
 share/js-source/Silki/URI.js
 share/js-source/Silki/User.js
+share/js-source/Textarea.js
 share/js-source/Widget/Lightbox2.js
 share/js/silki-combined.js
 share/mason/admin.mas

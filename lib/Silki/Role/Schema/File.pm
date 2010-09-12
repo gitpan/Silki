@@ -1,6 +1,6 @@
 package Silki::Role::Schema::File;
 BEGIN {
-  $Silki::Role::Schema::File::VERSION = '0.16';
+  $Silki::Role::Schema::File::VERSION = '0.17';
 }
 
 use strict;

@@ -1,4 +1,4 @@
-/* Generated at 2010-09-07 15:41:36.0 America/Chicago */
+/* Generated at 2010-09-12 11:10:23.0 America/Chicago */
 
 var JSAN = { "use": function () {} };
 
@@ -277,10 +277,6 @@ if ( typeof Silki == "undefined" ) {
     Silki = {};
 }
 
-if ( typeof Silki.FileView == "undefined" ) {
-    Silki.FileView = {};
-}
-
 Silki.FileView = function () {
     var iframe = $("file-view-iframe");
 
@@ -295,290 +291,24 @@ Silki.FileView = function () {
 };
 
 
-/* /home/autarch/projects/Silki/share/js-source/DOM/Events.js */
+/* /home/autarch/projects/Silki/share/js-source/Silki/PageEdit.js */
 
-(function () {
-	if(typeof DOM == "undefined") DOM = {};
-	DOM.Events = {};
+JSAN.use('DOM.Utils');
 
-    DOM.Events.VERSION = "0.02";
-	DOM.Events.EXPORT = [];
-	DOM.Events.EXPORT_OK = ["addListener", "removeListener"];
-	DOM.Events.EXPORT_TAGS = {
-		":common": DOM.Events.EXPORT,
-		":all": [].concat(DOM.Events.EXPORT, DOM.Events.EXPORT_OK)
-	};
-
-	// list of event listeners set by addListener
-	// offset 0 is null to prevent 0 from being used as a listener identifier
-	var listenerList = [null];
-
-	DOM.Events.addListener = function(elt, ev, func, makeCompatible) {
-		var usedFunc = func;
-        var id = listenerList.length;
-		if(makeCompatible == true || makeCompatible == undefined) {
-			usedFunc = makeCompatibilityWrapper(elt, ev, func);
-		}
-		if(elt.addEventListener) {
-			elt.addEventListener(ev, usedFunc, false);
-			listenerList[id] = [elt, ev, usedFunc];
-			return id;
-		}
-		else if(elt.attachEvent) {
-			elt.attachEvent("on" + ev, usedFunc);
-			listenerList[id] = [elt, ev, usedFunc];
-			return id;
-		}
-		else return false;
-	};
-
-	DOM.Events.removeListener = function() {
-		var elt, ev, func;
-		if(arguments.length == 1 && listenerList[arguments[0]]) {
-			elt  = listenerList[arguments[0]][0];
-			ev   = listenerList[arguments[0]][1];
-			func = listenerList[arguments[0]][2];
-			delete listenerList[arguments[0]];
-		}
-		else if(arguments.length == 3) {
-			elt  = arguments[0];
-			ev   = arguments[1];
-			func = arguments[2];
-		}
-		else return;
-
-		if(elt.removeEventListener) {
-			elt.removeEventListener(ev, func, false);
-		}
-		else if(elt.detachEvent) {
-			elt.detachEvent("on" + ev, func);
-		}
-	};
-
-    var rval;
-
-    function makeCompatibilityWrapper(elt, ev, func) {
-        return function (e) {
-            rval = true;
-            if(e == undefined && window.event != undefined)
-                e = window.event;
-            if(e.target == undefined && e.srcElement != undefined)
-                e.target = e.srcElement;
-            if(e.currentTarget == undefined)
-                e.currentTarget = elt;
-            if(e.relatedTarget == undefined) {
-                if(ev == "mouseover" && e.fromElement != undefined)
-                    e.relatedTarget = e.fromElement;
-                else if(ev == "mouseout" && e.toElement != undefined)
-                    e.relatedTarget = e.toElement;
-            }
-            if(e.pageX == undefined) {
-                if(document.body.scrollTop != undefined) {
-                    e.pageX = e.clientX + document.body.scrollLeft;
-                    e.pageY = e.clientY + document.body.scrollTop;
-                }
-                if(document.documentElement != undefined
-                && document.documentElement.scrollTop != undefined) {
-                    if(document.documentElement.scrollTop > 0
-                    || document.documentElement.scrollLeft > 0) {
-                        e.pageX = e.clientX + document.documentElement.scrollLeft;
-                        e.pageY = e.clientY + document.documentElement.scrollTop;
-                    }
-                }
-            }
-            if(e.stopPropagation == undefined)
-                e.stopPropagation = IEStopPropagation;
-            if(e.preventDefault == undefined)
-                e.preventDefault = IEPreventDefault;
-            if(e.cancelable == undefined) e.cancelable = true;
-            func(e);
-            return rval;
-        };
-    }
-
-    function IEStopPropagation() {
-        if(window.event) window.event.cancelBubble = true;
-    }
-
-    function IEPreventDefault() {
-        rval = false;
-    }
-
-	function cleanUpIE () {
-		for(var i=0; i<listenerList.length; i++) {
-			var listener = listenerList[i];
-			if(listener) {
-				var elt = listener[0];
-                var ev = listener[1];
-                var func = listener[2];
-				elt.detachEvent("on" + ev, func);
-			}
-		}
-        listenerList = null;
-	}
-
-	if(!window.addEventListener && window.attachEvent) {
-		window.attachEvent("onunload", cleanUpIE);
-	}
-
-})();
-
-/**
-
-=head1 AUTHOR
-
-Justin Constantino, <F<goflyapig@gmail.com>>.
-
-=head1 COPYRIGHT
-
-  Copyright (c) 2005 Justin Constantino.  All rights reserved.
-  This module is free software; you can redistribute it and/or modify it
-  under the terms of the GNU Lesser General Public Licence.
-
-*/
-
-/* /home/autarch/projects/Silki/share/js-source/DOM/Find.js */
-
-if ( typeof DOM == "undefined") DOM = {};
-
-DOM.Find = {
-
-  VERSION: 1.00,
-
-  EXPORT: [ 'checkAttributes','getElementsByAttributes', 'geba' ],
-
-  checkAttributes: function(hash,el){
-
-      // Check that passed arguments make sense
-
-      if( el === undefined || el === null )
-        throw("Second argument to checkAttributes should be a DOM node or the ID of a DOM Node");
-
-      if( el.constructor === String )
-        el = document.getElementById(el);
-
-      if( el === null || !el.nodeType ) // Make sure el is a Node
-        throw("Second argument to checkAttributes should be a DOM node or the ID of a DOM Node");
-
-      if(! (hash instanceof Object))
-        throw("First argument to checkAttributes should be an Object of attribute/test pairs. See the documentation for more information.");
-
-      // If we're still here, check the test pairs
-
-      for(key in hash){
-
-        /*
-          Prepare the "pointer"
-        */
-
-        // Check to make sure property chain is valled
-        // Provides easy declaration of nested propteries
-        // Example: {'style.position':'absolute'}
-
-        var pointer = el      // pointer
-        var last    = null;   // last pointer used to aplly() later
-
-        var pieces  = key.split('.');                   // break up the property chain
-
-        for(var i=0; i<pieces.length; i++){             // loop property chain
-          // There can be no match
-          // if the attribute does not exist
-          if(!pointer[pieces[i]]) return false;         // test the pointer exists
-          // Save the current pointer
-          last    = pointer;                            // backup current pointer
-          // Develope the pointer
-          pointer = pointer[pieces[i]];                 // stack the pointer
-        }
-
-        // Check if the pointer is actually a function
-        // Provides easy declaration of methods
-        // Example: {'hasChildNodes':true}
-        // Example: {'firstChild.hasChildNodes':true}
-
-        // Does not work in IE
-        // IE returns Object instead of Function
-        if( pointer instanceof Function )
-          try {
-            pointer = pointer.apply(last);
-          }catch(error){
-            throw("First agrument to checkAttributes included a Function Refrence which caused an ERROR: " +  error);
-          }
-
-        /*
-          Test "pointer" against "value"
-        */
-
-        // Perform one of 3 tests
-        // Regex, Function, Scalar
-
-        // Check against a regex
-        if( hash[key] instanceof RegExp ){
-          if( !hash[key].test( pointer ) )
-             return false;
-
-        // Check against a function
-        }else if( hash[key] instanceof Function ){
-          if( !hash[key]( pointer ) )
-            return false;
-
-        // Or check against a scalar value
-        }else if( hash[key] != pointer ){
-          return false;
-        }
-
-      }
-
-      return true;
-  },
-
-  getElementsByAttributes: function( searchAttributes, startAt, resultsLimit, depthLimit ) {
-
-     // if we haven't been deep enough yet
-     if(depthLimit !== undefined && depthLimit <= 0) return [];
-
-     // if no startAt is provided use document as default
-     if(startAt === undefined){
-       startAt = document;
-
-     // if startAt is a string convert it to a domref
-     }else if(typeof startAt == 'string'){
-       startAt = document.getElementById(startAt);
-     }
-
-     // check the startAt element
-     var results = DOM.Find.checkAttributes(searchAttributes, startAt) ? [ startAt ] : [];
-
-     // return the results right away if they only want 1 result
-     if(resultsLimit == 1 && results.length > 0) return results;
-
-     // Scan the childNodes of startAt
-     if (startAt.childNodes)
-       for( var i = 0; i < startAt.childNodes.length; i++){
-         // concat onto results any childNodes that match
-         results = results.concat(
-            DOM.Find.getElementsByAttributes( searchAttributes, startAt.childNodes[i], (resultsLimit) ? resultsLimit - results.length : undefined, (depthLimit) ? depthLimit -1 : undefined )
-         )
-         if (resultsLimit !== undefined && results.length >= resultsLimit) break;
-       }
-
-     return results;
-  }
-
+if ( typeof Silki == "undefined" ) {
+    Silki = {};
 }
 
-/*
+Silki.PageEdit = function () {
+    this.form = $("form-and-preview");
 
-=head1 AUTHOR
+    if ( ! this.form ) {
+        return;
+    }
 
-Daniel, Aquino <mr.danielaquino@gmail.com>.
-
-=head1 COPYRIGHT
-
-  Copyright (c) 2007 Daniel Aquino.
-  Released under the Perl Licence:
-  http://dev.perl.org/licenses/
-
-*/
+    this.toolbar = new Silki.PageEdit.Preview ();
+    this.toolbar = new Silki.PageEdit.Toolbar ();
+};
 
 
 /* /home/autarch/projects/Silki/share/js-source/HTTP/Request.js */
@@ -805,6 +535,790 @@ if ( typeof( HTTP.Request.Transport ) == "undefined" ) {
 }
 
 
+/* /home/autarch/projects/Silki/share/js-source/Silki/PageEdit/Preview.js */
+
+JSAN.use('DOM.Utils');
+JSAN.use('HTTP.Request');
+
+if ( typeof Silki == "undefined" ) {
+    Silki = {};
+}
+
+Silki.PageEdit.Preview = function () {
+    this.form  = $("edit-form");
+    this.preview  = $("preview");
+    this.textarea = $("page-content");
+
+    if ( ! ( this.form && this.preview && this.textarea ) ) {
+        return;
+    }
+
+    this.uri = this.form.action.replace( /(\/pages)?$/, '/html' );
+
+    this.last_content = this.textarea.value;
+
+    this._interval_id = setInterval( this._maybeUpdatePreviewFunc(), 1000 );
+};
+
+Silki.PageEdit.Preview.prototype._maybeUpdatePreviewFunc = function () {
+    var self = this;
+
+    var func = function (e) {
+        if ( ! self.textarea.value.length ) {
+            this.preview.innerHTML = "";
+        }
+
+        if ( self.textarea.value == self.last_content ) {
+            return;
+        }
+
+        if ( self._updating ) {
+            return;
+        }
+
+        self.last_content = self.textarea.value;
+
+        self._fetchPreview();
+    };
+
+    return func;
+};
+
+Silki.PageEdit.Preview.prototype._fetchPreview = function () {
+    this._updating = true;
+
+    var self = this;
+
+    var on_success = function (trans) {
+        self._updatePreview(trans);
+    };
+
+    new HTTP.Request( {
+        "uri":        this.uri,
+        "method":     "post",
+        "parameters": "x-tunneled-method=GET;content=" + encodeURIComponent( this.textarea.value ),
+        "onSuccess":  on_success,
+        "onFailure":  function () { self._updating = false; }
+    } );
+};
+
+Silki.PageEdit.Preview.prototype._updatePreview = function (trans) {
+    var resp = eval( "(" + trans.responseText + ")" );
+
+    if ( resp.html ) {
+        this.preview.innerHTML = resp.html;
+    }
+
+    this._updating = false;
+}
+
+
+/* /home/autarch/projects/Silki/share/js-source/DOM/Element.js */
+
+try {
+    JSAN.use( 'DOM.Utils' );
+} catch (e) {
+    throw "DOM.Element requires JSAN to be loaded";
+}
+
+if ( typeof( DOM ) == 'undefined' ) {
+    DOM = {};
+}
+
+DOM.Element = {
+    hide: function() {
+        for (var i = 0; i < arguments.length; i++) {
+            var element = $(arguments[i]);
+            if ( element && element.nodeType == 1 ) {
+                element.style.display = 'none';
+            }
+        }
+    }
+
+   ,show: function() {
+        for (var i = 0; i < arguments.length; i++) {
+            var element = $(arguments[i]);
+            if ( element && element.nodeType == 1 ) {
+                element.style.display = '';
+            }
+        }
+    }
+
+   ,toggle: function() {
+        for (var i = 0; i < arguments.length; i++) {
+            var element = $(arguments[i]);
+            if ( element && element.nodeType == 1 )
+                element.style.display =
+                    (element.style.display == 'none' ? '' : 'none');
+        }
+    }
+
+   ,remove: function() {
+        for (var i = 0; i < arguments.length; i++) {
+            element = $(arguments[i]);
+            if ( element )
+                element.parentNode.removeChild(element);
+        }
+    }
+
+   ,getHeight: function(element) {
+        element = $(element);
+        if ( !element ) return;
+        return element.offsetHeight;
+    }
+
+   ,hasClassName: function(element, className) {
+        element = $(element);
+        if ( !element || element.nodeType != 1 ) return;
+        var a = element.className.split(' ');
+        for (var i = 0; i < a.length; i++) {
+            if (a[i] == className)
+                return true;
+        }
+        return false;
+    }
+
+   ,addClassName: function(element, className) {
+        element = $(element);
+        if ( !element || element.nodeType != 1 ) return;
+        DOM.Element.removeClassName(element, className);
+        element.className += ' ' + className;
+    }
+
+   ,removeClassName: function(element, className) {
+        element = $(element);
+        if ( !element || element.nodeType != 1 ) return;
+
+        var newClassnames = new Array();
+        var a = element.className.split(' ');
+        for (var i = 0; i < a.length; i++) {
+            if (a[i] != className) {
+                newClassnames.push( a[i] );
+            }
+        }
+        element.className = newClassnames.join(' ');
+    }
+
+   ,cleanWhitespace: function() {
+        var element = $(element);
+        if ( !element ) return;
+        for (var i = 0; i < element.childNodes.length; i++) {
+            var node = element.childNodes[i];
+            if (node.nodeType == 3 && !/\S/.test(node.nodeValue))
+                DOM.Element.remove(node);
+        }
+    }
+};
+
+
+/* /home/autarch/projects/Silki/share/js-source/DOM/Events.js */
+
+(function () {
+	if(typeof DOM == "undefined") DOM = {};
+	DOM.Events = {};
+
+    DOM.Events.VERSION = "0.02";
+	DOM.Events.EXPORT = [];
+	DOM.Events.EXPORT_OK = ["addListener", "removeListener"];
+	DOM.Events.EXPORT_TAGS = {
+		":common": DOM.Events.EXPORT,
+		":all": [].concat(DOM.Events.EXPORT, DOM.Events.EXPORT_OK)
+	};
+
+	// list of event listeners set by addListener
+	// offset 0 is null to prevent 0 from being used as a listener identifier
+	var listenerList = [null];
+
+	DOM.Events.addListener = function(elt, ev, func, makeCompatible) {
+		var usedFunc = func;
+        var id = listenerList.length;
+		if(makeCompatible == true || makeCompatible == undefined) {
+			usedFunc = makeCompatibilityWrapper(elt, ev, func);
+		}
+		if(elt.addEventListener) {
+			elt.addEventListener(ev, usedFunc, false);
+			listenerList[id] = [elt, ev, usedFunc];
+			return id;
+		}
+		else if(elt.attachEvent) {
+			elt.attachEvent("on" + ev, usedFunc);
+			listenerList[id] = [elt, ev, usedFunc];
+			return id;
+		}
+		else return false;
+	};
+
+	DOM.Events.removeListener = function() {
+		var elt, ev, func;
+		if(arguments.length == 1 && listenerList[arguments[0]]) {
+			elt  = listenerList[arguments[0]][0];
+			ev   = listenerList[arguments[0]][1];
+			func = listenerList[arguments[0]][2];
+			delete listenerList[arguments[0]];
+		}
+		else if(arguments.length == 3) {
+			elt  = arguments[0];
+			ev   = arguments[1];
+			func = arguments[2];
+		}
+		else return;
+
+		if(elt.removeEventListener) {
+			elt.removeEventListener(ev, func, false);
+		}
+		else if(elt.detachEvent) {
+			elt.detachEvent("on" + ev, func);
+		}
+	};
+
+    var rval;
+
+    function makeCompatibilityWrapper(elt, ev, func) {
+        return function (e) {
+            rval = true;
+            if(e == undefined && window.event != undefined)
+                e = window.event;
+            if(e.target == undefined && e.srcElement != undefined)
+                e.target = e.srcElement;
+            if(e.currentTarget == undefined)
+                e.currentTarget = elt;
+            if(e.relatedTarget == undefined) {
+                if(ev == "mouseover" && e.fromElement != undefined)
+                    e.relatedTarget = e.fromElement;
+                else if(ev == "mouseout" && e.toElement != undefined)
+                    e.relatedTarget = e.toElement;
+            }
+            if(e.pageX == undefined) {
+                if(document.body.scrollTop != undefined) {
+                    e.pageX = e.clientX + document.body.scrollLeft;
+                    e.pageY = e.clientY + document.body.scrollTop;
+                }
+                if(document.documentElement != undefined
+                && document.documentElement.scrollTop != undefined) {
+                    if(document.documentElement.scrollTop > 0
+                    || document.documentElement.scrollLeft > 0) {
+                        e.pageX = e.clientX + document.documentElement.scrollLeft;
+                        e.pageY = e.clientY + document.documentElement.scrollTop;
+                    }
+                }
+            }
+            if(e.stopPropagation == undefined)
+                e.stopPropagation = IEStopPropagation;
+            if(e.preventDefault == undefined)
+                e.preventDefault = IEPreventDefault;
+            if(e.cancelable == undefined) e.cancelable = true;
+            func(e);
+            return rval;
+        };
+    }
+
+    function IEStopPropagation() {
+        if(window.event) window.event.cancelBubble = true;
+    }
+
+    function IEPreventDefault() {
+        rval = false;
+    }
+
+	function cleanUpIE () {
+		for(var i=0; i<listenerList.length; i++) {
+			var listener = listenerList[i];
+			if(listener) {
+				var elt = listener[0];
+                var ev = listener[1];
+                var func = listener[2];
+				elt.detachEvent("on" + ev, func);
+			}
+		}
+        listenerList = null;
+	}
+
+	if(!window.addEventListener && window.attachEvent) {
+		window.attachEvent("onunload", cleanUpIE);
+	}
+
+})();
+
+/**
+
+=head1 AUTHOR
+
+Justin Constantino, <F<goflyapig@gmail.com>>.
+
+=head1 COPYRIGHT
+
+  Copyright (c) 2005 Justin Constantino.  All rights reserved.
+  This module is free software; you can redistribute it and/or modify it
+  under the terms of the GNU Lesser General Public Licence.
+
+*/
+
+/* /home/autarch/projects/Silki/share/js-source/Textarea.js */
+
+Textarea = function (textarea) {
+    if ( textarea.tagName != "TEXTAREA" ) {
+        throw "Textarea requires a textarea as its constructor argument";
+    }
+
+    /* IE just does not work yet */
+    if ( document.selection && document.selection.createRange ) {
+        return;
+    }
+
+    this.textarea = textarea;
+};
+
+if ( document.selection && document.selection.createRange ) {
+    Textarea.prototype.selectedText = function () {
+        var text = document.selection.createRange().text;
+
+        if ( typeof text == "undefined" ) {
+            return "";
+        }
+
+        return text;
+    };
+
+    Textarea.prototype.replaceSelectedText = function (text) {
+        this.textarea.focus();
+
+        var range = document.selection.createRange();
+        range.text = text;
+
+        range.select();
+    };
+
+    Textarea.prototype.caretPosition = function () {
+        this.textarea.focus();
+        return this.textarea.selectionStart;
+    };
+
+    Textarea.prototype.selectText = function ( start, end ) {
+        this.textarea.focus();
+
+        var range = this._makeNewRange( start, end );
+    };
+
+    Textarea.prototype.moveCaret = function (offset) {
+        var pos = this.caretPosition() + offset;
+
+        var range = this._makeNewRange( pos, pos );
+        range.select();
+    };
+
+    Textarea.prototype._makeNewRange = function ( start, end ) {
+        this.textarea.focus();
+
+        var range = document.selection.createRange();
+        range.collapse(true);
+        range.moveEnd( "character", start );
+        range.moveStart( "character", end );
+
+        return range();
+    };
+}
+else {
+    Textarea.prototype.selectedText = function () {
+        var start = this.textarea.selectionStart;
+        var end = this.textarea.selectionEnd;
+
+        var text = this.textarea.value.substring( start, end );
+
+        if ( typeof text == "undefined" ) {
+            return "";
+        }
+
+        return text;
+    };
+
+    Textarea.prototype.replaceSelectedText = function (text) {
+        var start = this.textarea.selectionStart;
+        var end = this.textarea.selectionEnd;
+
+        var scroll = this.textarea.scrollTop;
+
+        this.textarea.value =
+            this.textarea.value.substring( 0, start )
+            + text
+            + this.textarea.value.substring( end, this.textarea.value.length );
+
+        this.textarea.focus();
+
+        this.textarea.selectionStart = start + text.length;
+        this.textarea.selectionEnd = start + text.length;
+        this.textarea.scrollTop = scroll;
+    };
+
+    Textarea.prototype.caretPosition = function () {
+        return this.textarea.selectionStart;
+    };
+
+    Textarea.prototype.selectText = function ( start, end ) {
+        this.textarea.selectionStart = start;
+        this.textarea.selectionEnd = end;
+    };
+
+    Textarea.prototype.moveCaret = function (offset) {
+        var new_pos = this.caretPosition() + offset;
+
+        this.textarea.setSelectionRange( new_pos, new_pos );
+    };
+}
+
+Textarea.prototype.previousLine = function () {
+    var text = this.textarea.value;
+
+    var last_line_end = text.lastIndexOf( "\n", this.caretPosition() - 1);
+
+    if ( ! last_line_end ) {
+        return "";
+    }
+    else {
+        var prev_line_start = text.lastIndexOf( "\n", last_line_end - 1 ) + 1;
+        return text.substr( prev_line_start, last_line_end - prev_line_start );
+    }
+}
+
+Textarea.prototype.caretIsMidLine = function () {
+    var pos = this.caretPosition();
+
+    if ( pos == 0 ) {
+        return false;
+    }
+
+    var char_before = this.textarea.value.substr( pos - 1, 1 );
+    if ( char_before == "\n" || char_before == "" ) {
+        return false;
+    }
+    else {
+        return true;
+    }
+};
+
+Textarea.prototype.moveCaretToBeginningOfLine = function () {
+    var pos = this.textarea.value.lastIndexOf( "\n", this.caretPosition() );
+
+    if ( pos == -1 ) {
+        this.moveCaret( -1 * this.caretPosition() );
+        return;
+    }
+
+    if ( pos == this.caretPosition() ) {
+        /* If we take the char before and the char after the caret
+         * and they're both newlines, then that means the caret is
+         * currently at the head of an empty line. If, however, the
+         * character before the caret's position is _not_ a newline,
+         * it means we're at the end of a line. */
+        if ( this.textarea.value.substr( this.caretPosition() -1, 2 ) != "\n\n" ) {
+            this.moveCaret( -1 * this.caretPosition() );
+        }
+        return;
+    }
+
+    this.moveCaret( ( pos - this.caretPosition() ) + 1 );
+};
+
+
+/* /home/autarch/projects/Silki/share/js-source/Silki/PageEdit/Toolbar.js */
+
+JSAN.use('DOM.Element');
+JSAN.use('DOM.Events');
+JSAN.use('DOM.Utils');
+JSAN.use('Textarea');
+
+Silki.PageEdit.Toolbar = function () {
+    /* Not really working yet */
+    return;
+
+    this.textarea = new Textarea ( $("page-content") );
+
+    if ( ! this.textarea ) {
+        return;
+    }
+
+    for ( var i = 0; i < Silki.PageEdit.Toolbar._Buttons.length; i++ ) {
+        var button_def = Silki.PageEdit.Toolbar._Buttons[i];
+
+        var button = $( button_def[0] + "-button" );
+
+        if ( ! button ) {
+            continue;
+        }
+
+        if ( typeof button_def[1] == "function" ) {
+            this._instrumentButton( button, button_def[1] );
+        }
+        else {
+            var open = button_def[1];
+            var close = button_def[2];
+
+            var func = this._makeTagTextFunction( open, close );
+
+            this._instrumentButton( button, func );
+        }
+    }
+
+    DOM.Element.show( $("toolbar") );
+};
+
+Silki.PageEdit.Toolbar.prototype._makeTagTextFunction = function ( open, close ) {
+    var self = this;
+
+    var func = function () {
+        var text = self.textarea.selectedText();
+
+        var result = text.match( /^(\s+)?(.+?)(\s+)?$/ );
+
+        var new_text;
+        if ( result && result[0] ) {
+            new_text =
+                ( typeof result[1] != "undefined" ? result[1] : "" )
+                + open + result[2] + close +
+                ( typeof result[3] != "undefined" ? result[3] : "" );
+        }
+        else {
+            new_text = open + text + close;
+        }
+
+        self.textarea.replaceSelectedText(new_text);
+
+        if ( ! text.length ) {
+            self.textarea.moveCaret( close.length * -1 );
+        }
+    };
+
+    return func;
+};
+
+Silki.PageEdit.Toolbar.prototype._instrumentButton = function ( button, func ) {
+    var self = this;
+
+    var on_click = function () {
+        /* get selected text */
+       func.apply(self);
+    };
+
+    DOM.Events.addListener( button, "click", on_click );
+};
+
+Silki.PageEdit.Toolbar._insertBulletList = function () {
+    this._insertBullet("*");
+};
+
+Silki.PageEdit.Toolbar._insertNumberList = function () {
+    this._insertBullet("1.");
+};
+
+Silki.PageEdit.Toolbar.prototype._insertBullet = function (bullet) {
+    var insert;
+    var old_pos;
+
+    if ( this.textarea.caretIsMidLine() ) {
+        insert = bullet + " ";
+        old_pos = this.textarea.caretPosition();
+    }
+    else {
+        insert = bullet + " \n\n";
+    }
+
+    if ( ! this.textarea.previousLine().match(/^\n?$/) ) {
+        insert = "\n" + insert;
+    }
+
+    this.textarea.moveCaretToBeginningOfLine();
+
+    this.textarea.replaceSelectedText(insert);
+
+    if (old_pos) {
+        this.textarea.moveCaret( ( old_pos - this.textarea.caretPosition() ) + insert.length );
+    }
+    else {
+        this.textarea.moveCaret(-2);
+    }
+};
+
+Silki.PageEdit.Toolbar._makeInsertHeaderFunction = function (header) {
+    var func = function () {
+        var old_pos;
+
+        var insert = header + " ";
+
+        if ( this.textarea.caretIsMidLine() ) {
+            old_pos = this.textarea.caretPosition();
+        }
+        else {
+            insert = insert + "\n\n";
+        }
+
+        this.textarea.moveCaretToBeginningOfLine();
+
+        this.textarea.replaceSelectedText(insert);
+
+        if (old_pos) {
+            this.textarea.moveCaret( ( old_pos - this.textarea.caretPosition() ) + insert.length );
+        }
+        else {
+            this.textarea.moveCaret(-2);
+        }
+    };
+
+    return func;
+};
+
+Silki.PageEdit.Toolbar._Buttons = [ [ "h2", Silki.PageEdit.Toolbar._makeInsertHeaderFunction('##') ],
+                            [ "h3", Silki.PageEdit.Toolbar._makeInsertHeaderFunction('###') ],
+                            [ "h4", Silki.PageEdit.Toolbar._makeInsertHeaderFunction('####') ],
+                            [ "bold", "**", "**" ],
+                            [ "italic", "*", "*" ],
+                            [ "bullet-list", Silki.PageEdit.Toolbar._insertBulletList ],
+                            [ "number-list", Silki.PageEdit.Toolbar._insertNumberList ]
+                          ];
+
+
+/* /home/autarch/projects/Silki/share/js-source/DOM/Find.js */
+
+if ( typeof DOM == "undefined") DOM = {};
+
+DOM.Find = {
+
+  VERSION: 1.00,
+
+  EXPORT: [ 'checkAttributes','getElementsByAttributes', 'geba' ],
+
+  checkAttributes: function(hash,el){
+
+      // Check that passed arguments make sense
+
+      if( el === undefined || el === null )
+        throw("Second argument to checkAttributes should be a DOM node or the ID of a DOM Node");
+
+      if( el.constructor === String )
+        el = document.getElementById(el);
+
+      if( el === null || !el.nodeType ) // Make sure el is a Node
+        throw("Second argument to checkAttributes should be a DOM node or the ID of a DOM Node");
+
+      if(! (hash instanceof Object))
+        throw("First argument to checkAttributes should be an Object of attribute/test pairs. See the documentation for more information.");
+
+      // If we're still here, check the test pairs
+
+      for(key in hash){
+
+        /*
+          Prepare the "pointer"
+        */
+
+        // Check to make sure property chain is valled
+        // Provides easy declaration of nested propteries
+        // Example: {'style.position':'absolute'}
+
+        var pointer = el      // pointer
+        var last    = null;   // last pointer used to aplly() later
+
+        var pieces  = key.split('.');                   // break up the property chain
+
+        for(var i=0; i<pieces.length; i++){             // loop property chain
+          // There can be no match
+          // if the attribute does not exist
+          if(!pointer[pieces[i]]) return false;         // test the pointer exists
+          // Save the current pointer
+          last    = pointer;                            // backup current pointer
+          // Develope the pointer
+          pointer = pointer[pieces[i]];                 // stack the pointer
+        }
+
+        // Check if the pointer is actually a function
+        // Provides easy declaration of methods
+        // Example: {'hasChildNodes':true}
+        // Example: {'firstChild.hasChildNodes':true}
+
+        // Does not work in IE
+        // IE returns Object instead of Function
+        if( pointer instanceof Function )
+          try {
+            pointer = pointer.apply(last);
+          }catch(error){
+            throw("First agrument to checkAttributes included a Function Refrence which caused an ERROR: " +  error);
+          }
+
+        /*
+          Test "pointer" against "value"
+        */
+
+        // Perform one of 3 tests
+        // Regex, Function, Scalar
+
+        // Check against a regex
+        if( hash[key] instanceof RegExp ){
+          if( !hash[key].test( pointer ) )
+             return false;
+
+        // Check against a function
+        }else if( hash[key] instanceof Function ){
+          if( !hash[key]( pointer ) )
+            return false;
+
+        // Or check against a scalar value
+        }else if( hash[key] != pointer ){
+          return false;
+        }
+
+      }
+
+      return true;
+  },
+
+  getElementsByAttributes: function( searchAttributes, startAt, resultsLimit, depthLimit ) {
+
+     // if we haven't been deep enough yet
+     if(depthLimit !== undefined && depthLimit <= 0) return [];
+
+     // if no startAt is provided use document as default
+     if(startAt === undefined){
+       startAt = document;
+
+     // if startAt is a string convert it to a domref
+     }else if(typeof startAt == 'string'){
+       startAt = document.getElementById(startAt);
+     }
+
+     // check the startAt element
+     var results = DOM.Find.checkAttributes(searchAttributes, startAt) ? [ startAt ] : [];
+
+     // return the results right away if they only want 1 result
+     if(resultsLimit == 1 && results.length > 0) return results;
+
+     // Scan the childNodes of startAt
+     if (startAt.childNodes)
+       for( var i = 0; i < startAt.childNodes.length; i++){
+         // concat onto results any childNodes that match
+         results = results.concat(
+            DOM.Find.getElementsByAttributes( searchAttributes, startAt.childNodes[i], (resultsLimit) ? resultsLimit - results.length : undefined, (depthLimit) ? depthLimit -1 : undefined )
+         )
+         if (resultsLimit !== undefined && results.length >= resultsLimit) break;
+       }
+
+     return results;
+  }
+
+}
+
+/*
+
+=head1 AUTHOR
+
+Daniel, Aquino <mr.danielaquino@gmail.com>.
+
+=head1 COPYRIGHT
+
+  Copyright (c) 2007 Daniel Aquino.
+  Released under the Perl Licence:
+  http://dev.perl.org/licenses/
+
+*/
+
+
 /* /home/autarch/projects/Silki/share/js-source/Silki/PageTags.js */
 
 JSAN.use('DOM.Events');
@@ -922,104 +1436,6 @@ Silki.PageTags.prototype._makeDeleteTagFunction = function (anchor) {
 
     return func;
 };
-
-/* /home/autarch/projects/Silki/share/js-source/DOM/Element.js */
-
-try {
-    JSAN.use( 'DOM.Utils' );
-} catch (e) {
-    throw "DOM.Element requires JSAN to be loaded";
-}
-
-if ( typeof( DOM ) == 'undefined' ) {
-    DOM = {};
-}
-
-DOM.Element = {
-    hide: function() {
-        for (var i = 0; i < arguments.length; i++) {
-            var element = $(arguments[i]);
-            if ( element && element.nodeType == 1 ) {
-                element.style.display = 'none';
-            }
-        }
-    }
-
-   ,show: function() {
-        for (var i = 0; i < arguments.length; i++) {
-            var element = $(arguments[i]);
-            if ( element && element.nodeType == 1 ) {
-                element.style.display = '';
-            }
-        }
-    }
-
-   ,toggle: function() {
-        for (var i = 0; i < arguments.length; i++) {
-            var element = $(arguments[i]);
-            if ( element && element.nodeType == 1 )
-                element.style.display =
-                    (element.style.display == 'none' ? '' : 'none');
-        }
-    }
-
-   ,remove: function() {
-        for (var i = 0; i < arguments.length; i++) {
-            element = $(arguments[i]);
-            if ( element )
-                element.parentNode.removeChild(element);
-        }
-    }
-
-   ,getHeight: function(element) {
-        element = $(element);
-        if ( !element ) return;
-        return element.offsetHeight;
-    }
-
-   ,hasClassName: function(element, className) {
-        element = $(element);
-        if ( !element || element.nodeType != 1 ) return;
-        var a = element.className.split(' ');
-        for (var i = 0; i < a.length; i++) {
-            if (a[i] == className)
-                return true;
-        }
-        return false;
-    }
-
-   ,addClassName: function(element, className) {
-        element = $(element);
-        if ( !element || element.nodeType != 1 ) return;
-        DOM.Element.removeClassName(element, className);
-        element.className += ' ' + className;
-    }
-
-   ,removeClassName: function(element, className) {
-        element = $(element);
-        if ( !element || element.nodeType != 1 ) return;
-
-        var newClassnames = new Array();
-        var a = element.className.split(' ');
-        for (var i = 0; i < a.length; i++) {
-            if (a[i] != className) {
-                newClassnames.push( a[i] );
-            }
-        }
-        element.className = newClassnames.join(' ');
-    }
-
-   ,cleanWhitespace: function() {
-        var element = $(element);
-        if ( !element ) return;
-        for (var i = 0; i < element.childNodes.length; i++) {
-            var node = element.childNodes[i];
-            if (node.nodeType == 3 && !/\S/.test(node.nodeValue))
-                DOM.Element.remove(node);
-        }
-    }
-};
-
 
 /* /home/autarch/projects/Silki/share/js-source/Silki/URI.js */
 
@@ -1163,10 +1579,6 @@ JSAN.use('DOM.Events');
 
 if ( typeof Silki == "undefined" ) {
     Silki = {};
-}
-
-if ( typeof Silki.QuickSearch == "undefined" ) {
-    Silki.QuickSearch = {};
 }
 
 Silki.QuickSearch = function () {
@@ -1501,6 +1913,13 @@ Silki.User.prototype._handleFailure = function (trans) {
 
 JSAN.use('DOM.Ready');
 JSAN.use('Silki.FileView');
+
+/* These three need to be loaded in this order so Silki.PageEdit can define
+   itself first */
+JSAN.use('Silki.PageEdit');
+JSAN.use('Silki.PageEdit.Preview');
+JSAN.use('Silki.PageEdit.Toolbar');
+
 JSAN.use('Silki.PageTags');
 JSAN.use('Silki.ProcessStatus');
 JSAN.use('Silki.QuickSearch');
@@ -1514,6 +1933,7 @@ if ( typeof Silki == "undefined" ) {
 
 Silki.instrumentAll = function () {
     new Silki.FileView ();
+    new Silki.PageEdit ();
     new Silki.PageTags ();
     new Silki.ProcessStatus ();
     new Silki.QuickSearch ();

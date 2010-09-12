@@ -1,6 +1,6 @@
 package Silki::Web::FormData;
 BEGIN {
-  $Silki::Web::FormData::VERSION = '0.16';
+  $Silki::Web::FormData::VERSION = '0.17';
 }
 
 use strict;
@@ -62,7 +62,7 @@ Silki::Web::FormData - Represents data for filling in forms
 
 =head1 VERSION
 
-version 0.16
+version 0.17
 
 =head1 AUTHOR
 

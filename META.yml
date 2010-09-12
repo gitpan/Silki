@@ -52,13 +52,13 @@ requires:
   Email::Date: 0
   Email::MIME::CreateHTML: 0
   Email::MessageID: 0
-  Email::Sender::Simple: 0
+  Email::Sender: 0.102370
   Email::Valid: 0
   Exception::Class: 0
   Fey: 0
   Fey::DBIManager: 0.13
   Fey::Loader: 0
-  Fey::ORM: 0.33
+  Fey::ORM: 0.34
   File::HomeDir: 0
   File::MimeInfo: 0
   File::Slurp: 0
@@ -113,4 +113,4 @@ requires:
 resources:
   bugtracker: http://rt.cpan.org/NoAuth/Bugs.html?Dist=Silki
   repository: http://hg.urth.org/hg/Silki
-version: 0.16
+version: 0.17

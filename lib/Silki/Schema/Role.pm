@@ -1,6 +1,6 @@
 package Silki::Schema::Role;
 BEGIN {
-  $Silki::Schema::Role::VERSION = '0.16';
+  $Silki::Schema::Role::VERSION = '0.17';
 }
 
 use strict;
@@ -57,7 +57,7 @@ Silki::Schema::Role - Represents a role
 
 =head1 VERSION
 
-version 0.16
+version 0.17
 
 =head1 AUTHOR
 

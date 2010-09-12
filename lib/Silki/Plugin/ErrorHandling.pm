@@ -1,6 +1,6 @@
 package Silki::Plugin::ErrorHandling;
 BEGIN {
-  $Silki::Plugin::ErrorHandling::VERSION = '0.16';
+  $Silki::Plugin::ErrorHandling::VERSION = '0.17';
 }
 
 use strict;
@@ -298,7 +298,7 @@ Silki::Plugin::ErrorHandling - An uber-hack plugin to override Catalyst's error 
 
 =head1 VERSION
 
-version 0.16
+version 0.17
 
 =head1 AUTHOR
 

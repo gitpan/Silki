@@ -1,6 +1,6 @@
 package Silki::View::Mason;
 BEGIN {
-  $Silki::View::Mason::VERSION = '0.16';
+  $Silki::View::Mason::VERSION = '0.17';
 }
 
 use strict;
@@ -11,7 +11,7 @@ use base 'Catalyst::View::Mason';
 {
     package Silki::Mason::Web;
 BEGIN {
-  $Silki::Mason::Web::VERSION = '0.16';
+  $Silki::Mason::Web::VERSION = '0.17';
 }
 
     use Data::Dumper;
@@ -67,6 +67,8 @@ sub has_template_for_path {
     );
 }
 
+__PACKAGE__->meta()->make_immutable( inline_constructor => 0 );
+
 1;
 
 # ABSTRACT: A Mason-based view
@@ -80,7 +82,7 @@ Silki::View::Mason - A Mason-based view
 
 =head1 VERSION
 
-version 0.16
+version 0.17
 
 =head1 AUTHOR
 

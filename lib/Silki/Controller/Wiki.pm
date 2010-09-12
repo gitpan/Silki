@@ -1,6 +1,6 @@
 package Silki::Controller::Wiki;
 BEGIN {
-  $Silki::Controller::Wiki::VERSION = '0.16';
+  $Silki::Controller::Wiki::VERSION = '0.17';
 }
 
 use strict;
@@ -28,6 +28,7 @@ use Moose;
 BEGIN { extends 'Silki::Controller::Base' }
 
 with qw(
+    Silki::Role::Controller::PagePreview
     Silki::Role::Controller::Pager
     Silki::Role::Controller::RevisionsAtomFeed
     Silki::Role::Controller::User
@@ -521,8 +522,17 @@ sub new_page_form : Chained('_set_wiki') : PathPart('new_page_form') : Args(0) {
 
     $self->_require_permission_for_wiki( $c, $c->stash()->{wiki}, 'Edit' );
 
-    $c->stash()->{title}    = $c->request()->params()->{title};
+    $c->stash()->{title}   = $c->request()->params()->{title};
+    $c->stash()->{preview} = q{<br />};
+
     $c->stash()->{template} = '/wiki/new-page-form';
+}
+
+sub new_page_html : Chained('_set_wiki') : PathPart('html') : Args(0) {
+    my $self = shift;
+    my $c    = shift;
+
+    $self->_send_preview_html($c);
 }
 
 sub page_collection : Chained('_set_wiki') : PathPart('pages') : Args(0) : ActionClass('+Silki::Action::REST') {
@@ -759,7 +769,7 @@ Silki::Controller::Wiki - Controller class for wikis
 
 =head1 VERSION
 
-version 0.16
+version 0.17
 
 =head1 AUTHOR
 
