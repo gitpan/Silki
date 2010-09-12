@@ -1,6 +1,6 @@
 package Silki::Markdent::Event::WikiLink;
 BEGIN {
-  $Silki::Markdent::Event::WikiLink::VERSION = '0.17';
+  $Silki::Markdent::Event::WikiLink::VERSION = '0.18';
 }
 
 use strict;
@@ -41,7 +41,7 @@ Silki::Markdent::Event::WikiLink - Represents a link to a wiki page
 
 =head1 VERSION
 
-version 0.17
+version 0.18
 
 =head1 AUTHOR
 

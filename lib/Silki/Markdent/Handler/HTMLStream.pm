@@ -1,6 +1,6 @@
 package Silki::Markdent::Handler::HTMLStream;
 BEGIN {
-  $Silki::Markdent::Handler::HTMLStream::VERSION = '0.17';
+  $Silki::Markdent::Handler::HTMLStream::VERSION = '0.18';
 }
 
 use strict;
@@ -208,7 +208,7 @@ Silki::Markdent::Handler::HTMLStream - A subclass of Markdent::Handler::HTMLStre
 
 =head1 VERSION
 
-version 0.17
+version 0.18
 
 =head1 AUTHOR
 

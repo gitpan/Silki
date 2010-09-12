@@ -1,6 +1,6 @@
 package Silki::Types;
 BEGIN {
-  $Silki::Types::VERSION = '0.17';
+  $Silki::Types::VERSION = '0.18';
 }
 
 use strict;
@@ -24,7 +24,7 @@ Silki::Types - Exports Silki types as well as Moose and Path::Class types
 
 =head1 VERSION
 
-version 0.17
+version 0.18
 
 =head1 AUTHOR
 

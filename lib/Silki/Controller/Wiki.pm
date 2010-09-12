@@ -1,6 +1,6 @@
 package Silki::Controller::Wiki;
 BEGIN {
-  $Silki::Controller::Wiki::VERSION = '0.17';
+  $Silki::Controller::Wiki::VERSION = '0.18';
 }
 
 use strict;
@@ -769,7 +769,7 @@ Silki::Controller::Wiki - Controller class for wikis
 
 =head1 VERSION
 
-version 0.17
+version 0.18
 
 =head1 AUTHOR
 

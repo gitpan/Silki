@@ -1,6 +1,6 @@
 package Silki::Role::Schema::SystemLogger;
 BEGIN {
-  $Silki::Role::Schema::SystemLogger::VERSION = '0.17';
+  $Silki::Role::Schema::SystemLogger::VERSION = '0.18';
 }
 
 use strict;
@@ -81,7 +81,7 @@ Silki::Role::Schema::SystemLogger - Logs specified actions in the SystemLog tabl
 
 =head1 VERSION
 
-version 0.17
+version 0.18
 
 =head1 AUTHOR
 

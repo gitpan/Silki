@@ -1,6 +1,6 @@
 package Silki::Role::Controller::PagePreview;
 BEGIN {
-  $Silki::Role::Controller::PagePreview::VERSION = '0.17';
+  $Silki::Role::Controller::PagePreview::VERSION = '0.18';
 }
 
 use strict;

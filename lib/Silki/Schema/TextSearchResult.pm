@@ -1,6 +1,6 @@
 package Silki::Schema::TextSearchResult;
 BEGIN {
-  $Silki::Schema::TextSearchResult::VERSION = '0.17';
+  $Silki::Schema::TextSearchResult::VERSION = '0.18';
 }
 
 use strict;
@@ -78,7 +78,7 @@ Silki::Schema::TextSearchResult - Represents a text search result
 
 =head1 VERSION
 
-version 0.17
+version 0.18
 
 =head1 AUTHOR
 
