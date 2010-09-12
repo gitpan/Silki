@@ -1,6 +1,6 @@
 package Silki::Role::Controller::User;
 BEGIN {
-  $Silki::Role::Controller::User::VERSION = '0.18';
+  $Silki::Role::Controller::User::VERSION = '0.19';
 }
 
 use strict;
@@ -256,7 +256,7 @@ Silki::Role::Controller::User - Provides user-related methods and actions
 
 =head1 VERSION
 
-version 0.18
+version 0.19
 
 =head1 AUTHOR
 

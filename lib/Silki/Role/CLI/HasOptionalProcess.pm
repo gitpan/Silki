@@ -1,6 +1,6 @@
 package Silki::Role::CLI::HasOptionalProcess;
 BEGIN {
-  $Silki::Role::CLI::HasOptionalProcess::VERSION = '0.18';
+  $Silki::Role::CLI::HasOptionalProcess::VERSION = '0.19';
 }
 
 use strict;

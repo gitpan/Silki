@@ -1,6 +1,6 @@
 package Silki::Config;
 BEGIN {
-  $Silki::Config::VERSION = '0.18';
+  $Silki::Config::VERSION = '0.19';
 }
 
 use strict;
@@ -932,7 +932,7 @@ Silki::Config - Configuration information for Silki
 
 =head1 VERSION
 
-version 0.18
+version 0.19
 
 =head1 AUTHOR
 

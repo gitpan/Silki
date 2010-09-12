@@ -1,6 +1,6 @@
 package Silki::Wiki::Importer;
 BEGIN {
-  $Silki::Wiki::Importer::VERSION = '0.18';
+  $Silki::Wiki::Importer::VERSION = '0.19';
 }
 
 use strict;
@@ -273,7 +273,10 @@ sub _import_user {
         );
 
         if ( $data->{openid_uri} ) {
-            $user->update( openid_uri => $data->{openid_uri} );
+            $user->update(
+                openid_uri => $data->{openid_uri},
+                user       => $self->user(),
+            );
         }
     }
 
