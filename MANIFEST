@@ -39,6 +39,8 @@ inc/migrations/4/01-user-image-table.sql
 inc/migrations/4/02-update-version.sql
 inc/migrations/5/01-process-table.sql
 inc/migrations/5/02-update-version.sql
+inc/migrations/6/01-user-table.sql
+inc/migrations/6/02-update-version.sql
 inc/migrations/fixup.sql
 lib/Silki.pm
 lib/Silki/Action/REST.pm
@@ -151,6 +153,7 @@ share/css/silki-combined.css
 share/email-templates/activation.html
 share/email-templates/autohandler
 share/email-templates/custom-message.mas
+share/email-templates/forgot-password.html
 share/email-templates/invitation-text.mas
 share/email-templates/invitation.html
 share/help/en/01-formatting.html
@@ -233,11 +236,12 @@ share/mason/recently-viewed.mas
 share/mason/sidebar.mas
 share/mason/site/dashboard
 share/mason/site/help
-share/mason/user/activation-form
 share/mason/user/autohandler
+share/mason/user/confirmation-form
+share/mason/user/forgot-password-form
 share/mason/user/login-form
 share/mason/user/new-user-form
-share/mason/user/pending-activation
+share/mason/user/pending-confirmation
 share/mason/user/preferences-form
 share/mason/user/profile
 share/mason/user/profile-in-wiki.mas
@@ -301,6 +305,7 @@ t/schema/Silki.sql.v2
 t/schema/Silki.sql.v3
 t/schema/Silki.sql.v4
 t/schema/Silki.sql.v5
+t/schema/Silki.sql.v6
 t/schema/migrations.t
 t/share/data/test.jpg
 t/share/data/test.tif

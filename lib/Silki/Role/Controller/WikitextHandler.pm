@@ -1,6 +1,6 @@
 package Silki::Role::Controller::WikitextHandler;
 BEGIN {
-  $Silki::Role::Controller::WikitextHandler::VERSION = '0.19';
+  $Silki::Role::Controller::WikitextHandler::VERSION = '0.20';
 }
 
 use strict;
@@ -50,11 +50,10 @@ sub _check_for_link_spam {
 
     my $config = Silki::Config->new();
 
-    my $key = $config->antispam_key();
-    return unless length $key;
-
+    my $key    = $config->antispam_key();
     my $server = $config->antispam_server();
-    return unless length $server;
+
+    return unless length $key && length $server;
 
     my $ua = Net::Akismet::Protocol->new(
         key  => $key,
@@ -97,7 +96,7 @@ Silki::Role::Controller::WikitextHandler - Handles wikitext provided by the user
 
 =head1 VERSION
 
-version 0.19
+version 0.20
 
 =head1 AUTHOR
 

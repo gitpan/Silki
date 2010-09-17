@@ -1,6 +1,6 @@
 package Silki::JSON;
 BEGIN {
-  $Silki::JSON::VERSION = '0.19';
+  $Silki::JSON::VERSION = '0.20';
 }
 
 use strict;
@@ -31,7 +31,7 @@ Silki::JSON - A thin wrapper around a JSON::XS object
 
 =head1 VERSION
 
-version 0.19
+version 0.20
 
 =head1 AUTHOR
 

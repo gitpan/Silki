@@ -1,6 +1,6 @@
 package Silki::Formatter::WikiToHTML;
 BEGIN {
-  $Silki::Formatter::WikiToHTML::VERSION = '0.19';
+  $Silki::Formatter::WikiToHTML::VERSION = '0.20';
 }
 
 use strict;
@@ -156,7 +156,7 @@ Silki::Formatter::WikiToHTML - Turns wikitext into HTML
 
 =head1 VERSION
 
-version 0.19
+version 0.20
 
 =head1 AUTHOR
 

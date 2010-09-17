@@ -174,9 +174,9 @@ my $wiki = Silki::Schema::Wiki->new( short_name => 'first-wiki' );
         user          => Silki::Schema::User->SystemUser(),
     );
 
-    is(
-        $user->password(), '*disabled*',
-        'password is set to "*disabled*" when disable_login is passed to insert()'
+    ok(
+        !$user->_password_is_encrypted(),
+        'password is not encrypted when disable_login is passed to insert()'
     );
 
     ok( !$user->has_valid_password(), 'user does not have valid password' );
@@ -195,46 +195,45 @@ my $wiki = Silki::Schema::Wiki->new( short_name => 'first-wiki' );
     my $user = Silki::Schema::User->insert(
         email_address       => $email,
         display_name        => 'Example User',
-        password            => $pw,
         requires_activation => 1,
         user                => Silki::Schema::User->SystemUser(),
     );
 
-    ok( length $user->activation_key(),
-        'user has an activation_key when requires_activation is passed to insert()' );
+    ok( length $user->confirmation_key(),
+        'user has an confirmation_key when requires_confirmation is passed to insert()' );
 
     ok( $user->requires_activation(),
         'requires_activation is true' );
 
     is(
-        $user->activation_uri(),
+        $user->confirmation_uri(),
         '/user/'
             . $user->user_id()
-            . '/activation/'
-            . $user->activation_key()
+            . '/confirmation/'
+            . $user->confirmation_key()
             . '/preferences_form',
-        'default activation_uri() is for preferences form'
+        'default confirmation_uri() is for preferences form'
     );
 
     is(
-        $user->activation_uri( view => 'status' ),
+        $user->confirmation_uri( view => 'status' ),
         '/user/'
             . $user->user_id()
-            . '/activation/'
-            . $user->activation_key()
+            . '/confirmation/'
+            . $user->confirmation_key()
             . '/status',
-        'activation_uri() with explicit view'
+        'confirmation_uri() with explicit view'
     );
 
     $user->update(
-        activation_key => undef,
-        user           => $user,
+        confirmation_key => undef,
+        user             => $user,
     );
 
     throws_ok(
-        sub { $user->activation_uri() },
-        qr/^\QCannot make an activation uri for a user which does not need activation/,
-        'cannot get an activation_uri for a user without an activation_key'
+        sub { $user->confirmation_uri() },
+        qr/^\QCannot make a confirmation uri for a user who does not have a confirmation key/,
+        'cannot get a confirmation_uri for a user without a confirmation_key'
     );
 }
 

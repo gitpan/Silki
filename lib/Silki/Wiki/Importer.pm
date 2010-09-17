@@ -1,6 +1,6 @@
 package Silki::Wiki::Importer;
 BEGIN {
-  $Silki::Wiki::Importer::VERSION = '0.19';
+  $Silki::Wiki::Importer::VERSION = '0.20';
 }
 
 use strict;
@@ -268,7 +268,6 @@ sub _import_user {
         $user = Silki::Schema::User->insert(
             %{$data},
             requires_activation => 1,
-            disable_login       => 1,
             user                => $self->user(),
         );
 

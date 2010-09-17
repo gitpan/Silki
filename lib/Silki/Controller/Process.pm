@@ -1,6 +1,6 @@
 package Silki::Controller::Process;
 BEGIN {
-  $Silki::Controller::Process::VERSION = '0.19';
+  $Silki::Controller::Process::VERSION = '0.20';
 }
 
 use strict;
@@ -64,7 +64,7 @@ Silki::Controller::Process - Controller class for processes
 
 =head1 VERSION
 
-version 0.19
+version 0.20
 
 =head1 AUTHOR
 

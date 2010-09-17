@@ -1,6 +1,6 @@
 package Silki::Controller::Wiki;
 BEGIN {
-  $Silki::Controller::Wiki::VERSION = '0.19';
+  $Silki::Controller::Wiki::VERSION = '0.20';
 }
 
 use strict;
@@ -485,7 +485,6 @@ sub _process_new_members {
         else {
             $user = Silki::Schema::User->insert(
                 requires_activation => 1,
-                disable_login       => 1,
                 email_address       => $address->address(),
                 (
                     $address->phrase()
@@ -769,7 +768,7 @@ Silki::Controller::Wiki - Controller class for wikis
 
 =head1 VERSION
 
-version 0.19
+version 0.20
 
 =head1 AUTHOR
 

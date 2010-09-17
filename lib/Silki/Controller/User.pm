@@ -1,6 +1,6 @@
 package Silki::Controller::User;
 BEGIN {
-  $Silki::Controller::User::VERSION = '0.19';
+  $Silki::Controller::User::VERSION = '0.20';
 }
 
 use strict;
@@ -57,12 +57,12 @@ sub wikis_GET {
     return $self->status_ok( $c, entity => \@entity );
 }
 
-sub _set_activation : Chained('_set_user') : PathPart('activation') : CaptureArgs(1) {
+sub _set_confirmation : Chained('_set_user') : PathPart('confirmation') : CaptureArgs(1) {
     my $self = shift;
     my $c    = shift;
     my $key  = shift;
 
-    my $user = Silki::Schema::User->new( activation_key => $key );
+    my $user = Silki::Schema::User->new( confirmation_key => $key );
 
     $c->redirect_and_detach( $c->domain()->uri( with_host => 1 ) )
         unless $user && $user->user_id() == $c->stash()->{user}->user_id();
@@ -70,18 +70,18 @@ sub _set_activation : Chained('_set_user') : PathPart('activation') : CaptureArg
     return;
 }
 
-sub pending_activation : Chained('_set_activation') : PathPart('status') : Args(0)  {
+sub pending_confirmation : Chained('_set_confirmation') : PathPart('status') : Args(0)  {
     my $self = shift;
     my $c    = shift;
 
-    $c->stash()->{template} = '/user/pending-activation';
+    $c->stash()->{template} = '/user/pending-confirmation';
 }
 
-sub activation_form : Chained('_set_activation') : PathPart('preferences_form') : Args(0)  {
+sub confirmation_form : Chained('_set_confirmation') : PathPart('preferences_form') : Args(0)  {
     my $self = shift;
     my $c    = shift;
 
-    $c->stash()->{template} = '/user/activation-form';
+    $c->stash()->{template} = '/user/confirmation-form';
 }
 
 sub login_form : Local {
@@ -144,7 +144,7 @@ sub authentication_POST {
 
                 if ($user) {
                     $c->redirect_and_detach(
-                        $user->activation_uri(
+                        $user->confirmation_uri(
                             view      => 'status',
                             with_host => 1,
                         )
@@ -206,6 +206,81 @@ sub authentication_DELETE {
     my $redirect = $c->request()->params()->{return_to}
         || $c->domain()->application_uri( path => q{} );
     $c->redirect_and_detach($redirect);
+}
+
+sub forgot_password_form : Local {
+    my $self = shift;
+    my $c    = shift;
+
+    $c->stash()->{template} = '/user/forgot-password-form';
+}
+
+sub password_reminder : Local : ActionClass('+Catalyst::Action::REST') {
+}
+
+sub password_reminder_POST {
+    my $self = shift;
+    my $c    = shift;
+
+    my $username = $c->request()->params()->{username};
+
+    my $user;
+
+    my @errors;
+    if ( string_is_empty($username) ) {
+        push @errors, {
+            field   => 'username',
+            message => loc('You must provide an email address.'),
+            };
+    }
+    else {
+        $user = Silki::Schema::User->new( username => $username );
+
+        if ($user) {
+            push @errors,
+                loc('This user account has been disabled by a site admin.')
+                if $user->is_disabled();
+        }
+        else {
+            push @errors, {
+                field => 'username',
+                message =>
+                    loc( "There is no user with the email address %1.", $username ),
+                };
+        }
+    }
+
+    if (@errors) {
+        $c->redirect_with_error(
+            error => \@errors,
+            uri   => $c->domain()->application_uri(
+                path      => '/user/forgot_password_form',
+                with_host => 1,
+            ),
+            form_data => {
+                username  => $username,
+                return_to => $c->request()->params()->{return_to},
+            },
+        );
+    }
+
+    $user->forgot_password();
+
+    $c->session_object()->add_message(
+        loc(
+            'A message telling you how to change your password has been sent to your email address.'
+        )
+    );
+
+    $c->redirect_and_detach(
+        $c->domain()->application_uri(
+            path      => '/user/forgot_password_form',
+            with_host => 1,
+            query =>
+                { return_to => $c->request()->parameters()->{return_to} },
+            with_host => 1,
+        )
+    );
 }
 
 sub new_user_form : Local {
@@ -297,7 +372,7 @@ sub users_collection_POST {
     $user->send_activation_email( sender => Silki::Schema::User->SystemUser() );
 
     $c->redirect_and_detach(
-        $user->activation_uri(
+        $user->confirmation_uri(
             view      => 'status',
             with_host => 1,
         )
@@ -320,7 +395,7 @@ Silki::Controller::User - Controller class for users
 
 =head1 VERSION
 
-version 0.19
+version 0.20
 
 =head1 AUTHOR
 

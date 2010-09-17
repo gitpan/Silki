@@ -1,6 +1,6 @@
 package Silki::Controller::Site;
 BEGIN {
-  $Silki::Controller::Site::VERSION = '0.19';
+  $Silki::Controller::Site::VERSION = '0.20';
 }
 
 use strict;
@@ -76,7 +76,7 @@ Silki::Controller::Site - Controller class for the site
 
 =head1 VERSION
 
-version 0.19
+version 0.20
 
 =head1 AUTHOR
 
