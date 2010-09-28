@@ -1,6 +1,6 @@
 package Silki::Help::File;
 BEGIN {
-  $Silki::Help::File::VERSION = '0.20';
+  $Silki::Help::File::VERSION = '0.21';
 }
 
 use strict;
@@ -70,11 +70,11 @@ Silki::Help::File - A single help file
 
 =head1 VERSION
 
-version 0.20
+version 0.21
 
 =head1 AUTHOR
 
-  Dave Rolsky <autarch@urth.org>
+Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 

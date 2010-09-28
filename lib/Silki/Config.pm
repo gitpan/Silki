@@ -1,6 +1,6 @@
 package Silki::Config;
 BEGIN {
-  $Silki::Config::VERSION = '0.20';
+  $Silki::Config::VERSION = '0.21';
 }
 
 use strict;
@@ -341,7 +341,7 @@ has temp_dir => (
     is      => 'ro',
     isa     => Dir,
     lazy    => 1,
-    default => sub { dir( File::Spec->tmpdir() )->subdir('silki') },
+    default => '_build_temp_dir',
 );
 
 has static_path_prefix => (
@@ -577,6 +577,16 @@ sub _build_mini_image_dir {
     my $self = shift;
 
     return $self->_cache_subdir('mini-image');
+}
+
+sub _build_temp_dir {
+    my $self = shift;
+
+    my $temp = dir( File::Spec->tmpdir() )->subdir('silki');
+
+    $self->_ensure_dir($temp);
+
+    return $temp;
 }
 
 sub _cache_subdir {
@@ -932,11 +942,11 @@ Silki::Config - Configuration information for Silki
 
 =head1 VERSION
 
-version 0.20
+version 0.21
 
 =head1 AUTHOR
 
-  Dave Rolsky <autarch@urth.org>
+Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 

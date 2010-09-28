@@ -1,6 +1,6 @@
 package Silki::Role::Controller::WikitextHandler;
 BEGIN {
-  $Silki::Role::Controller::WikitextHandler::VERSION = '0.20';
+  $Silki::Role::Controller::WikitextHandler::VERSION = '0.21';
 }
 
 use strict;
@@ -9,6 +9,7 @@ use namespace::autoclean;
 
 use Net::Akismet::Protocol;
 use Silki::Config;
+use Silki::I18N qw( loc );
 
 use Moose::Role;
 
@@ -19,7 +20,15 @@ sub _wikitext_from_form {
 
     my $wikitext = $self->_get_wikitext($c, $wiki);
 
-    $self->_check_for_link_spam( $c, $wiki, $wikitext );
+    unless (
+        $c->user()->has_permission_in_wiki(
+            wiki => $wiki, permission => Silki::Schema::Permission->Manage()
+        )
+        && $c->request()->params()->{skip_spam_check}
+        ) {
+
+        $self->_check_for_link_spam( $c, $wiki, $wikitext );
+    }
 
     return $wikitext;
 }
@@ -80,7 +89,7 @@ sub _check_for_link_spam {
 
     die loc(
         'Your submission was flagged as spam by our antispam system. Please check any external links in your text.'
-    );
+    ) . "\n";
 }
 
 1;
@@ -96,11 +105,11 @@ Silki::Role::Controller::WikitextHandler - Handles wikitext provided by the user
 
 =head1 VERSION
 
-version 0.20
+version 0.21
 
 =head1 AUTHOR
 
-  Dave Rolsky <autarch@urth.org>
+Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 

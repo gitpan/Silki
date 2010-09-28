@@ -1,6 +1,6 @@
 package Silki::AppRole::Tabs;
 BEGIN {
-  $Silki::AppRole::Tabs::VERSION = '0.20';
+  $Silki::AppRole::Tabs::VERSION = '0.21';
 }
 
 use strict;
@@ -49,11 +49,11 @@ Silki::AppRole::Tabs - Adds tab-related methods to the Catalyst object
 
 =head1 VERSION
 
-version 0.20
+version 0.21
 
 =head1 AUTHOR
 
-  Dave Rolsky <autarch@urth.org>
+Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 

@@ -295,7 +295,6 @@ t/lib/Silki/Markdent/Handler/MinimalTree.pm
 t/lib/Silki/Test/Email.pm
 t/lib/Silki/Test/FakeSchema.pm
 t/lib/Silki/Test/RealSchema.pm
-t/release-eol.t
 t/release-kwalitee.t
 t/release-pod-coverage.t
 t/release-pod-spell.t

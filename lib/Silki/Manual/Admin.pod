@@ -12,7 +12,7 @@ Silki::Manual::Admin - Admin manual for Silki
 
 =head1 VERSION
 
-version 0.20
+version 0.21
 
 =head1 INSTALLATION
 
@@ -419,7 +419,7 @@ The whole thing, wrapped in a virtual host, looks like this:
 
 =head1 AUTHOR
 
-  Dave Rolsky <autarch@urth.org>
+Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 

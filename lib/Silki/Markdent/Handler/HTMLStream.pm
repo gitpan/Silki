@@ -1,6 +1,6 @@
 package Silki::Markdent::Handler::HTMLStream;
 BEGIN {
-  $Silki::Markdent::Handler::HTMLStream::VERSION = '0.20';
+  $Silki::Markdent::Handler::HTMLStream::VERSION = '0.21';
 }
 
 use strict;
@@ -11,9 +11,10 @@ use MooseX::Params::Validate qw( validated_list );
 use Silki::I18N qw( loc );
 use Silki::Schema::Page;
 use Silki::Schema::Permission;
-use Silki::Types qw( Bool Str );
+use Silki::Types qw( Bool HashRef Str );
 
 use Moose;
+use MooseX::Params::Validate qw( validated_hash );
 use MooseX::SemiAffordanceAccessor;
 use MooseX::StrictConstructor;
 
@@ -32,6 +33,13 @@ has _user => (
     isa      => 'Silki::Schema::User',
     required => 1,
     init_arg => 'user',
+);
+
+has _cached_perms => (
+    is       => 'ro',
+    isa      => HashRef,,
+    default  => sub { {} },
+    init_arg => undef,
 );
 
 sub wiki_link {
@@ -62,13 +70,7 @@ sub _link_to_page {
 
     my $wiki = $p->{wiki} || $page->wiki();
 
-    unless (
-        $self->_user()->has_permission_in_wiki(
-            wiki       => $wiki,
-            permission => Silki::Schema::Permission->Read(),
-        )
-        ) {
-
+    unless ( $self->_check_for_read_permission($wiki) ) {
         $self->_stream()->text( loc('Inaccessible page') );
         return;
     }
@@ -152,13 +154,7 @@ sub _link_to_file {
         return;
     }
 
-    unless (
-        $self->_user()->has_permission_in_wiki(
-            wiki       => $file->wiki(),
-            permission => Silki::Schema::Permission->Read(),
-        )
-        ) {
-
+    unless ( $self->_check_for_read_permission( $file->wiki() ) ) {
         $self->_stream()->text( loc('Inaccessible file') );
         return;
     }
@@ -193,6 +189,54 @@ sub _link_to_file {
     $self->_stream()->tag('_a');
 }
 
+sub _check_for_read_permission {
+    my $self = shift;
+    my $wiki = shift;
+
+    my $cached_perms = $self->_cached_perms;
+
+    if ( exists $cached_perms->{ $wiki->wiki_id() } ) {
+        return $cached_perms->{ $wiki->wiki_id() };
+    }
+
+    return $cached_perms->{ $wiki->wiki_id() }
+        = $self->_user()->has_permission_in_wiki(
+        wiki       => $wiki,
+        permission => Silki::Schema::Permission->Read(),
+        );
+}
+
+sub auto_link {
+    my $self = shift;
+    my ($uri)    = validated_list(
+        \@_,
+        uri => { isa => Str, optional => 1 },
+    );
+
+    $self->_stream()->tag( 'a', href => $uri, rel => 'nofollow' );
+    $self->_stream()->text($uri);
+    $self->_stream()->tag('_a');
+}
+
+sub start_link {
+    my $self = shift;
+    my %p    = validated_hash(
+        \@_,
+        uri            => { isa => Str },
+        title          => { isa => Str, optional => 1 },
+        id             => { isa => Str, optional => 1 },
+        is_implicit_id => { isa => Bool, optional => 1 },
+    );
+
+    delete @p{ grep { ! defined $p{$_} } keys %p };
+
+    $self->_stream()->tag(
+        'a', href => $p{uri},
+        rel => 'nofollow',
+        ( exists $p{title} ? ( title => $p{title} ) : () ),
+    );
+}
+
 __PACKAGE__->meta()->make_immutable();
 
 1;
@@ -208,11 +252,11 @@ Silki::Markdent::Handler::HTMLStream - A subclass of Markdent::Handler::HTMLStre
 
 =head1 VERSION
 
-version 0.20
+version 0.21
 
 =head1 AUTHOR
 
-  Dave Rolsky <autarch@urth.org>
+Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 

@@ -1,6 +1,6 @@
 package Silki::Wiki::Exporter;
 BEGIN {
-  $Silki::Wiki::Exporter::VERSION = '0.20';
+  $Silki::Wiki::Exporter::VERSION = '0.21';
 }
 
 use strict;
