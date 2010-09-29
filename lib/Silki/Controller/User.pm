@@ -1,6 +1,6 @@
 package Silki::Controller::User;
 BEGIN {
-  $Silki::Controller::User::VERSION = '0.21';
+  $Silki::Controller::User::VERSION = '0.23';
 }
 
 use strict;
@@ -146,6 +146,7 @@ sub authentication_POST {
                     $c->redirect_and_detach(
                         $user->confirmation_uri(
                             view      => 'status',
+                            host      => $c->domain()->web_hostname(),
                             with_host => 1,
                         )
                     ) if $user->requires_activation();
@@ -264,7 +265,7 @@ sub password_reminder_POST {
         );
     }
 
-    $user->forgot_password();
+    $user->forgot_password( domain => $c->domain() );
 
     $c->session_object()->add_message(
         loc(
@@ -369,15 +370,18 @@ sub users_collection_POST {
         );
     }
 
-    $user->send_activation_email( sender => Silki::Schema::User->SystemUser() );
+    $user->send_activation_email(
+        sender => Silki::Schema::User->SystemUser(),
+        domain => $c->domain(),
+    );
 
     $c->redirect_and_detach(
         $user->confirmation_uri(
             view      => 'status',
+            host      => $c->domain()->web_hostname(),
             with_host => 1,
         )
     );
-
 }
 
 __PACKAGE__->meta()->make_immutable();
@@ -395,7 +399,7 @@ Silki::Controller::User - Controller class for users
 
 =head1 VERSION
 
-version 0.21
+version 0.23
 
 =head1 AUTHOR
 

@@ -12,7 +12,7 @@ Silki::Manual::Devel - Hack on Silki
 
 =head1 VERSION
 
-version 0.21
+version 0.23
 
 =head1 POSTGRES
 

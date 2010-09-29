@@ -1,6 +1,6 @@
 package Silki::Controller::Page;
 BEGIN {
-  $Silki::Controller::Page::VERSION = '0.21';
+  $Silki::Controller::Page::VERSION = '0.23';
 }
 
 use strict;
@@ -9,6 +9,7 @@ use namespace::autoclean;
 
 use File::MimeInfo qw( mimetype );
 use List::AllUtils qw( all );
+use Silki::Config;
 use Silki::I18N qw( loc );
 use Silki::Formatter::HTMLToWiki;
 use Silki::Formatter::WikiToHTML;
@@ -35,6 +36,13 @@ sub _set_page : Chained('/wiki/_set_wiki') : PathPart('page') : CaptureArgs(1) {
     # methods, which is really annoying. Fortunately, the request still has
     # the original form.
     my $page_path = ( split /\//, $c->request()->path_info() )[3];
+
+    if ( Silki::Config->new()->mod_rewrite_hack() ) {
+        $page_path =~ s/_/ /g;
+        $page_path = Silki::Schema::Page->TitleToURIPath($page_path);
+    }
+
+    warn $c->request->path_info, "\n", $page_path, "\n",$c->request->uri, "\n\n";
 
     my $wiki = $c->stash()->{wiki};
 
@@ -537,7 +545,7 @@ Silki::Controller::Page - Controller class for pages
 
 =head1 VERSION
 
-version 0.21
+version 0.23
 
 =head1 AUTHOR
 

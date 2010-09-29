@@ -1,6 +1,6 @@
 package Silki::Schema::PendingPageLink;
 BEGIN {
-  $Silki::Schema::PendingPageLink::VERSION = '0.21';
+  $Silki::Schema::PendingPageLink::VERSION = '0.23';
 }
 
 use strict;
@@ -30,7 +30,7 @@ Silki::Schema::PendingPageLink - Represents a link to a page which does not yet 
 
 =head1 VERSION
 
-version 0.21
+version 0.23
 
 =head1 AUTHOR
 

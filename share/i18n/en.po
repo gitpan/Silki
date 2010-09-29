@@ -141,12 +141,12 @@ msgstr ""
 msgid "(Link to non-existent wiki: %1)"
 msgstr ""
 
-#: lib/Silki/Controller/User.pm:268
+#: lib/Silki/Controller/User.pm:269
 msgid "A message telling you how to change your password has been sent to your email address."
 msgstr ""
 
 #. ($address->address()
-#: lib/Silki/Controller/Wiki.pm:503
+#: lib/Silki/Controller/Wiki.pm:505
 msgid "A user account for %1 has been created, and this person has been invited to join this wiki."
 msgstr ""
 
@@ -368,7 +368,7 @@ msgid "Deleted the file %1"
 msgstr ""
 
 #. ($page->title()
-#: lib/Silki/Controller/Page.pm:96
+#: lib/Silki/Controller/Page.pm:104
 msgid "Deleted the page %1"
 msgstr ""
 
@@ -517,7 +517,7 @@ msgid "History"
 msgstr ""
 
 #. ($page->title()
-#: lib/Silki/Controller/Page.pm:297 share/mason/autohandler:28
+#: lib/Silki/Controller/Page.pm:305 share/mason/autohandler:28
 msgid "History for %1"
 msgstr ""
 
@@ -835,9 +835,8 @@ msgstr ""
 msgid "Password (again)"
 msgstr ""
 
-#. ($self->domain()
-#: lib/Silki/Schema/User.pm:994
-msgid "Password reset for %1"
+#: lib/Silki/Schema/User.pm:993
+msgid "Password reset for Silki"
 msgstr ""
 
 #: share/mason/wiki/autohandler:13
@@ -976,7 +975,7 @@ msgid "Revision %1"
 msgstr ""
 
 #. ($num)
-#: lib/Silki/Controller/Page.pm:254
+#: lib/Silki/Controller/Page.pm:262
 msgid "Revision %1 has been deleted."
 msgstr ""
 
@@ -1102,7 +1101,7 @@ msgstr ""
 msgid "The email hostname you provided is already in use by another domain."
 msgstr ""
 
-#: lib/Silki/Controller/Page.pm:369
+#: lib/Silki/Controller/Page.pm:377
 msgid "The file has been uploaded, and this page now links to the file."
 msgstr ""
 
@@ -1110,11 +1109,11 @@ msgstr ""
 msgid "The file has been uploaded."
 msgstr ""
 
-#: lib/Silki/Controller/Page.pm:395
+#: lib/Silki/Controller/Page.pm:403
 msgid "The file you uploaded was empty."
 msgstr ""
 
-#: lib/Silki/Controller/Page.pm:388
+#: lib/Silki/Controller/Page.pm:396
 msgid "The file you uploaded was too large."
 msgstr ""
 
@@ -1147,7 +1146,7 @@ msgstr ""
 msgid "The two passwords you provided did not match"
 msgstr ""
 
-#: lib/Silki/Controller/User.pm:153
+#: lib/Silki/Controller/User.pm:154
 msgid "The username or password you provided was not valid."
 msgstr ""
 
@@ -1175,7 +1174,7 @@ msgid "There is already a wiki with this title (%1)"
 msgstr ""
 
 #. ($username)
-#: lib/Silki/Controller/User.pm:245
+#: lib/Silki/Controller/User.pm:246
 msgid "There is no user with the email address %1."
 msgstr ""
 
@@ -1234,7 +1233,7 @@ msgid ""
 "           if you have an account."
 msgstr ""
 
-#: lib/Silki/Controller/User.pm:137 lib/Silki/Controller/User.pm:238
+#: lib/Silki/Controller/User.pm:137 lib/Silki/Controller/User.pm:239
 msgid "This user account has been disabled by a site admin."
 msgstr ""
 
@@ -1348,7 +1347,7 @@ msgstr ""
 msgid "View this file"
 msgstr ""
 
-#: lib/Silki/Controller/Page.pm:54 share/mason/page/autohandler:9
+#: lib/Silki/Controller/Page.pm:62 share/mason/page/autohandler:9
 msgid "View this page"
 msgstr ""
 
@@ -1478,7 +1477,7 @@ msgstr ""
 msgid "You can <a href=\"%html(%1)\">download the export tarball</a>."
 msgstr ""
 
-#. ($user->confirmation_uri( with_host => 1)
+#. ($user->confirmation_uri( with_host => 1, host => $domain->web_hostname()
 #: share/email-templates/forgot-password.html:8
 msgid "You can <a href=\"%html(%1)\">reset your password by using the web interface</a>."
 msgstr ""
@@ -1495,7 +1494,7 @@ msgstr ""
 msgid "You cannot remove yourself as an admin."
 msgstr ""
 
-#: lib/Silki/Controller/Page.pm:381
+#: lib/Silki/Controller/Page.pm:389
 msgid "You did not select a file to upload."
 msgstr ""
 
@@ -1514,7 +1513,7 @@ msgstr ""
 msgid "You have been invited to join the %1 wiki. "
 msgstr ""
 
-#. (Silki::Schema::Domain->DefaultDomain()
+#. ($domain->web_hostname()
 #: share/email-templates/activation.html:9
 msgid "You have created a user account on the %1 server. You must <a href=\"%html(%2)\">activate your user account</a> before you can log in."
 msgstr ""
@@ -1537,7 +1536,7 @@ msgstr ""
 msgid "You must provide a password."
 msgstr ""
 
-#: lib/Silki/Controller/User.pm:230
+#: lib/Silki/Controller/User.pm:231
 msgid "You must provide an email address."
 msgstr ""
 

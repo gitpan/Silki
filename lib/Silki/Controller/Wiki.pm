@@ -1,6 +1,6 @@
 package Silki::Controller::Wiki;
 BEGIN {
-  $Silki::Controller::Wiki::VERSION = '0.21';
+  $Silki::Controller::Wiki::VERSION = '0.23';
 }
 
 use strict;
@@ -479,6 +479,7 @@ sub _process_new_members {
             $user->send_invitation_email(
                 wiki   => $wiki,
                 sender => $c->user(),
+                domain => $c->domain(),
                 %message,
             );
         }
@@ -497,6 +498,7 @@ sub _process_new_members {
             $user->send_activation_email(
                 wiki   => $wiki,
                 sender => $c->user(),
+                domain => $c->domain(),
                 %message,
             );
 
@@ -768,7 +770,7 @@ Silki::Controller::Wiki - Controller class for wikis
 
 =head1 VERSION
 
-version 0.21
+version 0.23
 
 =head1 AUTHOR
 

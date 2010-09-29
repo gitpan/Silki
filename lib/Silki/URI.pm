@@ -1,6 +1,6 @@
 package Silki::URI;
 BEGIN {
-  $Silki::URI::VERSION = '0.21';
+  $Silki::URI::VERSION = '0.23';
 }
 
 use strict;
@@ -56,7 +56,7 @@ Silki::URI - A utility module for generating URIs
 
 =head1 VERSION
 
-version 0.21
+version 0.23
 
 =head1 AUTHOR
 

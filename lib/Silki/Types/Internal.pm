@@ -1,6 +1,6 @@
 package Silki::Types::Internal;
 BEGIN {
-  $Silki::Types::Internal::VERSION = '0.21';
+  $Silki::Types::Internal::VERSION = '0.23';
 }
 
 use strict;
@@ -74,7 +74,7 @@ Silki::Types::Internal - Silki-specific types
 
 =head1 VERSION
 
-version 0.21
+version 0.23
 
 =head1 AUTHOR
 

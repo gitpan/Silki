@@ -1,6 +1,6 @@
 package Silki;
 BEGIN {
-  $Silki::VERSION = '0.21';
+  $Silki::VERSION = '0.23';
 }
 
 use strict;
@@ -75,7 +75,7 @@ Silki - Silki is a Catalyst-based wiki hosting platform
 
 =head1 VERSION
 
-version 0.21
+version 0.23
 
 =head1 DESCRIPTION
 

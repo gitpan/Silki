@@ -1,6 +1,6 @@
 package Silki::Formatter::HTMLToWiki::Table;
 BEGIN {
-  $Silki::Formatter::HTMLToWiki::Table::VERSION = '0.21';
+  $Silki::Formatter::HTMLToWiki::Table::VERSION = '0.23';
 }
 
 use strict;
