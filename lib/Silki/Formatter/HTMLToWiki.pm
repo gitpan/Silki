@@ -1,6 +1,6 @@
 package Silki::Formatter::HTMLToWiki;
 BEGIN {
-  $Silki::Formatter::HTMLToWiki::VERSION = '0.23';
+  $Silki::Formatter::HTMLToWiki::VERSION = '0.24';
 }
 
 use strict;
@@ -299,6 +299,7 @@ sub _file_link {
 
     my $link = q{};
     if ( $wiki_name ne $self->_wiki()->short_name() ) {
+
         # XXX - check that wiki name actually matches file's wiki?
 
         $link

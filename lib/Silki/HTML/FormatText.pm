@@ -1,6 +1,6 @@
 package Silki::HTML::FormatText;
 BEGIN {
-  $Silki::HTML::FormatText::VERSION = '0.23';
+  $Silki::HTML::FormatText::VERSION = '0.24';
 }
 
 use strict;
@@ -12,8 +12,8 @@ use base 'HTML::FormatText';
 # for text/etc.
 
 sub a_start {
-    my $self  = shift;
-    my $node  = shift;
+    my $self = shift;
+    my $node = shift;
 
     $self->{uri_for_a} = $node->attr('href');
 
@@ -21,8 +21,8 @@ sub a_start {
 }
 
 sub a_end {
-    my $self  = shift;
-    my $node  = shift;
+    my $self = shift;
+    my $node = shift;
 
     $self->out( ' (' . $self->{uri_for_a} . ')' )
         if $self->{uri_for_a};
@@ -46,7 +46,7 @@ Silki::HTML::FormatText - A subclass of HTML::FormatText that also handles links
 
 =head1 VERSION
 
-version 0.23
+version 0.24
 
 =head1 AUTHOR
 

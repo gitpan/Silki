@@ -1,6 +1,6 @@
 package Silki::Schema::File;
 BEGIN {
-  $Silki::Schema::File::VERSION = '0.23';
+  $Silki::Schema::File::VERSION = '0.24';
 }
 
 use strict;
@@ -68,15 +68,14 @@ sub _system_log_values_for_delete {
         = 'Deleted file, '
         . $self->filename()
         . ', attached to '
-        . $self->page()->title()
-        . ' in '
+        . $self->page()->title() . ' in '
         . $self->wiki()->title();
 
     return (
         page_id   => $self->page_id(),
         message   => $msg,
         data_blob => {
-            filename => $self->filename(),
+            filename  => $self->filename(),
             mime_type => $self->mime_type(),
             file_size => $self->file_size(),
         },
@@ -111,7 +110,7 @@ sub _filename_is_unique_for_page {
 sub _base_uri_path {
     my $self = shift;
 
-    return $self->wiki()->_base_uri_path() .  '/file/' . $self->file_id();
+    return $self->wiki()->_base_uri_path() . '/file/' . $self->file_id();
 }
 
 sub mime_type_description_for_lang {
@@ -189,7 +188,7 @@ Silki::Schema::File - Represents a file
 
 =head1 VERSION
 
-version 0.23
+version 0.24
 
 =head1 AUTHOR
 

@@ -1,6 +1,6 @@
 package Silki::Schema::Permission;
 BEGIN {
-  $Silki::Schema::Permission::VERSION = '0.23';
+  $Silki::Schema::Permission::VERSION = '0.24';
 }
 
 use strict;
@@ -51,7 +51,7 @@ Silki::Schema::Permission - Represents a permission
 
 =head1 VERSION
 
-version 0.23
+version 0.24
 
 =head1 AUTHOR
 

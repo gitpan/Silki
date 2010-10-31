@@ -1,6 +1,6 @@
 package Silki::Role::CLI::HasOptionalProcess;
 BEGIN {
-  $Silki::Role::CLI::HasOptionalProcess::VERSION = '0.23';
+  $Silki::Role::CLI::HasOptionalProcess::VERSION = '0.24';
 }
 
 use strict;
@@ -100,8 +100,8 @@ sub _handle_success {
 }
 
 if ( eval "use Getopt::Long::Descriptive; 1;"
-    && Getopt::Long::Descriptive->VERSION < 0.086 ) {
-eval <<'EOF';
+    && Getopt::Long::Descriptive->VERSION < 0.087 ) {
+    eval <<'EOF';
 {
 package
     Getopt::Long::Descriptive::Usage;

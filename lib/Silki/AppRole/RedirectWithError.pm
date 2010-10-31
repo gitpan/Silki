@@ -1,6 +1,6 @@
 package Silki::AppRole::RedirectWithError;
 BEGIN {
-  $Silki::AppRole::RedirectWithError::VERSION = '0.23';
+  $Silki::AppRole::RedirectWithError::VERSION = '0.24';
 }
 
 use strict;
@@ -41,7 +41,7 @@ sub redirect_with_error {
     $self->session_object()->set_form_data( $p{form_data} )
         if $p{form_data};
 
-    if ( $self->request()->looks_like_browser() && ! $p{force_json} ) {
+    if ( $self->request()->looks_like_browser() && !$p{force_json} ) {
         $self->redirect_and_detach( $p{uri} );
     }
     else {
@@ -49,6 +49,7 @@ sub redirect_with_error {
 
         $self->response()->status(RC_OK);
         $self->response()->content_type( $p{json_content_type} );
+
         # The URI could be a URI object, in which case we need to stringify it
         # for JSON::XS.
         $self->response()->body( $JSON->encode( { uri => $uri . q{} } ) );
@@ -69,7 +70,7 @@ Silki::AppRole::RedirectWithError - Adds $c->redirect_with_error() to the Cataly
 
 =head1 VERSION
 
-version 0.23
+version 0.24
 
 =head1 AUTHOR
 

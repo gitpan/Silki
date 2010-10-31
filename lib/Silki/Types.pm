@@ -1,6 +1,6 @@
 package Silki::Types;
 BEGIN {
-  $Silki::Types::VERSION = '0.23';
+  $Silki::Types::VERSION = '0.24';
 }
 
 use strict;
@@ -9,7 +9,8 @@ use warnings;
 use base 'MooseX::Types::Combine';
 
 __PACKAGE__->provide_types_from(
-    qw( Silki::Types::Internal MooseX::Types::Moose MooseX::Types::Path::Class ));
+    qw( Silki::Types::Internal MooseX::Types::Moose MooseX::Types::Path::Class )
+);
 
 1;
 
@@ -24,7 +25,7 @@ Silki::Types - Exports Silki types as well as Moose and Path::Class types
 
 =head1 VERSION
 
-version 0.23
+version 0.24
 
 =head1 AUTHOR
 

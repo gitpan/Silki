@@ -1,6 +1,6 @@
 package Silki::Markdent::Event::FileLink;
 BEGIN {
-  $Silki::Markdent::Event::FileLink::VERSION = '0.23';
+  $Silki::Markdent::Event::FileLink::VERSION = '0.24';
 }
 
 use strict;
@@ -41,7 +41,7 @@ Silki::Markdent::Event::FileLink - Represents a link to a file
 
 =head1 VERSION
 
-version 0.23
+version 0.24
 
 =head1 AUTHOR
 

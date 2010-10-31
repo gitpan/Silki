@@ -1,6 +1,6 @@
 package Silki::Localize::Format::Gettext;
 BEGIN {
-  $Silki::Localize::Format::Gettext::VERSION = '0.23';
+  $Silki::Localize::Format::Gettext::VERSION = '0.24';
 }
 
 use strict;
@@ -27,9 +27,9 @@ sub html {
 }
 
 sub quant {
-    my $self  = shift;
-    my $lang  = shift;
-    my $args  = shift;
+    my $self = shift;
+    my $lang = shift;
+    my $args = shift;
 
     my $num = shift @{$args};
     $num += 0;
@@ -217,7 +217,7 @@ Silki::Localize::Format::Gettext - Provides functions for localization, like %da
 
 =head1 VERSION
 
-version 0.23
+version 0.24
 
 =head1 AUTHOR
 

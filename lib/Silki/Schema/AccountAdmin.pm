@@ -1,6 +1,6 @@
 package Silki::Schema::AccountAdmin;
 BEGIN {
-  $Silki::Schema::AccountAdmin::VERSION = '0.23';
+  $Silki::Schema::AccountAdmin::VERSION = '0.24';
 }
 
 use strict;

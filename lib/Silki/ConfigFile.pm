@@ -1,6 +1,6 @@
 package Silki::ConfigFile;
 BEGIN {
-  $Silki::ConfigFile::VERSION = '0.23';
+  $Silki::ConfigFile::VERSION = '0.24';
 }
 
 use strict;
@@ -18,7 +18,7 @@ use MooseX::StrictConstructor;
 
 has file => (
     is      => 'rw',
-    isa     => Maybe[File],
+    isa     => Maybe [File],
     lazy    => 1,
     builder => '_build_file',
     writer  => '_set_file',
@@ -90,7 +90,7 @@ Silki::ConfigFile - Low-level interface to the config file
 
 =head1 VERSION
 
-version 0.23
+version 0.24
 
 =head1 AUTHOR
 

@@ -1,6 +1,6 @@
 package Silki::Schema::SystemLog;
 BEGIN {
-  $Silki::Schema::SystemLog::VERSION = '0.23';
+  $Silki::Schema::SystemLog::VERSION = '0.24';
 }
 
 use strict;
@@ -22,10 +22,11 @@ my $Schema = Silki::Schema->Schema();
 
     has_table( $Schema->table('SystemLog') );
 
+    #<<<
     transform data_blob
         => inflate { thaw( $_[1] ) }
         => deflate { nfreeze( $_[1] ) };
-
+    #>>>
     has_one( $Schema->table('User') );
     has_one( $Schema->table('Wiki') );
     has_one( $Schema->table('Page') );
@@ -66,10 +67,12 @@ sub _BuildAllLogSelect {
 
     my $log_t = $Schema->table('SystemLog');
 
-    $select->select($log_t)
-           ->from($log_t)
-           ->order_by( $log_t->column('log_datetime'), 'DESC' );
-
+    #<<<
+    $select
+        ->select($log_t)
+        ->from($log_t)
+        ->order_by( $log_t->column('log_datetime'), 'DESC' );
+    #>>>
     return $select;
 }
 
@@ -88,7 +91,7 @@ Silki::Schema::SystemLog - Represents a system log entry
 
 =head1 VERSION
 
-version 0.23
+version 0.24
 
 =head1 AUTHOR
 

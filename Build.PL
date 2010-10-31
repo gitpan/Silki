@@ -9,8 +9,10 @@ my %module_build_args = (
   'build_requires' => {
     'MIME::Base64' => '0',
     'Module::Build' => '0.3601',
+    'Test::Differences' => '0',
     'Test::More' => '0.88',
-    'Test::Most' => '0'
+    'Test::Most' => '0',
+    'Test::Requires' => '0'
   },
   'configure_requires' => {
     'Module::Build' => '0.3601'
@@ -20,7 +22,7 @@ my %module_build_args = (
     'Dave Rolsky <autarch@urth.org>'
   ],
   'dist_name' => 'Silki',
-  'dist_version' => '0.23',
+  'dist_version' => '0.24',
   'license' => 'open_source',
   'module_name' => 'Silki',
   'recommends' => {},

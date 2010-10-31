@@ -1,6 +1,6 @@
 package Silki::Role::Controller::File;
 BEGIN {
-  $Silki::Role::Controller::File::VERSION = '0.23';
+  $Silki::Role::Controller::File::VERSION = '0.24';
 }
 
 use strict;

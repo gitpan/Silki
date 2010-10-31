@@ -1,6 +1,6 @@
 package Silki::Controller::Page;
 BEGIN {
-  $Silki::Controller::Page::VERSION = '0.23';
+  $Silki::Controller::Page::VERSION = '0.24';
 }
 
 use strict;
@@ -41,8 +41,6 @@ sub _set_page : Chained('/wiki/_set_wiki') : PathPart('page') : CaptureArgs(1) {
         $page_path =~ s/_/ /g;
         $page_path = Silki::Schema::Page->TitleToURIPath($page_path);
     }
-
-    warn $c->request->path_info, "\n", $page_path, "\n",$c->request->uri, "\n\n";
 
     my $wiki = $c->stash()->{wiki};
 
@@ -545,7 +543,7 @@ Silki::Controller::Page - Controller class for pages
 
 =head1 VERSION
 
-version 0.23
+version 0.24
 
 =head1 AUTHOR
 

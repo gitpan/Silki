@@ -1,6 +1,6 @@
 package Silki::Formatter::HTMLToWiki::Table::Cell;
 BEGIN {
-  $Silki::Formatter::HTMLToWiki::Table::Cell::VERSION = '0.23';
+  $Silki::Formatter::HTMLToWiki::Table::Cell::VERSION = '0.24';
 }
 
 use strict;
@@ -22,7 +22,7 @@ has colspan => (
 
 has alignment => (
     is      => 'ro',
-    isa     => enum( [ qw( left right center ) ] ),
+    isa     => enum( [qw( left right center )] ),
     default => 'left',
 );
 

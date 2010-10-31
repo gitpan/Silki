@@ -1,6 +1,6 @@
 package Silki::Role::Controller::Pager;
 BEGIN {
-  $Silki::Role::Controller::Pager::VERSION = '0.23';
+  $Silki::Role::Controller::Pager::VERSION = '0.24';
 }
 
 use strict;
@@ -13,8 +13,8 @@ use Data::Page;
 use Data::Page::FlickrLike;
 
 sub _make_pager {
-    my $self = shift;
-    my $c    = shift;
+    my $self  = shift;
+    my $c     = shift;
     my $total = shift;
 
     my $limit    = 50;
@@ -44,7 +44,7 @@ Silki::Role::Controller::Pager - Provides a pager to controllers
 
 =head1 VERSION
 
-version 0.23
+version 0.24
 
 =head1 AUTHOR
 

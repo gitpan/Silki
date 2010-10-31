@@ -1,6 +1,6 @@
 package Silki::Plugin::ErrorHandling;
 BEGIN {
-  $Silki::Plugin::ErrorHandling::VERSION = '0.23';
+  $Silki::Plugin::ErrorHandling::VERSION = '0.24';
 }
 
 use strict;
@@ -288,7 +288,6 @@ EOF
 
 # ABSTRACT: An uber-hack plugin to override Catalyst's error output and add better error logging
 
-
 __END__
 =pod
 
@@ -298,7 +297,7 @@ Silki::Plugin::ErrorHandling - An uber-hack plugin to override Catalyst's error 
 
 =head1 VERSION
 
-version 0.23
+version 0.24
 
 =head1 AUTHOR
 

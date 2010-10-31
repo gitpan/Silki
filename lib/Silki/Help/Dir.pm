@@ -1,6 +1,6 @@
 package Silki::Help::Dir;
 BEGIN {
-  $Silki::Help::Dir::VERSION = '0.23';
+  $Silki::Help::Dir::VERSION = '0.24';
 }
 
 use strict;
@@ -57,8 +57,8 @@ sub _build_files {
                 locale_code => $self->locale_code(),
                 )
             }
-        sort { $a cmp $b }
-        grep { !$_->is_dir() } $lang_dir->children()
+            sort { $a cmp $b }
+            grep { !$_->is_dir() } $lang_dir->children()
     ];
 }
 
@@ -105,7 +105,7 @@ Silki::Help::Dir - A directory of help files
 
 =head1 VERSION
 
-version 0.23
+version 0.24
 
 =head1 AUTHOR
 

@@ -1,6 +1,6 @@
 package Silki::Role::Controller::RevisionsAtomFeed;
 BEGIN {
-  $Silki::Role::Controller::RevisionsAtomFeed::VERSION = '0.23';
+  $Silki::Role::Controller::RevisionsAtomFeed::VERSION = '0.24';
 }
 
 use strict;
@@ -23,7 +23,8 @@ sub _output_atom_feed_for_revisions {
     my @entries;
 
     my $updated;
-    while ( my ( $page, $revision ) = $page ? ( $page, $revisions->next() ) : $revisions->next() ) {
+    while ( my ( $page, $revision )
+        = $page ? ( $page, $revisions->next() ) : $revisions->next() ) {
         last unless $revision;
 
         $updated ||= $revision->creation_datetime();
@@ -88,7 +89,7 @@ Silki::Role::Controller::RevisionsAtomFeed - Generates an atom feed from a set o
 
 =head1 VERSION
 
-version 0.23
+version 0.24
 
 =head1 AUTHOR
 

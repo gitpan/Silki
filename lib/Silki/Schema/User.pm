@@ -1,6 +1,6 @@
 package Silki::Schema::User;
 BEGIN {
-  $Silki::Schema::User::VERSION = '0.23';
+  $Silki::Schema::User::VERSION = '0.24';
 }
 
 use strict;
@@ -230,8 +230,8 @@ around insert => sub {
         $p{password} = $UnusablePW;
     }
     elsif ( delete $p{disable_login} ) {
-        $p{password}       = $UnusablePW;
-        $p{openid_uri}     = undef;
+        $p{password}         = $UnusablePW;
+        $p{openid_uri}       = undef;
         $p{confirmation_key} = undef;
     }
     elsif ( defined $p{password} ) {
@@ -262,8 +262,8 @@ around update => sub {
     }
 
     if ( delete $p{disable_login} ) {
-        $p{password}       = $UnusablePW;
-        $p{openid_uri}     = undef;
+        $p{password}         = $UnusablePW;
+        $p{openid_uri}       = undef;
         $p{confirmation_key} = undef;
     }
 
@@ -274,7 +274,7 @@ around update => sub {
 
 sub _system_log_values_for_insert {
     my $class = shift;
-    my %p    = @_;
+    my %p     = @_;
 
     my $msg = 'Created user: ' . $p{username};
 
@@ -354,6 +354,7 @@ sub _has_password_or_openid_uri {
     my $error = { message => loc('You must provide a password or OpenID.') };
 
     if ($is_insert) {
+
         # coverage - this is never going to be true if the around modifier on
         # insert defined above runs first, because it deletes the
         # disable_login parameter and sets a crypted password in the params
@@ -385,7 +386,8 @@ sub _has_password_or_openid_uri {
             if all { exists $p->{$_} && string_is_empty( $p->{$_} ) }
             qw( password openid_uri );
 
-        return if any { ! string_is_empty( $p->{$_} ) } qw( password openid_uri );
+        return
+            if any { !string_is_empty( $p->{$_} ) } qw( password openid_uri );
 
         return if none { exists $p->{$_} } qw( password openid_uri );
 
@@ -602,16 +604,16 @@ sub _password_is_encrypted {
 sub requires_activation {
     my $self = shift;
 
-    return defined $self->confirmation_key() && ! $self->has_valid_password();
+    return defined $self->confirmation_key() && !$self->has_valid_password();
 }
 
 sub confirmation_uri {
     my $self = shift;
     my %p    = @_;
 
-    die
-        loc('Cannot make a confirmation uri for a user who does not have a confirmation key.')
-        unless defined $self->confirmation_key();
+    die loc(
+        'Cannot make a confirmation uri for a user who does not have a confirmation key.'
+    ) unless defined $self->confirmation_key();
 
     my $view = $p{view} || 'preferences_form';
 
@@ -716,15 +718,16 @@ sub _role_name_in_wiki {
 sub _BuildRoleInWikiSelect {
     my $select = Silki::Schema->SQLFactoryClass()->new_select();
 
-    $select->select( $Schema->table('Role')->column('name') )
+    #<<<
+    $select
+        ->select( $Schema->table('Role')->column('name') )
         ->from( $Schema->table('Role'), $Schema->table('UserWikiRole') )
-        ->where(
-        $Schema->table('UserWikiRole')->column('wiki_id'),
-        '=', Fey::Placeholder->new()
-        )->and(
-        $Schema->table('UserWikiRole')->column('user_id'),
-        '=', Fey::Placeholder->new()
-        );
+        ->where( $Schema->table('UserWikiRole')->column('wiki_id'),
+                 '=', Fey::Placeholder->new() )
+        ->and( $Schema->table('UserWikiRole')->column('user_id'),
+               '=', Fey::Placeholder->new() );
+    #>>>
+    return $select;
 }
 
 sub _BuildMemberWikiCountSelect {
@@ -732,8 +735,10 @@ sub _BuildMemberWikiCountSelect {
 
     my $select = Silki::Schema->SQLFactoryClass()->new_select();
 
-    my $distinct = Fey::Literal::Term->new( 'DISTINCT ',
-        $Schema->table('Wiki')->column('wiki_id') );
+    my $distinct = Fey::Literal::Term->new(
+        'DISTINCT ',
+        $Schema->table('Wiki')->column('wiki_id')
+    );
     my $count = Fey::Literal::Function->new( 'COUNT', $distinct );
 
     $select->select($count);
@@ -762,12 +767,12 @@ sub _MemberWikiSelectBase {
     my $authed = Silki::Schema::Role->Authenticated();
     my $read   = Silki::Schema::Permission->Read();
 
+    #<<<
     $select
         ->from( $Schema->table('Wiki'), $Schema->table('UserWikiRole') )
         ->where( $Schema->table('UserWikiRole')->column('user_id'),
-                 '=', Fey::Placeholder->new()
-        );
-
+                 '=', Fey::Placeholder->new() );
+    #>>>
     return;
 }
 
@@ -814,9 +819,11 @@ sub _BuildSharedWikiSelect {
     # number (ORDER BY 5).
     my $title_idx = first_index { $_->name() eq 'title' }
     $Schema->table('Wiki')->columns();
-    $union->union( $intersect1, $intersect2 )
+    #<<<
+    $union
+        ->union( $intersect1, $intersect2 )
         ->order_by( Fey::Literal::Term->new($title_idx) );
-
+    #>>>
     return $union;
 }
 
@@ -837,18 +844,21 @@ sub _BuildAllWikiCountSelect {
 
     my $select = Silki::Schema->SQLFactoryClass()->new_select();
 
-    my $distinct = Fey::Literal::Term->new( 'DISTINCT ',
-        $Schema->table('Wiki')->column('wiki_id') );
+    my $distinct = Fey::Literal::Term->new(
+        'DISTINCT ',
+        $Schema->table('Wiki')->column('wiki_id')
+    );
     my $count = Fey::Literal::Function->new( 'COUNT', $distinct );
 
-    $select->select($count)->from( $Schema->table('Wiki') )->where(
-        $Schema->table('Wiki')->column('wiki_id'),
-        'IN', $explicit_wiki_select
-        )->where('or')->where(
-        $Schema->table('Wiki')->column('wiki_id'),
-        'IN', $implicit_wiki_select
-        );
-
+    #<<<
+    $select
+        ->select($count)->from( $Schema->table('Wiki') )
+        ->where( $Schema->table('Wiki')->column('wiki_id'),
+                 'IN', $explicit_wiki_select )
+        ->where('or')
+        ->where( $Schema->table('Wiki')->column('wiki_id'),
+                 'IN', $implicit_wiki_select );
+    #>>>
     return $select;
 }
 
@@ -876,7 +886,7 @@ sub _BuildAllWikiSelect {
     my $is_explicit_idx = ( scalar $Schema->table('Wiki')->columns() ) + 1;
 
     my $title_idx = first_index { $_->name() eq 'title' }
-        $Schema->table('Wiki')->columns();
+    $Schema->table('Wiki')->columns();
 
     $union->union( $explicit_wiki_select, $implicit_wiki_select )->order_by(
         Fey::Literal::Term->new($is_explicit_idx),
@@ -907,15 +917,15 @@ sub _ImplicitWikiSelectBase {
     my $explicit = Silki::Schema->SQLFactoryClass()->new_select();
     $explicit->select( $Schema->table('Wiki')->column('wiki_id') );
     $class->_ExplicitWikiSelectBase($explicit);
-
-    $select->from( $Schema->tables( 'Wiki', 'Page' ) )
-           ->from( $Schema->tables( 'Page', 'PageRevision' ) )
-           ->where( $Schema->table('PageRevision')->column('user_id'),
-                    '=', Fey::Placeholder->new()
-                  )
-           ->and( $Schema->table('Wiki')->column('wiki_id'), 'NOT IN',
-                  $explicit );
-
+    #<<<
+    $select
+        ->from( $Schema->tables( 'Wiki', 'Page' ) )
+        ->from( $Schema->tables( 'Page', 'PageRevision' ) )
+        ->where( $Schema->table('PageRevision')->column('user_id'),
+                 '=', Fey::Placeholder->new() )
+        ->and( $Schema->table('Wiki')->column('wiki_id'),
+               'NOT IN', $explicit );
+    #>>>
     return;
 }
 
@@ -943,29 +953,32 @@ sub _BuildRecentlyViewedPagesSelect {
 
     my ( $page_t, $page_view_t ) = $Schema->tables( 'Page', 'PageView' );
 
-    my $max_func = Fey::Literal::Function->new( 'MAX',
-        $page_view_t->column('view_datetime') );
+    my $max_func = Fey::Literal::Function->new(
+        'MAX',
+        $page_view_t->column('view_datetime')
+    );
 
     my $max_datetime = Silki::Schema->SQLFactoryClass()->new_select();
+
+    #<<<
     $max_datetime
         ->select($max_func)
         ->from( $page_view_t )
-        ->where(
-            $page_view_t->column('page_id'),
-            '=', $page_t->column('page_id')
-        );
-
+        ->where( $page_view_t->column('page_id'),
+                 '=', $page_t->column('page_id') );
+    #>>>
     my $viewed_select = Silki::Schema->SQLFactoryClass()->new_select();
+    #<<<
     $viewed_select
         ->select($page_t)
         ->from( $page_t, $page_view_t )
         ->where( $page_view_t->column('user_id'), '=', Fey::Placeholder->new() )
-        ->and( $page_view_t->column('view_datetime') , '=', $max_datetime )
+        ->and  ( $page_view_t->column('view_datetime') , '=', $max_datetime )
         ->order_by(
             $page_view_t->column('view_datetime'), 'DESC',
             $page_t->column('title'),              'ASC',
         );
-
+    #>>>
     return $viewed_select;
 }
 
@@ -1000,21 +1013,25 @@ sub forgot_password {
 
 sub _send_email {
     my $self = shift;
-    my ( $wiki, $sender, $domain, $message, $subject, $template ) = validated_list(
+    my ( $wiki, $sender, $domain, $message, $subject, $template )
+        = validated_list(
         \@_,
-        wiki     => { isa => 'Silki::Schema::Wiki', optional => 1 },
-        sender   => { isa => 'Silki::Schema::User' },
-        domain   => { isa => 'Silki::Schema::Domain', default => Silki::Schema::Domain->DefaultDomain() },
-        message  => { isa => Str,                   optional => 1 },
-        subject  => { isa => Str,                   optional => 1 },
+        wiki   => { isa => 'Silki::Schema::Wiki', optional => 1 },
+        sender => { isa => 'Silki::Schema::User' },
+        domain => {
+            isa     => 'Silki::Schema::Domain',
+            default => Silki::Schema::Domain->DefaultDomain()
+        },
+        message  => { isa => Str, optional => 1 },
+        subject  => { isa => Str, optional => 1 },
         template => { isa => Str },
-    );
+        );
 
     die "Cannot send an invitation email without a wiki."
-        if $template eq 'invitation' && ! $wiki;
+        if $template eq 'invitation' && !$wiki;
 
-    $subject
-        ||= $wiki
+    $subject ||=
+        $wiki
         ? loc(
         'You have been invited to join the %1 wiki at %2',
         $wiki->title(),
@@ -1110,10 +1127,12 @@ sub _BuildActiveUserCountSelect {
     my $count
         = Fey::Literal::Function->new( 'COUNT', $user_t->column('user_id') );
 
-    $select->select($count)
-           ->from($user_t)
-           ->where( $user_t->column('is_disabled'), '=', 0 );
-
+    #<<<
+    $select
+        ->select($count)
+        ->from($user_t)
+        ->where( $user_t->column('is_disabled'), '=', 0 );
+    #>>>
     return $select;
 }
 
@@ -1148,10 +1167,12 @@ sub _BuildAllUsersSelect {
     my $order_by = Fey::Literal::Term->new(
         q{CASE WHEN display_name = '' THEN username ELSE display_name END});
 
-    $select->select($user_t)
-           ->from($user_t)
-           ->order_by($order_by);
-
+    #<<<
+    $select
+        ->select($user_t)
+        ->from($user_t)
+        ->order_by($order_by);
+    #>>>
     return $select;
 }
 
@@ -1170,7 +1191,7 @@ Silki::Schema::User - Represents a user
 
 =head1 VERSION
 
-version 0.23
+version 0.24
 
 =head1 AUTHOR
 

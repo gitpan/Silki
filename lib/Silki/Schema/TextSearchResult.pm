@@ -1,6 +1,6 @@
 package Silki::Schema::TextSearchResult;
 BEGIN {
-  $Silki::Schema::TextSearchResult::VERSION = '0.23';
+  $Silki::Schema::TextSearchResult::VERSION = '0.24';
 }
 
 use strict;
@@ -29,7 +29,7 @@ sub HighlightMarker {
 }
 
 sub title_for_display {
-    my $self = shift;
+    my $self       = shift;
     my $full_title = shift;
 
     my ( $title, undef ) = split /\n/, $self->_result(), 2;
@@ -78,7 +78,7 @@ Silki::Schema::TextSearchResult - Represents a text search result
 
 =head1 VERSION
 
-version 0.23
+version 0.24
 
 =head1 AUTHOR
 

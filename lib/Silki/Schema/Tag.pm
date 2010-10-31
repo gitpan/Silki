@@ -1,6 +1,6 @@
 package Silki::Schema::Tag;
 BEGIN {
-  $Silki::Schema::Tag::VERSION = '0.23';
+  $Silki::Schema::Tag::VERSION = '0.24';
 }
 
 use strict;
@@ -32,7 +32,8 @@ with 'Silki::Role::Schema::Serializes';
 sub _base_uri_path {
     my $self = shift;
 
-    return $self->wiki()->_base_uri_path() . '/tag/' . uri_escape( $self->tag() );
+    return $self->wiki()->_base_uri_path() . '/tag/'
+        . uri_escape( $self->tag() );
 }
 
 __PACKAGE__->meta()->make_immutable();
@@ -50,7 +51,7 @@ Silki::Schema::Tag - Represents a tag
 
 =head1 VERSION
 
-version 0.23
+version 0.24
 
 =head1 AUTHOR
 

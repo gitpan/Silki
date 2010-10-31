@@ -1,6 +1,6 @@
 package Silki::Role::Controller::User;
 BEGIN {
-  $Silki::Role::Controller::User::VERSION = '0.23';
+  $Silki::Role::Controller::User::VERSION = '0.24';
 }
 
 use strict;
@@ -89,7 +89,7 @@ sub user_PUT {
     my $user = $c->stash()->{user};
 
     my $can_edit = 0;
-    my $key = $params->{confirmation_key};
+    my $key      = $params->{confirmation_key};
     if ($key) {
         $can_edit = 1
             if ( $user->confirmation_key() || q{} ) eq $key;
@@ -230,8 +230,8 @@ sub _user_update_error {
         );
 
     $c->redirect_with_error(
-        error => $errors,
-        uri   => $uri,
+        error     => $errors,
+        uri       => $uri,
         form_data => $form_data,
     );
 }
@@ -261,7 +261,7 @@ Silki::Role::Controller::User - Provides user-related methods and actions
 
 =head1 VERSION
 
-version 0.23
+version 0.24
 
 =head1 AUTHOR
 

@@ -1,6 +1,6 @@
 package Silki::Controller::Base;
 BEGIN {
-  $Silki::Controller::Base::VERSION = '0.23';
+  $Silki::Controller::Base::VERSION = '0.24';
 }
 
 use strict;
@@ -63,7 +63,9 @@ sub end : Private {
                 $c->response()->body($fh);
             }
             else {
-                $c->log()->error( "X-sendfile pointed at nonexistent file - $file\n" );
+                $c->log()
+                    ->error(
+                    "X-sendfile pointed at nonexistent file - $file\n");
                 $c->response()->status(404);
             }
         }
@@ -205,7 +207,7 @@ Silki::Controller::Base - Controller base class
 
 =head1 VERSION
 
-version 0.23
+version 0.24
 
 =head1 AUTHOR
 

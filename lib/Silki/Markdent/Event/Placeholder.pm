@@ -1,32 +1,37 @@
-package Silki::Schema::PendingPageLink;
+package Silki::Markdent::Event::Placeholder;
 BEGIN {
-  $Silki::Schema::PendingPageLink::VERSION = '0.24';
+  $Silki::Markdent::Event::Placeholder::VERSION = '0.24';
 }
 
 use strict;
 use warnings;
 use namespace::autoclean;
 
-use Silki::Schema;
+use Markdent::Types qw( Str );
 
-use Fey::ORM::Table;
+use Moose;
+use MooseX::StrictConstructor;
 
-has_policy 'Silki::Schema::Policy';
+has id => (
+    is       => 'ro',
+    isa      => Str,
+    required => 1,
+);
 
-has_table( Silki::Schema->Schema()->table('PendingPageLink') );
+with 'Markdent::Role::Event';
 
 __PACKAGE__->meta()->make_immutable();
 
 1;
 
-# ABSTRACT: Represents a link to a page which does not yet exist
+# ABSTRACT: Represents a placeholder for page links
 
 __END__
 =pod
 
 =head1 NAME
 
-Silki::Schema::PendingPageLink - Represents a link to a page which does not yet exist
+Silki::Markdent::Event::Placeholder - Represents a placeholder for page links
 
 =head1 VERSION
 

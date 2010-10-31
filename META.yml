@@ -5,12 +5,14 @@ author:
 build_requires:
   MIME::Base64: 0
   Module::Build: 0.3601
+  Test::Differences: 0
   Test::More: 0.88
   Test::Most: 0
+  Test::Requires: 0
 configure_requires:
   Module::Build: 0.3601
 dynamic_config: 0
-generated_by: 'Dist::Zilla version 4.102341, CPAN::Meta::Converter version 2.101670'
+generated_by: 'Dist::Zilla version 4.102342, CPAN::Meta::Converter version 2.101670'
 license: open_source
 meta-spec:
   url: http://module-build.sourceforge.net/META-spec-v1.4.html
@@ -113,4 +115,4 @@ requires:
 resources:
   bugtracker: http://rt.cpan.org/NoAuth/Bugs.html?Dist=Silki
   repository: http://hg.urth.org/hg/Silki
-version: 0.23
+version: 0.24

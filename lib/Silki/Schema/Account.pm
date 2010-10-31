@@ -1,6 +1,6 @@
 package Silki::Schema::Account;
 BEGIN {
-  $Silki::Schema::Account::VERSION = '0.23';
+  $Silki::Schema::Account::VERSION = '0.24';
 }
 
 use strict;
@@ -92,10 +92,12 @@ sub _BuildAllAccountSelect {
 
     my $account_t = $Schema->table('Account');
 
-    $select->select($account_t)
-           ->from($account_t)
-           ->order_by( $account_t->column('name') );
-
+    #<<<
+    $select
+        ->select($account_t)
+        ->from($account_t)
+        ->order_by( $account_t->column('name') );
+    #>>>
     return $select;
 }
 

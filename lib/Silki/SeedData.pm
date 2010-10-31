@@ -1,6 +1,6 @@
 package Silki::SeedData;
 BEGIN {
-  $Silki::SeedData::VERSION = '0.23';
+  $Silki::SeedData::VERSION = '0.24';
 }
 
 use strict;
@@ -120,7 +120,7 @@ sub _make_first_wiki {
 }
 
 sub _make_production_wiki {
-    my $admin   = shift;
+    my $admin = shift;
 
     my $wiki = _make_wiki( 'My Wiki', 'my-wiki' );
 
@@ -199,7 +199,7 @@ Silki::SeedData - Seeds a fresh database with data
 
 =head1 VERSION
 
-version 0.23
+version 0.24
 
 =head1 AUTHOR
 
