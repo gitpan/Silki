@@ -1,6 +1,6 @@
 package Silki::Schema::Policy;
 BEGIN {
-  $Silki::Schema::Policy::VERSION = '0.24';
+  $Silki::Schema::Policy::VERSION = '0.25';
 }
 
 use strict;
@@ -83,7 +83,7 @@ Silki::Schema::Policy - A Fey::Policy for Silki
 
 =head1 VERSION
 
-version 0.24
+version 0.25
 
 =head1 AUTHOR
 

@@ -1,6 +1,6 @@
 package Silki::Web::CSS;
 BEGIN {
-  $Silki::Web::CSS::VERSION = '0.24';
+  $Silki::Web::CSS::VERSION = '0.25';
 }
 
 use strict;
@@ -100,7 +100,7 @@ Silki::Web::CSS - Combines and minifies CSS source files
 
 =head1 VERSION
 
-version 0.24
+version 0.25
 
 =head1 AUTHOR
 

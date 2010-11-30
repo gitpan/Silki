@@ -1,6 +1,6 @@
 package Silki::Markdent::Event::Placeholder;
 BEGIN {
-  $Silki::Markdent::Event::Placeholder::VERSION = '0.24';
+  $Silki::Markdent::Event::Placeholder::VERSION = '0.25';
 }
 
 use strict;
@@ -35,7 +35,7 @@ Silki::Markdent::Event::Placeholder - Represents a placeholder for page links
 
 =head1 VERSION
 
-version 0.24
+version 0.25
 
 =head1 AUTHOR
 

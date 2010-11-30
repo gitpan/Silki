@@ -1,6 +1,6 @@
 package Silki::Controller::UserImage;
 BEGIN {
-  $Silki::Controller::UserImage::VERSION = '0.24';
+  $Silki::Controller::UserImage::VERSION = '0.25';
 }
 
 use strict;

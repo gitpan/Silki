@@ -1,6 +1,6 @@
 package Silki::Controller::Domain;
 BEGIN {
-  $Silki::Controller::Domain::VERSION = '0.24';
+  $Silki::Controller::Domain::VERSION = '0.25';
 }
 
 use strict;
@@ -134,7 +134,7 @@ Silki::Controller::Domain - Controller class for domains
 
 =head1 VERSION
 
-version 0.24
+version 0.25
 
 =head1 AUTHOR
 

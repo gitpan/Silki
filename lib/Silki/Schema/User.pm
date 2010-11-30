@@ -1,6 +1,6 @@
 package Silki::Schema::User;
 BEGIN {
-  $Silki::Schema::User::VERSION = '0.24';
+  $Silki::Schema::User::VERSION = '0.25';
 }
 
 use strict;
@@ -37,7 +37,7 @@ my $Schema = Silki::Schema->Schema();
 with 'Silki::Role::Schema::URIMaker';
 
 with 'Silki::Role::Schema::SystemLogger' =>
-    { methods => [ 'insert', 'update' ] };
+    { methods => [ 'insert', 'update', 'delete' ] };
 
 with 'Silki::Role::Schema::DataValidator' => {
     steps => [
@@ -134,6 +134,27 @@ class_has _RecentlyViewedPagesSelect => (
     builder => '_BuildRecentlyViewedPagesSelect',
 );
 
+class_has _AllPageCountSelect => (
+    is      => 'ro',
+    does    => 'Fey::Role::SQL::ReturnsData',
+    lazy    => 1,
+    builder => '_BuildAllPageCountSelect',
+);
+
+class_has _AllRevisionCountSelect => (
+    is      => 'ro',
+    does    => 'Fey::Role::SQL::ReturnsData',
+    lazy    => 1,
+    builder => '_BuildAllRevisionCountSelect',
+);
+
+class_has _AllFileCountSelect => (
+    is      => 'ro',
+    does    => 'Fey::Role::SQL::ReturnsData',
+    lazy    => 1,
+    builder => '_BuildAllFileCountSelect',
+);
+
 class_has 'SystemUser' => (
     is      => 'ro',
     isa     => __PACKAGE__,
@@ -167,6 +188,13 @@ class_has _AllUsersSelect => (
     isa     => 'Fey::SQL::Select',
     lazy    => 1,
     builder => '_BuildAllUsersSelect',
+);
+
+class_has _AllRevisionsForDeleteSelect => (
+    is      => 'ro',
+    isa     => 'Fey::SQL::Select',
+    lazy    => 1,
+    builder => '_BuildAllRevisionsForDeleteSelect',
 );
 
 {
@@ -204,6 +232,33 @@ class_has _AllUsersSelect => (
         table       => $Schema->table('Wiki'),
         select      => $select,
         bind_params => sub { ( $_[0]->user_id() ) x 3 },
+    );
+}
+
+{
+    my $select = __PACKAGE__->_AllPageCountSelect();
+
+    query page_count => (
+        select      => $select,
+        bind_params => sub { ( $_[0]->user_id() ) },
+    );
+}
+
+{
+    my $select = __PACKAGE__->_AllRevisionCountSelect();
+
+    query revision_count => (
+        select      => $select,
+        bind_params => sub { ( $_[0]->user_id() ) },
+    );
+}
+
+{
+    my $select = __PACKAGE__->_AllFileCountSelect();
+
+    query file_count => (
+        select      => $select,
+        bind_params => sub { ( $_[0]->user_id() ) },
     );
 }
 
@@ -272,6 +327,29 @@ around update => sub {
     return $self->$orig(%p);
 };
 
+after update => sub {
+    $_[0]->_clear_best_name();
+    $_[0]->_clear_has_valid_password();
+    $_[0]->_clear_has_login_credentials();
+};
+
+around delete => sub {
+    my $orig = shift;
+    my $self = shift;
+    my %p    = @_;
+
+    Silki::Schema->RunInTransaction(
+        sub {
+            my $revisions = $self->_all_revisions_for_delete();
+            while ( my $revision = $revisions->next() ) {
+                $revision->delete( user => $p{user} );
+            }
+
+            $self->$orig(%p);
+        }
+    );
+};
+
 sub _system_log_values_for_insert {
     my $class = shift;
     my %p     = @_;
@@ -316,11 +394,29 @@ sub _system_log_values_for_update {
     );
 }
 
-after update => sub {
-    $_[0]->_clear_best_name();
-    $_[0]->_clear_has_valid_password();
-    $_[0]->_clear_has_login_credentials();
-};
+sub _system_log_values_for_delete {
+    my $self = shift;
+
+    my $msg
+        = 'Deleted user '
+        . $self->best_name() . ' - '
+        . ( $self->email_address() || $self->openid_uri() );
+
+    return (
+        message   => $msg,
+        data_blob => {
+            map { $_ => $self->$_() }
+                qw(
+                email_address
+                username
+                openid_uri
+                display_name
+                time_zone
+                locale_code
+                )
+        }
+    );
+}
 
 sub _make_confirmation_key {
     shift;
@@ -1176,6 +1272,97 @@ sub _BuildAllUsersSelect {
     return $select;
 }
 
+sub _all_revisions_for_delete {
+    my $self = shift;
+
+    my $select = $self->_AllRevisionsForDeleteSelect();
+
+    my $dbh = Silki::Schema->DBIManager()->source_for_sql($select)->dbh();
+
+    return Fey::Object::Iterator::FromSelect->new(
+        classes     => 'Silki::Schema::PageRevision',
+        select      => $select,
+        dbh         => $dbh,
+        bind_params => [ $self->user_id() ],
+    );
+}
+
+sub _BuildAllRevisionsForDeleteSelect {
+    my $class = shift;
+
+    my $select = Silki::Schema->SQLFactoryClass()->new_select();
+
+    my $rev_t = $Schema->table('PageRevision');
+
+    #<<<
+    $select
+        ->select($rev_t)
+        ->from($rev_t)
+        ->where( $rev_t->column('user_id'), '=', Fey::Placeholder->new() )
+        ->order_by( $rev_t->column('page_id'), 'ASC',
+                    $rev_t->column('revision_number'), 'DESC',
+                  );
+    #>>>
+    return $select;
+}
+
+sub _BuildAllPageCountSelect {
+    my $class = shift;
+
+    my $select = Silki::Schema->SQLFactoryClass()->new_select();
+
+    my $page_t = $Schema->table('Page');
+
+    my $count
+        = Fey::Literal::Function->new( 'COUNT', $page_t->column('page_id') );
+
+    #<<<
+    $select
+        ->select($count)
+        ->from($page_t)
+        ->where( $page_t->column('user_id'), '=', Fey::Placeholder->new() );
+    #>>>
+    return $select;
+}
+
+sub _BuildAllRevisionCountSelect {
+    my $class = shift;
+
+    my $select = Silki::Schema->SQLFactoryClass()->new_select();
+
+    my $rev_t = $Schema->table('PageRevision');
+
+    my $count
+        = Fey::Literal::Function->new( 'COUNT', $rev_t->column('page_id') );
+
+    #<<<
+    $select
+        ->select($count)
+        ->from($rev_t)
+        ->where( $rev_t->column('user_id'), '=', Fey::Placeholder->new() );
+    #>>>
+    return $select;
+}
+
+sub _BuildAllFileCountSelect {
+    my $class = shift;
+
+    my $select = Silki::Schema->SQLFactoryClass()->new_select();
+
+    my $file_t = $Schema->table('File');
+
+    my $count
+        = Fey::Literal::Function->new( 'COUNT', $file_t->column('file_id') );
+
+    #<<<
+    $select
+        ->select($count)
+        ->from($file_t)
+        ->where( $file_t->column('user_id'), '=', Fey::Placeholder->new() );
+    #>>>
+    return $select;
+}
+
 __PACKAGE__->meta()->make_immutable();
 
 1;
@@ -1191,7 +1378,7 @@ Silki::Schema::User - Represents a user
 
 =head1 VERSION
 
-version 0.24
+version 0.25
 
 =head1 AUTHOR
 

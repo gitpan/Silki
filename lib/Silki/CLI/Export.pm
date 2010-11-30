@@ -1,6 +1,6 @@
 package Silki::CLI::Export;
 BEGIN {
-  $Silki::CLI::Export::VERSION = '0.24';
+  $Silki::CLI::Export::VERSION = '0.25';
 }
 
 use strict;

@@ -1,6 +1,6 @@
 package Silki::Controller::File;
 BEGIN {
-  $Silki::Controller::File::VERSION = '0.24';
+  $Silki::Controller::File::VERSION = '0.25';
 }
 
 use strict;
@@ -174,7 +174,7 @@ Silki::Controller::File - Controller class for files
 
 =head1 VERSION
 
-version 0.24
+version 0.25
 
 =head1 AUTHOR
 

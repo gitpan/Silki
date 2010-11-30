@@ -1,6 +1,6 @@
 package Silki::Schema::PageRevision;
 BEGIN {
-  $Silki::Schema::PageRevision::VERSION = '0.24';
+  $Silki::Schema::PageRevision::VERSION = '0.25';
 }
 
 use strict;
@@ -97,7 +97,7 @@ around delete => sub {
     my $orig = shift;
     my $self = shift;
 
-    my @args = @_;
+    my %p = @_;
 
     Silki::Schema->RunInTransaction(
         sub {
@@ -107,14 +107,21 @@ around delete => sub {
             my $max_rev = $page->most_recent_revision()->revision_number();
             my $is_most_recent = $rev == $max_rev;
 
-            $self->$orig(@args);
+            $self->$orig(%p);
 
             $page->_clear_most_recent_revision();
 
             $self->_renumber_higher_revisions( $rev, $max_rev );
 
-            $page->most_recent_revision()->_post_change()
-                if $is_most_recent;
+            $page->_clear_revision_count();
+
+            if ( $page->revision_count() ) {
+                $page->most_recent_revision()->_post_change()
+                    if $is_most_recent;
+            }
+            else {
+                $page->delete( user => $p{user} );
+            }
         }
     );
 };
@@ -398,7 +405,7 @@ Silki::Schema::PageRevision - Represents a page revision
 
 =head1 VERSION
 
-version 0.24
+version 0.25
 
 =head1 AUTHOR
 

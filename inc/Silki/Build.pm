@@ -63,6 +63,7 @@ sub _update_from_existing_config {
             password => 'db-password',
             host     => 'db-host',
             port     => 'db-port',
+            ssl      => 'db-ssl',
         },
         dirs => { share => 'share-dir' },
     );
@@ -124,7 +125,7 @@ sub ACTION_share {
 sub ACTION_database {
     my $self = shift;
 
-    require Silki::DBInstaller;
+    require Silki::DatabaseManager;
 
     my %db_config;
 
@@ -140,7 +141,9 @@ sub ACTION_database {
     local $ENV{SILKI_HOSTNAME} = $hostname
         if defined $hostname && $hostname ne q{};
 
-    Silki::DBInstaller->new(
+    $db_config{db_name} = delete $db_config{name};
+
+    Silki::DatabaseManager->new(
         %db_config,
         production => 1,
         quiet      => $self->quiet(),

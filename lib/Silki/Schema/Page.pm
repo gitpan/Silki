@@ -1,6 +1,6 @@
 package Silki::Schema::Page;
 BEGIN {
-  $Silki::Schema::Page::VERSION = '0.24';
+  $Silki::Schema::Page::VERSION = '0.25';
 }
 
 use strict;
@@ -269,8 +269,8 @@ sub _system_log_values_for_delete {
         message   => $msg,
         data_blob => {
             title     => $self->title(),
-            revisions => $revision->revision_number(),
-            content   => $revision->content(),
+            revisions => ( $revision ? $revision->revision_number() : 0 ),
+            content   => ( $revision ? $revision->content() : undef ),
         },
     );
 }
@@ -774,7 +774,7 @@ Silki::Schema::Page - Represents a page
 
 =head1 VERSION
 
-version 0.24
+version 0.25
 
 =head1 AUTHOR
 

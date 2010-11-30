@@ -8,11 +8,11 @@ use lib 'lib', 'inc';
 
 use FindBin;
 use MIME::Base64 qw( encode_base64 );
-use Silki::DBInstaller;
+use Silki::DatabaseManager;
 use Storable qw( nfreeze );
 
-Silki::DBInstaller->new(
-    name             => 'SilkiTest',
+Silki::DatabaseManager->new(
+    db_name          => 'SilkiTest',
     drop             => 1,
     seed             => 0,
     quiet            => 1,

@@ -1,6 +1,6 @@
 package Silki::Role::Schema::DebugUTF8;
 BEGIN {
-  $Silki::Role::Schema::DebugUTF8::VERSION = '0.24';
+  $Silki::Role::Schema::DebugUTF8::VERSION = '0.25';
 }
 
 use namespace::autoclean;

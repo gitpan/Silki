@@ -22,7 +22,7 @@ my %module_build_args = (
     'Dave Rolsky <autarch@urth.org>'
   ],
   'dist_name' => 'Silki',
-  'dist_version' => '0.24',
+  'dist_version' => '0.25',
   'license' => 'open_source',
   'module_name' => 'Silki',
   'recommends' => {},
@@ -69,7 +69,7 @@ my %module_build_args = (
     'Fey' => '0',
     'Fey::DBIManager' => '0.13',
     'Fey::Loader' => '0',
-    'Fey::ORM' => '0.34',
+    'Fey::ORM' => '0.37',
     'File::HomeDir' => '0',
     'File::MimeInfo' => '0',
     'File::Slurp' => '0',
@@ -108,6 +108,7 @@ my %module_build_args = (
     'Net::Interface' => '0',
     'Number::Format' => '0',
     'Path::Class' => '0',
+    'Pg::DatabaseManager' => '0.02',
     'Scalar::Util' => '0',
     'String::Diff' => '0',
     'Sub::Exporter' => '0',
@@ -120,7 +121,8 @@ my %module_build_args = (
     'URI::FromHash' => '0',
     'XML::Atom::SimpleFeed' => '0',
     'autodie' => '0',
-    'namespace::autoclean' => '0'
+    'namespace::autoclean' => '0',
+    'perl' => '5.10.0'
   },
   'script_files' => [
     'bin/silki-export',

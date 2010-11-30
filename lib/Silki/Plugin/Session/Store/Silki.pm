@@ -1,6 +1,6 @@
 package Silki::Plugin::Session::Store::Silki;
 BEGIN {
-  $Silki::Plugin::Session::Store::Silki::VERSION = '0.24';
+  $Silki::Plugin::Session::Store::Silki::VERSION = '0.25';
 }
 
 use strict;
@@ -30,7 +30,7 @@ Silki::Plugin::Session::Store::Silki - Provides a database handle to the session
 
 =head1 VERSION
 
-version 0.24
+version 0.25
 
 =head1 AUTHOR
 
