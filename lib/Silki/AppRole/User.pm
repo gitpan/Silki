@@ -1,6 +1,6 @@
 package Silki::AppRole::User;
 BEGIN {
-  $Silki::AppRole::User::VERSION = '0.25';
+  $Silki::AppRole::User::VERSION = '0.26';
 }
 
 use strict;
@@ -43,7 +43,7 @@ Silki::AppRole::User - Adds $c->user() to the Catalyst object
 
 =head1 VERSION
 
-version 0.25
+version 0.26
 
 =head1 AUTHOR
 

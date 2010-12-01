@@ -1,6 +1,6 @@
 package Silki::Formatter::HTMLToWiki;
 BEGIN {
-  $Silki::Formatter::HTMLToWiki::VERSION = '0.25';
+  $Silki::Formatter::HTMLToWiki::VERSION = '0.26';
 }
 
 use strict;

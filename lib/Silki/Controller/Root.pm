@@ -1,6 +1,6 @@
 package Silki::Controller::Root;
 BEGIN {
-  $Silki::Controller::Root::VERSION = '0.25';
+  $Silki::Controller::Root::VERSION = '0.26';
 }
 
 use strict;
@@ -36,7 +36,7 @@ Silki::Controller::Root - Controller class for the root of the URI namespace
 
 =head1 VERSION
 
-version 0.25
+version 0.26
 
 =head1 AUTHOR
 

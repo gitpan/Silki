@@ -1,6 +1,6 @@
 package Silki::Role::Web::CombinedStaticFiles;
 BEGIN {
-  $Silki::Role::Web::CombinedStaticFiles::VERSION = '0.25';
+  $Silki::Role::Web::CombinedStaticFiles::VERSION = '0.26';
 }
 
 use strict;
@@ -107,7 +107,7 @@ Silki::Role::Web::CombinedStaticFiles - Provides common behavior for combining a
 
 =head1 VERSION
 
-version 0.25
+version 0.26
 
 =head1 AUTHOR
 

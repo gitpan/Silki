@@ -20,7 +20,6 @@ meta-spec:
 name: Silki
 requires:
   Algorithm::Diff: 0
-  Apache2::ServerUtil: 0
   Archive::Tar::Wrapper: 0
   Authen::Passphrase: 0
   CSS::Minifier: 0
@@ -117,4 +116,4 @@ requires:
 resources:
   bugtracker: http://rt.cpan.org/NoAuth/Bugs.html?Dist=Silki
   repository: http://hg.urth.org/hg/Silki
-version: 0.25
+version: 0.26

@@ -1,6 +1,6 @@
 package Silki::I18N;
 BEGIN {
-  $Silki::I18N::VERSION = '0.25';
+  $Silki::I18N::VERSION = '0.26';
 }
 
 use strict;
@@ -50,7 +50,7 @@ Silki::I18N - The primary interface to i18n
 
 =head1 VERSION
 
-version 0.25
+version 0.26
 
 =head1 AUTHOR
 

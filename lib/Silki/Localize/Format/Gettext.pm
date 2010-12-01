@@ -1,6 +1,6 @@
 package Silki::Localize::Format::Gettext;
 BEGIN {
-  $Silki::Localize::Format::Gettext::VERSION = '0.25';
+  $Silki::Localize::Format::Gettext::VERSION = '0.26';
 }
 
 use strict;
@@ -217,7 +217,7 @@ Silki::Localize::Format::Gettext - Provides functions for localization, like %da
 
 =head1 VERSION
 
-version 0.25
+version 0.26
 
 =head1 AUTHOR
 

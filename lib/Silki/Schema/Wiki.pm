@@ -1,6 +1,6 @@
 package Silki::Schema::Wiki;
 BEGIN {
-  $Silki::Schema::Wiki::VERSION = '0.25';
+  $Silki::Schema::Wiki::VERSION = '0.26';
 }
 
 use strict;
@@ -1854,7 +1854,7 @@ Silki::Schema::Wiki - Represents a wiki
 
 =head1 VERSION
 
-version 0.25
+version 0.26
 
 =head1 AUTHOR
 
