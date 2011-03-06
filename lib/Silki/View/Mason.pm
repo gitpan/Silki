@@ -1,6 +1,6 @@
 package Silki::View::Mason;
 BEGIN {
-  $Silki::View::Mason::VERSION = '0.26';
+  $Silki::View::Mason::VERSION = '0.27';
 }
 
 use strict;
@@ -11,7 +11,7 @@ use base 'Catalyst::View::Mason';
 {
     package Silki::Mason::Web;
 BEGIN {
-  $Silki::Mason::Web::VERSION = '0.26';
+  $Silki::Mason::Web::VERSION = '0.27';
 }
 
     use Data::Dumper;
@@ -34,10 +34,28 @@ use Silki::Web::FormData;
 use Silki::Util qw( string_is_empty );
 
 {
-    my $config = Silki::Config->new()->mason_config();
-    $config->{escape_flags} = { nbsp => \&_nbsp_escape };
+    my $config = Silki::Config->instance();
 
-    __PACKAGE__->config($config);
+    my %config = (
+        comp_root => $config->share_dir()->subdir('mason')->stringify(),
+        data_dir =>
+            $config->cache_dir()->subdir( 'mason', 'web' )->stringify(),
+        error_mode           => 'fatal',
+        in_package           => 'Silki::Mason::Web',
+        use_match            => 0,
+        default_escape_flags => 'h',
+        escape_flags         => {
+            nbsp => \&_nbsp_escape,
+        },
+    );
+
+    if ( $config->is_production() ) {
+        $config{static_source} = 1;
+        $config{static_source_touch_file}
+            = $config->etc_dir()->file('mason-touch')->stringify();
+    }
+
+    __PACKAGE__->config( \%config );
 }
 
 sub _nbsp_escape {
@@ -82,7 +100,7 @@ Silki::View::Mason - A Mason-based view
 
 =head1 VERSION
 
-version 0.26
+version 0.27
 
 =head1 AUTHOR
 

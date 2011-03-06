@@ -10,6 +10,7 @@ my %module_build_args = (
     'MIME::Base64' => '0',
     'Module::Build' => '0.3601',
     'Test::Differences' => '0',
+    'Test::Fatal' => '0',
     'Test::More' => '0.88',
     'Test::Most' => '0',
     'Test::Requires' => '0'
@@ -22,7 +23,7 @@ my %module_build_args = (
     'Dave Rolsky <autarch@urth.org>'
   ],
   'dist_name' => 'Silki',
-  'dist_version' => '0.26',
+  'dist_version' => '0.27',
   'license' => 'open_source',
   'module_name' => 'Silki',
   'recommends' => {},
@@ -35,7 +36,7 @@ my %module_build_args = (
     'Catalyst::Action::REST' => '0',
     'Catalyst::Plugin::AuthenCookie' => '0',
     'Catalyst::Plugin::RedirectAndDetach' => '0',
-    'Catalyst::Plugin::Session' => '0.27',
+    'Catalyst::Plugin::Session' => '0.31',
     'Catalyst::Plugin::Session::AsObject' => '0',
     'Catalyst::Plugin::Session::State::URI' => '0',
     'Catalyst::Plugin::Session::Store::DBI' => '0',
@@ -90,15 +91,14 @@ my %module_build_args = (
     'JavaScript::Squish' => '0',
     'Lingua::EN::Inflect' => '0',
     'List::AllUtils' => '0',
-    'Log::Dispatch' => '0',
     'Markdent' => '0.16',
     'Moose' => '0',
     'MooseX::ClassAttribute' => '0',
+    'MooseX::Configuration' => '0',
     'MooseX::MetaDescription' => '0',
     'MooseX::Params::Validate' => '0',
     'MooseX::Role::Parameterized' => '0',
     'MooseX::SemiAffordanceAccessor' => '0',
-    'MooseX::Singleton' => '0',
     'MooseX::StrictConstructor' => '0',
     'MooseX::Types' => '0',
     'MooseX::Types::Moose' => '0',
@@ -124,12 +124,12 @@ my %module_build_args = (
     'perl' => '5.10.0'
   },
   'script_files' => [
-    'bin/silki-export',
-    'bin/silki-server',
-    'bin/silki-cgi',
     'bin/silki-import',
+    'bin/silki-cgi',
     'bin/silki.psgi',
-    'bin/silki-fastcgi'
+    'bin/silki-fastcgi',
+    'bin/silki-export',
+    'bin/silki-server'
   ],
   'share_dir' => {
     'dist' => 'share'

@@ -1,6 +1,6 @@
 package Silki::Controller::Wiki;
 BEGIN {
-  $Silki::Controller::Wiki::VERSION = '0.26';
+  $Silki::Controller::Wiki::VERSION = '0.27';
 }
 
 use strict;
@@ -700,7 +700,7 @@ sub _import_wiki {
     my $process = Silki::Schema::Process->insert( status => q{} );
 
     my $file = file( $c->request()->upload('tarball')->tempname() );
-    my $tarball = Silki::Config->new()->temp_dir()->file( $file->basename );
+    my $tarball = Silki::Config->instance()->temp_dir()->file( $file->basename );
 
     rename $file => $tarball;
 
@@ -770,7 +770,7 @@ Silki::Controller::Wiki - Controller class for wikis
 
 =head1 VERSION
 
-version 0.26
+version 0.27
 
 =head1 AUTHOR
 

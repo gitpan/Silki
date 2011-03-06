@@ -1,6 +1,6 @@
 package Silki::Web::Javascript;
 BEGIN {
-  $Silki::Web::Javascript::VERSION = '0.26';
+  $Silki::Web::Javascript::VERSION = '0.27';
 }
 
 use strict;
@@ -21,7 +21,7 @@ sub _build_header {
 }
 
 sub _build_files {
-    my $dir = dir( Silki::Config->new()->share_dir(), 'js-source' );
+    my $dir = dir( Silki::Config->instance()->share_dir(), 'js-source' );
 
     # Works around an error that comes from JSAN::Parse::FileDeps
     # attempting to assign $_, which is somehow read-only.
@@ -40,29 +40,21 @@ sub _build_files {
 }
 
 sub _build_target_file {
-    my $js_dir = dir( Silki::Config->new()->var_lib_dir(), 'js' );
+    my $js_dir = dir( Silki::Config->instance()->var_lib_dir(), 'js' );
 
     $js_dir->mkpath( 0, 0755 );
 
     return file( $js_dir, 'silki-combined.js' );
 }
 
-{
-    my @Exceptions = (
-        qr/\@cc_on/,
-        qr/\@if/,
-        qr/\@end/,
-    );
+sub _squish {
+    my $self = shift;
+    my $code = shift;
 
-    sub _squish {
-        my $self = shift;
-        my $code = shift;
+    return $code
+        unless Silki::Config->instance()->is_production();
 
-        return $code
-            unless Silki::Config->instance()->is_production();
-
-        return minify($code);
-    }
+    return minify($code);
 }
 
 __PACKAGE__->meta()->make_immutable();
@@ -80,7 +72,7 @@ Silki::Web::Javascript - Combines and minifies Javascript source files
 
 =head1 VERSION
 
-version 0.26
+version 0.27
 
 =head1 AUTHOR
 

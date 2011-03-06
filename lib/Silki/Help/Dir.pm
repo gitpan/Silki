@@ -1,6 +1,6 @@
 package Silki::Help::Dir;
 BEGIN {
-  $Silki::Help::Dir::VERSION = '0.26';
+  $Silki::Help::Dir::VERSION = '0.27';
 }
 
 use strict;
@@ -43,7 +43,7 @@ has content => (
 sub _build_files {
     my $self = shift;
 
-    my $help_dir = Silki::Config->new()->share_dir()->subdir('help');
+    my $help_dir = Silki::Config->instance()->share_dir()->subdir('help');
 
     my $lang_dir = $help_dir->subdir( $self->locale_code() );
 
@@ -105,7 +105,7 @@ Silki::Help::Dir - A directory of help files
 
 =head1 VERSION
 
-version 0.26
+version 0.27
 
 =head1 AUTHOR
 

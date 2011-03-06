@@ -1,6 +1,6 @@
 package Silki::Schema::User;
 BEGIN {
-  $Silki::Schema::User::VERSION = '0.26';
+  $Silki::Schema::User::VERSION = '0.27';
 }
 
 use strict;
@@ -423,7 +423,7 @@ sub _make_confirmation_key {
 
     return sha1_hex(
         shift, time, $$, rand(1_000_000_000),
-        Silki::Config->new()->secret()
+        Silki::Config->instance()->secret()
     );
 }
 
@@ -1378,7 +1378,7 @@ Silki::Schema::User - Represents a user
 
 =head1 VERSION
 
-version 0.26
+version 0.27
 
 =head1 AUTHOR
 

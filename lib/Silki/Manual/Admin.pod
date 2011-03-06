@@ -3,7 +3,7 @@ package Silki::Manual::Admin;
 # ABSTRACT: Admin manual for Silki
 
 
-__END__
+
 =pod
 
 =head1 NAME
@@ -12,7 +12,7 @@ Silki::Manual::Admin - Admin manual for Silki
 
 =head1 VERSION
 
-version 0.26
+version 0.27
 
 =head1 INSTALLATION
 
@@ -439,4 +439,7 @@ This is free software, licensed under:
   The GNU Affero General Public License, Version 3, November 2007
 
 =cut
+
+
+__END__
 

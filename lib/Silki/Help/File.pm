@@ -1,6 +1,6 @@
 package Silki::Help::File;
 BEGIN {
-  $Silki::Help::File::VERSION = '0.26';
+  $Silki::Help::File::VERSION = '0.27';
 }
 
 use strict;
@@ -38,16 +38,28 @@ has content => (
 sub _build_content {
     my $self = shift;
 
-    my $config = Silki::Config->new();
+    my $config = Silki::Config->instance();
+
+    my %config = (
+        comp_root => $self->file()->dir()->stringify(),
+        data_dir =>
+            $config->cache_dir()
+            ->subdir( 'mason', 'help', $self->locale_code() )->stringify(),
+        error_mode           => 'fatal',
+        in_package           => 'Silki::Mason::Help',
+        default_escape_flags => 'h',
+    );
+
+    if ( $config->is_production() ) {
+        $config{static_source} = 1;
+        $config{static_source_touch_file}
+            = $config->etc_dir()->file('mason-touch')->stringify();
+    }
 
     my $body   = q{};
     my $interp = HTML::Mason::Interp->new(
         out_method => \$body,
-        comp_root  => $self->file()->dir()->stringify(),
-        data_dir =>
-            $config->cache_dir()
-            ->subdir( 'mason', 'help', $self->locale_code() )->stringify(),
-        %{ $config->mason_config_for_help() },
+        %config,
     );
 
     $interp->exec( q{/} . $self->file()->basename() );
@@ -70,7 +82,7 @@ Silki::Help::File - A single help file
 
 =head1 VERSION
 
-version 0.26
+version 0.27
 
 =head1 AUTHOR
 

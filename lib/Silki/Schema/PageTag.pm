@@ -1,6 +1,6 @@
 package Silki::Schema::PageTag;
 BEGIN {
-  $Silki::Schema::PageTag::VERSION = '0.26';
+  $Silki::Schema::PageTag::VERSION = '0.27';
 }
 
 use strict;
@@ -34,7 +34,7 @@ Silki::Schema::PageTag - Represents a tag for a page
 
 =head1 VERSION
 
-version 0.26
+version 0.27
 
 =head1 AUTHOR
 

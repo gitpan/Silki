@@ -1,6 +1,6 @@
 package Silki::URI;
 BEGIN {
-  $Silki::URI::VERSION = '0.26';
+  $Silki::URI::VERSION = '0.27';
 }
 
 use strict;
@@ -19,18 +19,32 @@ sub dynamic_uri {
     my %p = @_;
 
     $p{path}
-        = _prefixed_path( Silki::Config->new()->path_prefix(), $p{path} );
+        = _prefixed_path( Silki::Config->instance()->path_prefix(), $p{path} );
 
     return URI::FromHash::uri(%p);
 }
 
-sub static_uri {
-    my $path = shift;
+{
+    my $StaticPathPrefix;
 
-    return _prefixed_path(
-        Silki::Config->new()->static_path_prefix(),
-        $path
-    );
+    my $config = Silki::Config->instance();
+    if ( $config->is_production() ) {
+        $StaticPathPrefix = $config->path_prefix();
+        $StaticPathPrefix .= q{/};
+        $StaticPathPrefix .= $Silki::Config::VERSION || 'wc';
+    }
+    else {
+        $StaticPathPrefix = q{};
+    }
+
+    sub static_uri {
+        my $path = shift;
+
+        return _prefixed_path(
+            $StaticPathPrefix,
+            $path
+        );
+    }
 }
 
 sub _prefixed_path {
@@ -40,7 +54,7 @@ sub _prefixed_path {
     return '/'
         if all { string_is_empty($_) } $prefix, $path;
 
-    $path = ( $prefix || '' ) . ( $path || '' );
+    $path = ( $prefix || q{} ) . ( $path || q{} );
 
     return $path;
 }
@@ -58,7 +72,7 @@ Silki::URI - A utility module for generating URIs
 
 =head1 VERSION
 
-version 0.26
+version 0.27
 
 =head1 AUTHOR
 

@@ -40,6 +40,8 @@ inc/migrations/5/01-process-table.sql
 inc/migrations/5/02-update-version.sql
 inc/migrations/6/01-user-table.sql
 inc/migrations/6/02-update-version.sql
+inc/migrations/7/01-add-indexes.sql
+inc/migrations/7/02-update-version.sql
 inc/migrations/fixup.sql
 lib/Silki.pm
 lib/Silki/Action/REST.pm
@@ -50,7 +52,6 @@ lib/Silki/AppRole/User.pm
 lib/Silki/CLI/Export.pm
 lib/Silki/CLI/Import.pm
 lib/Silki/Config.pm
-lib/Silki/ConfigFile.pm
 lib/Silki/Controller/Base.pm
 lib/Silki/Controller/Domain.pm
 lib/Silki/Controller/File.pm
@@ -294,17 +295,17 @@ t/lib/Silki/Markdent/Handler/MinimalTree.pm
 t/lib/Silki/Test/Email.pm
 t/lib/Silki/Test/FakeSchema.pm
 t/lib/Silki/Test/RealSchema.pm
-t/release-kwalitee.t
 t/release-pod-coverage.t
 t/release-pod-spell.t
-t/release-pod.t
+t/release-pod-syntax.t
 t/schema/Silki.sql.v1
 t/schema/Silki.sql.v2
 t/schema/Silki.sql.v3
 t/schema/Silki.sql.v4
 t/schema/Silki.sql.v5
 t/schema/Silki.sql.v6
+t/schema/Silki.sql.v7
 t/schema/migrations.t
 t/share/data/test.jpg
 t/share/data/test.tif
-t/share/mason/email/test.html
+t/share/email-templates/test.html

@@ -1,6 +1,6 @@
 package Silki::I18N;
 BEGIN {
-  $Silki::I18N::VERSION = '0.26';
+  $Silki::I18N::VERSION = '0.27';
 }
 
 use strict;
@@ -18,7 +18,7 @@ use Silki::Config;
     my $DL = Data::Localize->new( fallback_languages => ['en'] );
     $DL->add_localizer(
         class      => '+Silki::Localize::Gettext',
-        path       => file( Silki::Config->new()->share_dir, 'i18n', '*.po' ),
+        path       => file( Silki::Config->instance()->share_dir, 'i18n', '*.po' ),
         keep_empty => 1,
     );
 
@@ -50,7 +50,7 @@ Silki::I18N - The primary interface to i18n
 
 =head1 VERSION
 
-version 0.26
+version 0.27
 
 =head1 AUTHOR
 

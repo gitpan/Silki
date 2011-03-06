@@ -1,6 +1,6 @@
 package Silki::Email;
 BEGIN {
-  $Silki::Email::VERSION = '0.26';
+  $Silki::Email::VERSION = '0.27';
 }
 
 use strict;
@@ -21,10 +21,31 @@ use Silki::Types qw( Str HashRef );
 use Sub::Exporter -setup => { exports => ['send_email'] };
 
 my $Body;
-my $Interp = HTML::Mason::Interp->new(
-    out_method => \$Body,
-    %{ Silki::Config->new()->mason_config_for_email() },
-);
+my $Interp;
+
+{
+    my $config = Silki::Config->instance();
+
+    my %config = (
+        comp_root =>
+            $config->share_dir()->subdir('email-templates')->stringify(),
+        data_dir =>
+            $config->cache_dir()->subdir( 'mason', 'email' )->stringify(),
+        error_mode => 'fatal',
+        in_package => 'Silki::Mason::Email',
+    );
+
+    if ( $config->is_production() ) {
+        $config{static_source} = 1;
+        $config{static_source_touch_file}
+            = $config->etc_dir()->file('mason-touch')->stringify();
+    }
+
+    $Interp = HTML::Mason::Interp->new(
+        out_method => \$Body,
+        %config,
+    );
+};
 
 sub send_email {
     my ( $from, $to, $subject, $template, $args ) = validated_list(
@@ -83,7 +104,7 @@ sub _execute_template {
 {
     package Silki::Mason::Email;
 BEGIN {
-  $Silki::Mason::Email::VERSION = '0.26';
+  $Silki::Mason::Email::VERSION = '0.27';
 }
 
     use Silki::I18N qw( loc );
@@ -103,7 +124,7 @@ Silki::Email - Sends email from a template
 
 =head1 VERSION
 
-version 0.26
+version 0.27
 
 =head1 AUTHOR
 

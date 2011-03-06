@@ -1,6 +1,6 @@
 package Silki::Markdent::Handler::HTMLGenerator;
 BEGIN {
-  $Silki::Markdent::Handler::HTMLGenerator::VERSION = '0.26';
+  $Silki::Markdent::Handler::HTMLGenerator::VERSION = '0.27';
 }
 
 use strict;
@@ -345,7 +345,7 @@ Silki::Markdent::Handler::HTMLGenerator - A subclass of Markdent::Handler::HTMLS
 
 =head1 VERSION
 
-version 0.26
+version 0.27
 
 =head1 AUTHOR
 

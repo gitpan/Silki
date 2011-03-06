@@ -1,6 +1,6 @@
 package Silki;
 BEGIN {
-  $Silki::VERSION = '0.26';
+  $Silki::VERSION = '0.27';
 }
 
 use strict;
@@ -29,37 +29,79 @@ my $Config;
 BEGIN {
     extends 'Catalyst';
 
-    $Config = Silki::Config->new();
+    $Config = Silki::Config->instance();
 
-    Catalyst->import( @{ $Config->catalyst_imports() } );
+    my @imports = qw(
+        AuthenCookie
+        +Silki::Plugin::ErrorHandling
+        Session::AsObject
+        Session::State::URI
+        +Silki::Plugin::Session::Store::Silki
+        RedirectAndDetach
+        SubRequest
+        Unicode::Encoding
+    );
+
+    push @imports, 'Static::Simple'
+        if $Config->serve_static_files();
+
+    push @imports, 'StackTrace'
+        unless $Config->is_production() || $Config->is_profiling();
+
+    Catalyst->import(@imports);
 
     Silki::Schema->LoadAllClasses();
 }
 
-with @{ $Config->catalyst_roles() };
-
-__PACKAGE__->config(
-    name => 'Silki',
-    %{ $Config->catalyst_config() },
+with qw(
+    Silki::AppRole::Domain
+    Silki::AppRole::RedirectWithError
+    Silki::AppRole::Tabs
+    Silki::AppRole::User
 );
+
+{
+    my %config = (
+        name              => 'Silki',
+        default_view      => 'Mason',
+        'Plugin::Session' => {
+            expires => ( 60 * 5 ),
+
+            # Need to quote it for Pg
+            dbi_table        => q{"Session"},
+            dbi_dbh          => 'Silki::Plugin::Session::Store::Silki',
+            object_class     => 'Silki::Web::Session',
+            rewrite_body     => 0,
+            rewrite_redirect => 1,
+        },
+        authen_cookie => {
+            name       => 'Silki-user',
+            path       => '/',
+            mac_secret => $Config->secret(),
+        },
+        encoding => 'UTF-8',
+        root     => $Config->share_dir()->stringify(),
+    );
+
+    unless ( $Config->is_production() ) {
+        $config{static} = {
+            dirs         => [qw( files images js css static )],
+            include_path => [
+                map { $Config->$_()->stringify() }
+                    qw( cache_dir var_lib_dir share_dir )
+            ],
+            debug => 1,
+        };
+    }
+
+    __PACKAGE__->config(\%config);
+}
 
 __PACKAGE__->apply_request_class_roles('Silki::Request');
 
 Silki::Schema->EnableObjectCaches();
 
 __PACKAGE__->setup();
-
-{
-    package
-        Catalyst::Plugin::Session;
-    no warnings 'redefine';
-
-    # XXX - monkey patch so that we don't try to read the value of sessionid
-    # before prepare_action can set the session id from the URI.
-    sub dump_these {
-        return $_[0]->maybe::next::method;
-    }
-}
 
 __PACKAGE__->meta()->make_immutable( replace_constructor => 1 );
 
@@ -77,7 +119,7 @@ Silki - Silki is a Catalyst-based wiki hosting platform
 
 =head1 VERSION
 
-version 0.26
+version 0.27
 
 =head1 DESCRIPTION
 

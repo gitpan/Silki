@@ -1,6 +1,6 @@
 package Silki::Markdent::Dialect::Silki::BlockParser;
 BEGIN {
-  $Silki::Markdent::Dialect::Silki::BlockParser::VERSION = '0.26';
+  $Silki::Markdent::Dialect::Silki::BlockParser::VERSION = '0.27';
 }
 
 use strict;
@@ -28,7 +28,7 @@ Silki::Markdent::Dialect::Silki::BlockParser - Parses span-level markup for the 
 
 =head1 VERSION
 
-version 0.26
+version 0.27
 
 =head1 AUTHOR
 

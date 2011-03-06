@@ -1,6 +1,6 @@
 package Silki::Web::CSS;
 BEGIN {
-  $Silki::Web::CSS::VERSION = '0.26';
+  $Silki::Web::CSS::VERSION = '0.27';
 }
 
 use strict;
@@ -27,7 +27,7 @@ has lessc_path => (
 );
 
 sub _build_files {
-    my $dir = dir( Silki::Config->new()->share_dir(), 'css-source' );
+    my $dir = dir( Silki::Config->instance()->share_dir(), 'css-source' );
 
     return [
         sort
@@ -41,7 +41,7 @@ sub _build_files {
 }
 
 sub _build_target_file {
-    my $css_dir = dir( Silki::Config->new()->var_lib_dir(), 'css' );
+    my $css_dir = dir( Silki::Config->instance()->var_lib_dir(), 'css' );
 
     $css_dir->mkpath( 0, 0755 );
 
@@ -100,7 +100,7 @@ Silki::Web::CSS - Combines and minifies CSS source files
 
 =head1 VERSION
 
-version 0.26
+version 0.27
 
 =head1 AUTHOR
 

@@ -1,6 +1,6 @@
 package Silki::Schema;
 BEGIN {
-  $Silki::Schema::VERSION = '0.26';
+  $Silki::Schema::VERSION = '0.27';
 }
 
 use strict;
@@ -27,10 +27,10 @@ if ($Silki::Schema::TestSchema) {
     __PACKAGE__->DBIManager()->add_source($source);
 }
 else {
-    my $dbi_config = Silki::Config->instance()->dbi_config();
+    my $connection = Silki::Config->instance()->database_connection();
 
     my $source = Fey::DBIManager::Source->new(
-        %{$dbi_config},
+        %{$connection},
         post_connect => \&_set_dbh_attributes,
     );
 
@@ -86,7 +86,7 @@ Silki::Schema - Represents the Silki schema
 
 =head1 VERSION
 
-version 0.26
+version 0.27
 
 =head1 AUTHOR
 

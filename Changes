@@ -1,3 +1,16 @@
+0.27  2011-03-06
+
+- Really added support for ssl database connections, including a --db-ssl
+  parameter to the Build.PL.
+
+- All foreign key columns in the schema are now indexed.
+
+- The previous release appeared to have some bad mock data for the
+  schema. This release should fix that.
+
+- Switch from Test::Exception to Test::Fatal, and add the later as a prereq.
+
+
 0.26  2010-11-30
 
 - Removed a bogus prereq on Apache2::ServerUtil.
@@ -11,9 +24,6 @@
   from spammers.
 
 - Deleting all of a page's revisions now deletes the page.
-
-- The Build.PL now accepts a --db-ssl flag to require an SSL connection when
-  creating/migrating the database.
 
 
 0.24  2010-10-31

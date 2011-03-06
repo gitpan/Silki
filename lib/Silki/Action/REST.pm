@@ -1,6 +1,6 @@
 package Silki::Action::REST;
 BEGIN {
-  $Silki::Action::REST::VERSION = '0.26';
+  $Silki::Action::REST::VERSION = '0.27';
 }
 
 use strict;
@@ -46,7 +46,7 @@ Silki::Action::REST - Extends dispatch to add get_FOO_html
 
 =head1 VERSION
 
-version 0.26
+version 0.27
 
 =head1 AUTHOR
 

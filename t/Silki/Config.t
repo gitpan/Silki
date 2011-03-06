@@ -18,20 +18,20 @@ $ENV{HARNESS_ACTIVE}       = 0;
 $ENV{SILKI_CONFIG_TESTING} = 1;
 
 {
-    my $config = Silki::Config->instance();
+    my $config = Silki::Config->new();
 
     is_deeply(
-        $config->_build_config_hash(),
+        $config->_raw_config(),
         {},
         'config hash is empty by default'
     );
 }
 
 {
-    my $config = Silki::Config->instance();
+    my $config = Silki::Config->new();
 
     is(
-        $config->_build_secret, 'a big secret',
+        $config->secret, 'a big secret',
         'secret has a basic default in dev environment'
     );
 }
@@ -39,12 +39,8 @@ $ENV{SILKI_CONFIG_TESTING} = 1;
 {
     local $ENV{SILKI_CONFIG} = '/path/to/nonexistent/file.conf';
 
-    my $config = Silki::Config->instance();
-
-    $config->_clear_config_file();
-
     throws_ok(
-        sub { $config->_build_config_hash() },
+        sub { Silki::Config->new() },
         qr/\QNonexistent config file in SILKI_CONFIG env var/,
         'SILKI_CONFIG pointing to bad file throws an error'
     );
@@ -60,15 +56,13 @@ secret = foobar
 EOF
     close $fh;
 
-    my $config = Silki::Config->instance();
-
     {
         local $ENV{SILKI_CONFIG} = $file;
 
-        $config->_clear_config_file();
+        my $config = Silki::Config->new();
 
         is_deeply(
-            $config->_build_config_hash(), {
+            $config->_raw_config(), {
                 Silki => { secret => 'foobar' },
             },
             'config hash uses data from file in SILKI_CONFIG'
@@ -85,10 +79,8 @@ EOF
     {
         local $ENV{SILKI_CONFIG} = $file;
 
-        $config->_clear_config_file();
-
         throws_ok(
-            sub { $config->_build_config_hash() },
+            sub { Silki::Config->new() },
             qr/\QYou must supply a value for [Silki] - secret when running Silki in production/,
             'If is_production is true in config, there must be a secret defined'
         );
@@ -105,10 +97,10 @@ EOF
     {
         local $ENV{SILKI_CONFIG} = $file;
 
-        $config->_clear_config_file();
+        my $config = Silki::Config->new();
 
         is_deeply(
-            $config->_build_config_hash(), {
+            $config->_raw_config(), {
                 Silki => {
                     secret        => 'foobar',
                     is_production => 1,
@@ -119,33 +111,12 @@ EOF
     }
 }
 
-Silki::Config->_clear_instance();
-
 {
-    my $config = Silki::Config->instance();
-
-    my @base_imports = qw(
-        AuthenCookie
-        +Silki::Plugin::ErrorHandling
-        Session::AsObject
-        Session::State::URI
-        +Silki::Plugin::Session::Store::Silki
-        RedirectAndDetach
-        SubRequest
-        Unicode::Encoding
-    );
+    my $config = Silki::Config->new();
 
     ok( $config->serve_static_files(), 'by default we serve static files' );
 
-    is_deeply(
-        $config->_build_catalyst_imports(),
-        [ @base_imports, 'Static::Simple', 'StackTrace' ],
-        'catalyst imports by default in dev setting'
-    );
-
-    Silki::Config->_clear_instance();
-
-    $config = Silki::Config->instance();
+    $config = Silki::Config->new();
 
     $config->_set_is_production(1);
 
@@ -154,15 +125,7 @@ Silki::Config->_clear_instance();
         'does not serve static files in production'
     );
 
-    is_deeply(
-        $config->_build_catalyst_imports(),
-        [@base_imports],
-        'catalyst imports by default in production setting'
-    );
-
-    Silki::Config->_clear_instance();
-
-    $config = Silki::Config->instance();
+    $config = Silki::Config->new();
 
     $config->_set_is_production(0);
 
@@ -173,15 +136,7 @@ Silki::Config->_clear_instance();
         'does not serve static files when profiling'
     );
 
-    is_deeply(
-        $config->_build_catalyst_imports(),
-        [@base_imports],
-        'catalyst imports by default in profiling setting'
-    );
-
-    Silki::Config->_clear_instance();
-
-    $config = Silki::Config->instance();
+    $config = Silki::Config->new();
 
     $config->_set_is_profiling(0);
 
@@ -192,100 +147,73 @@ Silki::Config->_clear_instance();
             !$config->serve_static_files(),
             'does not serve static files under mod_perl'
         );
-
-        is_deeply(
-            $config->_build_catalyst_imports(),
-            [ @base_imports, 'StackTrace' ],
-            'catalyst imports by default under mod_perl'
-        );
     }
 }
 
-Silki::Config->_clear_instance();
-
 {
-    my $config = Silki::Config->instance();
+    my $config = Silki::Config->new();
 
-    my @roles = qw(
-        Silki::AppRole::Domain
-        Silki::AppRole::RedirectWithError
-        Silki::AppRole::Tabs
-        Silki::AppRole::User
-    );
-
-    is_deeply(
-        $config->_build_catalyst_roles(),
-        \@roles,
-        'catalyst roles'
+    is(
+        $config->is_profiling(), 0,
+        'is_profiling defaults to false'
     );
 }
 
-Silki::Config->_clear_instance();
-
 {
-    my $config = Silki::Config->instance();
-
-    is(
-        $config->_build_is_profiling(), 0,
-        'is_profiling defaults to false'
-    );
-
     local $INC{'Devel/NYTProf.pm'} = 1;
 
+    my $config = Silki::Config->new();
+
     is(
-        $config->_build_is_profiling(), 1,
+        $config->is_profiling(), 1,
         'is_profiling defaults is true if Devel::NYTProf is loaded'
     );
 }
 
-Silki::Config->_clear_instance();
-
 {
-    my $config = Silki::Config->instance();
+    my $config = Silki::Config->new();
 
     my $home_dir = dir( File::HomeDir->my_home() );
 
     is(
-        $config->_build_var_lib_dir(),
+        $config->var_lib_dir(),
         $home_dir->subdir( '.silki', 'var', 'lib' ),
         'var lib dir defaults to $HOME/.silki/var/lib'
     );
 
     is(
-        $config->_build_share_dir(),
+        $config->share_dir(),
         dir( dirname( abs_path($0) ), '..', '..', 'share' )->resolve(),
         'share dir defaults to $CHECKOUT/share'
     );
 
     is(
-        $config->_build_etc_dir(),
+        $config->etc_dir(),
         $home_dir->subdir( '.silki', 'etc' ),
         'etc dir defaults to $HOME/.silki/etc'
     );
 
     is(
-        $config->_build_cache_dir(),
+        $config->cache_dir(),
         $home_dir->subdir( '.silki', 'cache' ),
         'cache dir defaults to $HOME/.silki/cache'
     );
 
     is(
-        $config->_build_files_dir(),
+        $config->files_dir(),
         $home_dir->subdir( '.silki', 'cache', 'files' ),
         'files dir defaults to $HOME/.silki/cache/files'
     );
 
     is(
-        $config->_build_thumbnails_dir(),
+        $config->thumbnails_dir(),
         $home_dir->subdir( '.silki', 'cache', 'thumbnails' ),
         'thumbnails dir defaults to $HOME/.silki/cache/thumbnails'
     );
 }
 
-Silki::Config->_clear_instance();
-
 {
-    my $config = Silki::Config->instance();
+    my $config = Silki::Config->new();
 
     $config->_set_is_production(1);
 
@@ -293,7 +221,7 @@ Silki::Config->_clear_instance();
     local *Silki::Config::_ensure_dir = sub {return};
 
     is(
-        $config->_build_var_lib_dir(),
+        $config->var_lib_dir(),
         '/var/lib/silki',
         'var lib dir defaults to /var/lib/silki in production'
     );
@@ -305,37 +233,35 @@ Silki::Config->_clear_instance();
     )->absolute()->cleanup();
 
     is(
-        $config->_build_share_dir(),
+        $config->share_dir(),
         $share_dir,
         'share dir defaults to /usr/local/share/silki in production'
     );
 
     is(
-        $config->_build_etc_dir(),
+        $config->etc_dir(),
         '/etc/silki',
         'etc dir defaults to /etc/silki in production'
     );
 
     is(
-        $config->_build_cache_dir(),
+        $config->cache_dir(),
         '/var/cache/silki',
         'cache dir defaults to /var/cache/silki in production'
     );
 
     is(
-        $config->_build_files_dir(),
+        $config->files_dir(),
         '/var/cache/silki/files',
         'files dir defaults to /var/cache/silki/files in production'
     );
 
     is(
-        $config->_build_thumbnails_dir(),
+        $config->thumbnails_dir(),
         '/var/cache/silki/thumbnails',
         'thumbnails dir defaults to /var/cache/silki/thumbnails in production'
     );
 }
-
-Silki::Config->_clear_instance();
 
 {
     my $dir = tempdir( CLEANUP => 1 );
@@ -345,7 +271,6 @@ Silki::Config->_clear_instance();
 [dirs]
 var_lib = /foo/var/lib
 share   = /foo/share
-etc     = /foo/etc
 cache   = /foo/cache
 EOF
     close $fh;
@@ -356,108 +281,40 @@ EOF
     {
         local $ENV{SILKI_CONFIG} = $file;
 
-        my $config = Silki::Config->instance();
+        my $config = Silki::Config->new();
 
         is(
-            $config->_build_var_lib_dir(),
+            $config->var_lib_dir(),
             dir('/foo/var/lib'),
             'var lib dir defaults gets /foo/var/lib from file'
         );
 
         is(
-            $config->_build_share_dir(),
+            $config->share_dir(),
             dir('/foo/share'),
-            'var lib dir defaults gets /foo/share from file'
+            'share dir defaults gets /foo/share from file'
         );
 
         is(
-            $config->_build_etc_dir(),
-            dir('/foo/etc'),
-            'var lib dir defaults gets /foo/etc from file'
-        );
-
-        is(
-            $config->_build_cache_dir(),
+            $config->cache_dir(),
             dir('/foo/cache'),
-            'var lib dir defaults gets /foo/cache from file'
+            'cache dir defaults gets /foo/cache from file'
         );
     }
 }
 
-Silki::Config->_clear_instance();
-
 {
-    my $config = Silki::Config->instance();
-
-    my $cat = $config->_build_catalyst_config();
-
-    is(
-        $cat->{default_view}, 'Mason',
-        'Catalyst config - default_view = Mason',
-    );
+    my $config = Silki::Config->new();
 
     is_deeply(
-        $cat->{'Plugin::Session'}, {
-            expires          => 300,
-            dbi_table        => q{"Session"},
-            dbi_dbh          => 'Silki::Plugin::Session::Store::Silki',
-            object_class     => 'Silki::Web::Session',
-            rewrite_body     => 0,
-            rewrite_redirect => 1,
-        },
-        'Catalyst config - Plugin::Session'
-    );
-
-    is_deeply(
-        $cat->{authen_cookie}, {
-            name       => 'Silki-user',
-            path       => '/',
-            mac_secret => $config->secret(),
-        },
-        'Catalyst config - authen_cookie'
-    );
-
-    is(
-        $cat->{root}, $config->share_dir(),
-        'Catalyst config - root is share_dir',
-    );
-
-    is_deeply(
-        $cat->{static}, {
-            dirs         => [qw( files images js css static w3c ckeditor )],
-            include_path => [
-                $config->cache_dir()->stringify(),
-                $config->var_lib_dir()->stringify(),
-                $config->share_dir()->stringify(),
-            ],
-            debug => 1,
-        },
-        'Catalyst config - static in dev environment'
-    );
-
-    $config->_set_is_production(1);
-
-    $cat = $config->_build_catalyst_config();
-
-    ok( !$cat->{static}, 'no static config for prod environment' );
-}
-
-Silki::Config->_clear_instance();
-
-{
-    my $config = Silki::Config->instance();
-
-    is_deeply(
-        $config->_build_dbi_config(), {
+        $config->database_connection(), {
             dsn      => 'dbi:Pg:dbname=Silki',
             username => q{},
             password => q{},
         },
-        'default dbi config'
+        'default database config'
     );
 }
-
-Silki::Config->_clear_instance();
 
 {
     my $dir = tempdir( CLEANUP => 1 );
@@ -475,186 +332,20 @@ EOF
 
     local $ENV{SILKI_CONFIG} = $file;
 
-    my $config = Silki::Config->instance();
+    my $config = Silki::Config->new();
 
     is_deeply(
-        $config->_build_dbi_config(), {
+        $config->database_connection(), {
             dsn      => 'dbi:Pg:dbname=Foo;host=example.com;port=9876',
             username => 'user',
             password => 'pass',
         },
-        'dbi config from file'
+        'database config from file'
     );
 }
 
-Silki::Config->_clear_instance();
-
 {
-    my $config = Silki::Config->instance();
-
-    my $home_dir = dir( File::HomeDir->my_home() );
-
-    my $share_dir = $config->share_dir();
-
-    is_deeply(
-        $config->_build_mason_config(), {
-            comp_root => $share_dir->subdir('mason'),
-            data_dir =>
-                $home_dir->subdir( '.silki', 'cache', 'mason', 'web' ),
-            error_mode           => 'fatal',
-            in_package           => 'Silki::Mason::Web',
-            use_match            => 0,
-            default_escape_flags => 'h',
-        },
-        'default mason config'
-    );
-}
-
-Silki::Config->_clear_instance();
-
-{
-    my $config = Silki::Config->instance();
-
-    no warnings 'redefine';
-    local *Silki::Config::_ensure_dir = sub {return};
-
-    $config->_set_is_production(1);
-
-    my $share_dir = $config->share_dir();
-
-    is_deeply(
-        $config->_build_mason_config(), {
-            comp_root                => $share_dir->subdir('mason'),
-            data_dir                 => '/var/cache/silki/mason/web',
-            error_mode               => 'fatal',
-            in_package               => 'Silki::Mason::Web',
-            use_match                => 0,
-            default_escape_flags     => 'h',
-            static_source            => 1,
-            static_source_touch_file => '/etc/silki/mason-touch',
-        },
-        'mason config in production'
-    );
-}
-
-Silki::Config->_clear_instance();
-
-{
-    my $config = Silki::Config->instance();
-
-    my $home_dir = dir( File::HomeDir->my_home() );
-
-    my $share_dir = $config->share_dir();
-
-    is_deeply(
-        $config->_build_mason_config_for_email(), {
-            comp_root => $share_dir->subdir('email-templates'),
-            data_dir =>
-                $home_dir->subdir( '.silki', 'cache', 'mason', 'email' ),
-            error_mode => 'fatal',
-            in_package => 'Silki::Mason::Email',
-        },
-        'default mason config for email'
-    );
-}
-
-Silki::Config->_clear_instance();
-
-{
-    my $config = Silki::Config->instance();
-
-    no warnings 'redefine';
-    local *Silki::Config::_ensure_dir = sub {return};
-
-    $config->_set_is_production(1);
-
-    my $share_dir = $config->share_dir();
-
-    is_deeply(
-        $config->_build_mason_config_for_email(), {
-            comp_root                => $share_dir->subdir('email-templates'),
-            data_dir                 => '/var/cache/silki/mason/email',
-            error_mode               => 'fatal',
-            in_package               => 'Silki::Mason::Email',
-            static_source            => 1,
-            static_source_touch_file => '/etc/silki/mason-touch',
-        },
-        'mason config for email in production'
-    );
-}
-
-Silki::Config->_clear_instance();
-
-{
-    my $config = Silki::Config->instance();
-
-    is(
-        $config->static_path_prefix(), q{},
-        'in dev environment, no static path prefix'
-    );
-}
-
-Silki::Config->_clear_instance();
-
-{
-    my $dir     = tempdir( CLEANUP => 1 );
-    my $etc_dir = tempdir( CLEANUP => 1 );
-
-    my $file = "$dir/silki.conf";
-    open my $fh, '>', $file;
-    print {$fh} <<"EOF";
-[dirs]
-etc = $etc_dir
-EOF
-    close $fh;
-
-    local $ENV{SILKI_CONFIG} = $file;
-
-    my $config = Silki::Config->instance();
-
-    $config->_set_is_production(1);
-
-    my $version = $Silki::Config::VERSION || 'wc';
-    is(
-        $config->static_path_prefix(), q{/} . $version,
-        'in prod environment, static path prefix includes a version'
-    );
-}
-
-Silki::Config->_clear_instance();
-
-{
-    my $dir     = tempdir( CLEANUP => 1 );
-    my $etc_dir = tempdir( CLEANUP => 1 );
-
-    my $file = "$dir/silki.conf";
-    open my $fh, '>', $file;
-    print {$fh} <<"EOF";
-[dirs]
-etc = $etc_dir
-EOF
-    close $fh;
-
-    local $ENV{SILKI_CONFIG} = $file;
-
-    my $config = Silki::Config->instance();
-
-    $config->_set_is_production(1);
-
-    $config->_set_path_prefix('/foo');
-
-    my $version = $Silki::Config::VERSION || 'wc';
-
-    is(
-        $config->static_path_prefix(), qq{/foo/$version},
-        'in prod environment, static path prefix includes revision number and general prefix'
-    );
-}
-
-Silki::Config->_clear_instance();
-
-{
-    my $config = Silki::Config->instance();
+    my $config = Silki::Config->new();
 
     my $dir = tempdir( CLEANUP => 1 );
 
@@ -665,22 +356,20 @@ Silki::Config->_clear_instance();
     ok( -d $new_dir, '_ensure_dir makes a new directory if needed' );
 }
 
-Silki::Config->_clear_instance();
-
 {
     my $dir = tempdir( CLEANUP => 1 );
 
     my $file = "$dir/silki.conf";
 
-    my $config = Silki::Config->instance();
+    my $config = Silki::Config->new();
 
     $config->write_config_file(
         file   => $file,
         values => {
-            'database/name'     => 'Foo',
-            'database/username' => 'fooer',
-            'dirs/share'        => '/path/to/share',
-            'antispam/key'      => 'abcdef',
+            'database_name'     => 'Foo',
+            'database_username' => 'fooer',
+            'share_dir'         => '/path/to/share',
+            'antispam_key'      => 'abcdef',
         },
     );
 
@@ -711,8 +400,8 @@ Silki::Config->_clear_instance();
     );
 
     like(
-        $content, qr/\[Silki\].+?\[antispam\].+?\[database\]/s,
-        'section order is alphabetical, except that first section is Silki'
+        $content, qr/\[Silki\].+?\[database\].+?\[antispam\]/s,
+        'section order matches order of definition on Silki::Config'
     );
 }
 

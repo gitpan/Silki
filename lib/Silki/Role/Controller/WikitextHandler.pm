@@ -1,6 +1,6 @@
 package Silki::Role::Controller::WikitextHandler;
 BEGIN {
-  $Silki::Role::Controller::WikitextHandler::VERSION = '0.26';
+  $Silki::Role::Controller::WikitextHandler::VERSION = '0.27';
 }
 
 use strict;
@@ -57,7 +57,7 @@ sub _check_for_link_spam {
     my $wiki     = shift;
     my $wikitext = shift;
 
-    my $config = Silki::Config->new();
+    my $config = Silki::Config->instance();
 
     my $key    = $config->antispam_key();
     my $server = $config->antispam_server();
@@ -104,7 +104,7 @@ Silki::Role::Controller::WikitextHandler - Handles wikitext provided by the user
 
 =head1 VERSION
 
-version 0.26
+version 0.27
 
 =head1 AUTHOR
 

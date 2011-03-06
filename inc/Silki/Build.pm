@@ -8,6 +8,8 @@ use File::Spec;
 
 use base 'Module::Build';
 
+use lib 'lib';
+
 sub new {
     my $class = shift;
     my %args  = @_;
@@ -18,6 +20,7 @@ sub new {
         'db-password' => { type => '=s' },
         'db-host'     => { type => '=s' },
         'db-port'     => { type => '=s' },
+        'db-ssl'      => {},
     };
 
     $args{auto_features} = {
@@ -44,39 +47,27 @@ sub _update_from_existing_config {
 
     my $config = eval {
         local $ENV{SILKI_CONFIG}
-            = $self->args('etc-dir')
-            ? File::Spec->catfile( $self->args('etc-dir'), 'silki.conf' )
-            : undef;
+            = File::Spec->catfile( $self->args('etc-dir'), 'silki.conf' )
+            if $self->args('etc-dir');
 
-        require Silki::ConfigFile;
+        require Silki::Config;
 
-        Silki::ConfigFile->new()->raw_data();
+        Silki::Config->new();
     };
 
     return unless $config;
 
-    my %map = (
-        Silki    => { hostname => 'hostname' },
-        database => {
-            name     => 'db-name',
-            username => 'db-username',
-            password => 'db-password',
-            host     => 'db-host',
-            port     => 'db-port',
-            ssl      => 'db-ssl',
-        },
-        dirs => { share => 'share-dir' },
-    );
+    for my $mb_key (
+        qw( db-name db-username db-password db-host db-port db-ssl share-dir )
+        ) {
+        ( my $meth = $mb_key ) =~ s/-/_/g;
+        $meth =~ s/db/database/;
 
-    for my $section (keys %map ) {
-        for my $key ( keys %{$map{$section}} ) {
-            my $value = $config->{$section}{$key};
+        my $value = $config->$meth();
 
-            next unless defined $value && $value ne q{};
+        next unless defined $value && length $value;
 
-            my $mb_key = $map{$section}{$key};
-            $self->args( $mb_key => $value );
-        }
+        $self->args( $mb_key => $value );
     }
 
     return;
@@ -172,24 +163,31 @@ sub ACTION_config {
     my $secret = Digest::SHA::sha1_hex( time . $$ . rand(1_000_000_000) );
 
     my %values = (
-        'Silki/is_production' => 1,
-        'Silki/secret'        => $secret,
+        'is_production' => 1,
+        'secret'        => $secret,
     );
 
     my %args = $self->args();
 
-    $values{'dirs/share'} = $args{'share-dir'}
+    $values{share_dir} = $args{'share-dir'}
         if $args{'share-dir'};
 
-    $values{'dirs/cache'} = $args{'cache-dir'}
+    $values{cache_dir} = $args{'cache-dir'}
         if $args{'cache-dir'};
 
     for my $key ( grep { defined $args{$_} } grep {/^db-/} keys %args ) {
         ( my $conf_key = $key ) =~ s/^db-//;
-        $values{"database/$conf_key"} = $args{$key};
+        $values{ 'database_' . $conf_key } = $args{$key};
     }
 
-    $config->write_config_file( file => $config_file, values => \%values );
+    delete $values{database_name}
+        if $values{database_name} eq 'Silki';
+
+    delete $values{database_ssl}
+        unless $values{database_ssl};
+
+    Silki::Config->new()
+        ->write_config_file( file => $config_file, values => \%values );
 }
 
 sub ACTION_clean_mason_cache {

@@ -1,6 +1,6 @@
 package Silki::Schema::Role;
 BEGIN {
-  $Silki::Schema::Role::VERSION = '0.26';
+  $Silki::Schema::Role::VERSION = '0.27';
 }
 
 use strict;
@@ -27,11 +27,11 @@ for my $role (qw( Guest Authenticated Member Admin )) {
         is      => 'ro',
         isa     => 'Silki::Schema::Role',
         lazy    => 1,
-        default => sub { __PACKAGE__->_CreateOrFindRole($role) },
+        default => sub { __PACKAGE__->_FindOrCreateRole($role) },
     );
 }
 
-sub _CreateOrFindRole {
+sub _FindOrCreateRole {
     my $class = shift;
     my $name  = shift;
 
@@ -57,7 +57,7 @@ Silki::Schema::Role - Represents a role
 
 =head1 VERSION
 
-version 0.26
+version 0.27
 
 =head1 AUTHOR
 

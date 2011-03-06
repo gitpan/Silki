@@ -4,7 +4,7 @@
       "Dave Rolsky <autarch@urth.org>"
    ],
    "dynamic_config" : 0,
-   "generated_by" : "Dist::Zilla version 4.102345, CPAN::Meta::Converter version 2.101670",
+   "generated_by" : "Dist::Zilla version 4.200004, CPAN::Meta::Converter version 2.110240",
    "license" : [
       "agpl_3"
    ],
@@ -33,7 +33,7 @@
             "Catalyst::Action::REST" : 0,
             "Catalyst::Plugin::AuthenCookie" : 0,
             "Catalyst::Plugin::RedirectAndDetach" : 0,
-            "Catalyst::Plugin::Session" : "0.27",
+            "Catalyst::Plugin::Session" : "0.31",
             "Catalyst::Plugin::Session::AsObject" : 0,
             "Catalyst::Plugin::Session::State::URI" : 0,
             "Catalyst::Plugin::Session::Store::DBI" : 0,
@@ -88,15 +88,14 @@
             "JavaScript::Squish" : 0,
             "Lingua::EN::Inflect" : 0,
             "List::AllUtils" : 0,
-            "Log::Dispatch" : 0,
             "Markdent" : "0.16",
             "Moose" : 0,
             "MooseX::ClassAttribute" : 0,
+            "MooseX::Configuration" : 0,
             "MooseX::MetaDescription" : 0,
             "MooseX::Params::Validate" : 0,
             "MooseX::Role::Parameterized" : 0,
             "MooseX::SemiAffordanceAccessor" : 0,
-            "MooseX::Singleton" : 0,
             "MooseX::StrictConstructor" : 0,
             "MooseX::Types" : 0,
             "MooseX::Types::Moose" : 0,
@@ -126,6 +125,7 @@
          "requires" : {
             "MIME::Base64" : 0,
             "Test::Differences" : 0,
+            "Test::Fatal" : 0,
             "Test::More" : "0.88",
             "Test::Most" : 0,
             "Test::Requires" : 0
@@ -144,6 +144,6 @@
          "web" : "http://hg.urth.org/hg/Silki"
       }
    },
-   "version" : "0.26"
+   "version" : "0.27"
 }
 

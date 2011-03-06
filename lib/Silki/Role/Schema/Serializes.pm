@@ -1,6 +1,6 @@
 package Silki::Role::Schema::Serializes;
 BEGIN {
-  $Silki::Role::Schema::Serializes::VERSION = '0.26';
+  $Silki::Role::Schema::Serializes::VERSION = '0.27';
 }
 
 use strict;
@@ -49,3 +49,5 @@ role {
         };
     };
 };
+
+1;

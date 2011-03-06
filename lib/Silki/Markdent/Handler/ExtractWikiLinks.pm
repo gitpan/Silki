@@ -1,6 +1,6 @@
 package Silki::Markdent::Handler::ExtractWikiLinks;
 BEGIN {
-  $Silki::Markdent::Handler::ExtractWikiLinks::VERSION = '0.26';
+  $Silki::Markdent::Handler::ExtractWikiLinks::VERSION = '0.27';
 }
 
 use strict;
@@ -57,7 +57,7 @@ Silki::Markdent::Handler::ExtractWikiLinks - Extracts all links from a Silki Mar
 
 =head1 VERSION
 
-version 0.26
+version 0.27
 
 =head1 AUTHOR
 

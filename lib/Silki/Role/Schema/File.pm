@@ -1,6 +1,6 @@
 package Silki::Role::Schema::File;
 BEGIN {
-  $Silki::Role::Schema::File::VERSION = '0.26';
+  $Silki::Role::Schema::File::VERSION = '0.27';
 }
 
 use strict;
@@ -64,7 +64,7 @@ sub _build_small_image_file {
     my $self = shift;
 
     $self->_build_resized_image(
-        Silki::Config->new()->small_image_dir(),
+        Silki::Config->instance()->small_image_dir(),
         '150x400',
     );
 }
@@ -73,7 +73,7 @@ sub _build_thumbnail_file {
     my $self = shift;
 
     $self->_build_resized_image(
-        Silki::Config->new()->thumbnails_dir(),
+        Silki::Config->instance()->thumbnails_dir(),
         '75x200',
     );
 }
@@ -82,7 +82,7 @@ sub _build_mini_image_file {
     my $self = shift;
 
     $self->_build_resized_image(
-        Silki::Config->new()->mini_image_dir(),
+        Silki::Config->instance()->mini_image_dir(),
         '40x40',
     );
 }
@@ -113,7 +113,7 @@ sub _build_resized_image {
 sub _build_file_on_disk {
     my $self = shift;
 
-    my $dir = Silki::Config->new()->files_dir();
+    my $dir = Silki::Config->instance()->files_dir();
 
     my $file = $dir->file( $self->_filename_with_hash() );
 
@@ -133,7 +133,7 @@ sub _build_filename_with_hash {
     my $self = shift;
 
     return join q{-},
-        sha256_hex( $self->pk_values_hash(), Silki::Config->new()->secret() ),
+        sha256_hex( $self->pk_values_hash(), Silki::Config->instance()->secret() ),
         $self->filename();
 }
 
