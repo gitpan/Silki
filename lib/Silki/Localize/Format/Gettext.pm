@@ -1,6 +1,6 @@
 package Silki::Localize::Format::Gettext;
-BEGIN {
-  $Silki::Localize::Format::Gettext::VERSION = '0.27';
+{
+  $Silki::Localize::Format::Gettext::VERSION = '0.28';
 }
 
 use strict;
@@ -217,7 +217,7 @@ Silki::Localize::Format::Gettext - Provides functions for localization, like %da
 
 =head1 VERSION
 
-version 0.27
+version 0.28
 
 =head1 AUTHOR
 
@@ -225,7 +225,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2010 by Dave Rolsky.
+This software is Copyright (c) 2011 by Dave Rolsky.
 
 This is free software, licensed under:
 

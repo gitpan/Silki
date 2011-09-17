@@ -1,6 +1,6 @@
 package Silki::Types;
-BEGIN {
-  $Silki::Types::VERSION = '0.27';
+{
+  $Silki::Types::VERSION = '0.28';
 }
 
 use strict;
@@ -25,7 +25,7 @@ Silki::Types - Exports Silki types as well as Moose and Path::Class types
 
 =head1 VERSION
 
-version 0.27
+version 0.28
 
 =head1 AUTHOR
 
@@ -33,7 +33,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2010 by Dave Rolsky.
+This software is Copyright (c) 2011 by Dave Rolsky.
 
 This is free software, licensed under:
 

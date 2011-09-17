@@ -31,15 +31,18 @@ local $ENV{LC_ALL} = 'C';
 all_pod_files_spelling_ok();
 
 __DATA__
+API
 CGI
 FastCGI
 INI
 JS
 MACs
 OpenID
+POSTGRES
 PSGI
 PayPal
 Postgres
+Rolsky
 Sendfile
 Silki
 Silki's
@@ -51,9 +54,9 @@ UI
 Wikis
 antispam
 backend
-citext
 cgi
 changeme
+citext
 contrib
 dir
 dirs
@@ -74,6 +77,7 @@ prepends
 prereqs
 runtime
 spamminess
+ssl
 uber
 unescapes
 uri

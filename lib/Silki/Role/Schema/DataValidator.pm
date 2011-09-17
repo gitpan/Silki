@@ -1,6 +1,6 @@
 package Silki::Role::Schema::DataValidator;
-BEGIN {
-  $Silki::Role::Schema::DataValidator::VERSION = '0.27';
+{
+  $Silki::Role::Schema::DataValidator::VERSION = '0.28';
 }
 
 use strict;
@@ -166,7 +166,7 @@ Silki::Role::Schema::DataValidator - Does data validation on inserts and updates
 
 =head1 VERSION
 
-version 0.27
+version 0.28
 
 =head1 AUTHOR
 
@@ -174,7 +174,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2010 by Dave Rolsky.
+This software is Copyright (c) 2011 by Dave Rolsky.
 
 This is free software, licensed under:
 

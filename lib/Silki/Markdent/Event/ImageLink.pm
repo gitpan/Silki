@@ -1,6 +1,6 @@
 package Silki::Markdent::Event::ImageLink;
-BEGIN {
-  $Silki::Markdent::Event::ImageLink::VERSION = '0.27';
+{
+  $Silki::Markdent::Event::ImageLink::VERSION = '0.28';
 }
 
 use strict;
@@ -35,7 +35,7 @@ Silki::Markdent::Event::ImageLink - Represents a link to an image (to be embedde
 
 =head1 VERSION
 
-version 0.27
+version 0.28
 
 =head1 AUTHOR
 
@@ -43,7 +43,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2010 by Dave Rolsky.
+This software is Copyright (c) 2011 by Dave Rolsky.
 
 This is free software, licensed under:
 

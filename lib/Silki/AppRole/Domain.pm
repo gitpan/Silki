@@ -1,6 +1,6 @@
 package Silki::AppRole::Domain;
-BEGIN {
-  $Silki::AppRole::Domain::VERSION = '0.27';
+{
+  $Silki::AppRole::Domain::VERSION = '0.28';
 }
 
 use strict;
@@ -42,7 +42,7 @@ Silki::AppRole::Domain - Adds $c->domain() to the Catalyst object
 
 =head1 VERSION
 
-version 0.27
+version 0.28
 
 =head1 AUTHOR
 
@@ -50,7 +50,7 @@ Dave Rolsky <autarch@urth.org>
 
 =head1 COPYRIGHT AND LICENSE
 
-This software is Copyright (c) 2010 by Dave Rolsky.
+This software is Copyright (c) 2011 by Dave Rolsky.
 
 This is free software, licensed under:
 
