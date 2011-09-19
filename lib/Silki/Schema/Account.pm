@@ -1,6 +1,6 @@
 package Silki::Schema::Account;
 {
-  $Silki::Schema::Account::VERSION = '0.28';
+  $Silki::Schema::Account::VERSION = '0.29';
 }
 
 use strict;

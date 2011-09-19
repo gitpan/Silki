@@ -1,6 +1,6 @@
 package Silki::Schema::WantedPage;
 {
-  $Silki::Schema::WantedPage::VERSION = '0.28';
+  $Silki::Schema::WantedPage::VERSION = '0.29';
 }
 
 use strict;
@@ -74,7 +74,7 @@ Silki::Schema::WantedPage - Represents a wanted page
 
 =head1 VERSION
 
-version 0.28
+version 0.29
 
 =head1 AUTHOR
 

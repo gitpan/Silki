@@ -23,7 +23,7 @@ my %module_build_args = (
     "Dave Rolsky <autarch\@urth.org>"
   ],
   "dist_name" => "Silki",
-  "dist_version" => "0.28",
+  "dist_version" => "0.29",
   "license" => "open_source",
   "module_name" => "Silki",
   "recommends" => {},
@@ -40,6 +40,7 @@ my %module_build_args = (
     "Catalyst::Plugin::Session::AsObject" => 0,
     "Catalyst::Plugin::Session::State::URI" => 0,
     "Catalyst::Plugin::Session::Store::DBI" => 0,
+    "Catalyst::Plugin::StackTrace" => 0,
     "Catalyst::Plugin::SubRequest" => 0,
     "Catalyst::Plugin::Unicode::Encoding" => 0,
     "Catalyst::Runtime" => "5.8",

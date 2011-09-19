@@ -1,6 +1,6 @@
 package Silki::Schema::WikiRolePermission;
 {
-  $Silki::Schema::WikiRolePermission::VERSION = '0.28';
+  $Silki::Schema::WikiRolePermission::VERSION = '0.29';
 }
 
 use strict;
@@ -31,7 +31,7 @@ Silki::Schema::WikiRolePermission - Represents the permission granted to a role 
 
 =head1 VERSION
 
-version 0.28
+version 0.29
 
 =head1 AUTHOR
 

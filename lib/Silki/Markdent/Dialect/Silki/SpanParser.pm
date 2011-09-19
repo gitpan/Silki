@@ -1,6 +1,6 @@
 package Silki::Markdent::Dialect::Silki::SpanParser;
 {
-  $Silki::Markdent::Dialect::Silki::SpanParser::VERSION = '0.28';
+  $Silki::Markdent::Dialect::Silki::SpanParser::VERSION = '0.29';
 }
 
 use strict;
@@ -185,7 +185,7 @@ Silki::Markdent::Dialect::Silki::SpanParser - Parses span-level markup for the S
 
 =head1 VERSION
 
-version 0.28
+version 0.29
 
 =head1 AUTHOR
 

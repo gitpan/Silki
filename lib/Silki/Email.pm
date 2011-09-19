@@ -1,6 +1,6 @@
 package Silki::Email;
 {
-  $Silki::Email::VERSION = '0.28';
+  $Silki::Email::VERSION = '0.29';
 }
 
 use strict;
@@ -104,7 +104,7 @@ sub _execute_template {
 {
     package Silki::Mason::Email;
 {
-  $Silki::Mason::Email::VERSION = '0.28';
+  $Silki::Mason::Email::VERSION = '0.29';
 }
 
     use Silki::I18N qw( loc );
@@ -124,7 +124,7 @@ Silki::Email - Sends email from a template
 
 =head1 VERSION
 
-version 0.28
+version 0.29
 
 =head1 AUTHOR
 

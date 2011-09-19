@@ -1,6 +1,6 @@
 package Silki::Help::Dir;
 {
-  $Silki::Help::Dir::VERSION = '0.28';
+  $Silki::Help::Dir::VERSION = '0.29';
 }
 
 use strict;
@@ -105,7 +105,7 @@ Silki::Help::Dir - A directory of help files
 
 =head1 VERSION
 
-version 0.28
+version 0.29
 
 =head1 AUTHOR
 

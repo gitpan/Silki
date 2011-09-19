@@ -1,6 +1,6 @@
 package Silki::Role::Controller::WikitextHandler;
 {
-  $Silki::Role::Controller::WikitextHandler::VERSION = '0.28';
+  $Silki::Role::Controller::WikitextHandler::VERSION = '0.29';
 }
 
 use strict;
@@ -104,7 +104,7 @@ Silki::Role::Controller::WikitextHandler - Handles wikitext provided by the user
 
 =head1 VERSION
 
-version 0.28
+version 0.29
 
 =head1 AUTHOR
 

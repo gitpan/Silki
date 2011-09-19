@@ -1,6 +1,6 @@
 package Silki::Schema::PageRevision;
 {
-  $Silki::Schema::PageRevision::VERSION = '0.28';
+  $Silki::Schema::PageRevision::VERSION = '0.29';
 }
 
 use strict;
@@ -405,7 +405,7 @@ Silki::Schema::PageRevision - Represents a page revision
 
 =head1 VERSION
 
-version 0.28
+version 0.29
 
 =head1 AUTHOR
 

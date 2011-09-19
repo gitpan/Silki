@@ -1,6 +1,6 @@
 package Silki::CLI::Import;
 {
-  $Silki::CLI::Import::VERSION = '0.28';
+  $Silki::CLI::Import::VERSION = '0.29';
 }
 
 use strict;
@@ -98,7 +98,7 @@ sub _replace_dbi_manager {
 
     package _DBIManager;
 {
-  $_DBIManager::VERSION = '0.28';
+  $_DBIManager::VERSION = '0.29';
 }
 
     use Moose;

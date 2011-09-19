@@ -1,6 +1,6 @@
 package Silki::Role::OptionalLog;
 {
-  $Silki::Role::OptionalLog::VERSION = '0.28';
+  $Silki::Role::OptionalLog::VERSION = '0.29';
 }
 
 use strict;

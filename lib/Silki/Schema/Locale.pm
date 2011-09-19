@@ -1,6 +1,6 @@
 package Silki::Schema::Locale;
 {
-  $Silki::Schema::Locale::VERSION = '0.28';
+  $Silki::Schema::Locale::VERSION = '0.29';
 }
 
 use strict;
@@ -50,7 +50,7 @@ Silki::Schema::Locale - Represents a locale
 
 =head1 VERSION
 
-version 0.28
+version 0.29
 
 =head1 AUTHOR
 

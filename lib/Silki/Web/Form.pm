@@ -1,6 +1,6 @@
 package Silki::Web::Form;
 {
-  $Silki::Web::Form::VERSION = '0.28';
+  $Silki::Web::Form::VERSION = '0.29';
 }
 
 use strict;
@@ -250,7 +250,7 @@ Silki::Web::Form - Does post-processing on HTML forms
 
 =head1 VERSION
 
-version 0.28
+version 0.29
 
 =head1 AUTHOR
 

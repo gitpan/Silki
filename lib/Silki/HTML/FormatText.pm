@@ -1,6 +1,6 @@
 package Silki::HTML::FormatText;
 {
-  $Silki::HTML::FormatText::VERSION = '0.28';
+  $Silki::HTML::FormatText::VERSION = '0.29';
 }
 
 use strict;
@@ -46,7 +46,7 @@ Silki::HTML::FormatText - A subclass of HTML::FormatText that also handles links
 
 =head1 VERSION
 
-version 0.28
+version 0.29
 
 =head1 AUTHOR
 

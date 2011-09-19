@@ -1,6 +1,6 @@
 package Silki::Web::Session;
 {
-  $Silki::Web::Session::VERSION = '0.28';
+  $Silki::Web::Session::VERSION = '0.29';
 }
 
 use strict;
@@ -87,7 +87,7 @@ Silki::Web::Session - An object for session data
 
 =head1 VERSION
 
-version 0.28
+version 0.29
 
 =head1 AUTHOR
 

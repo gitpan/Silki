@@ -1,6 +1,6 @@
 package Silki::Schema::UserWikiRole;
 {
-  $Silki::Schema::UserWikiRole::VERSION = '0.28';
+  $Silki::Schema::UserWikiRole::VERSION = '0.29';
 }
 
 use strict;
@@ -32,7 +32,7 @@ Silki::Schema::UserWikiRole - Represents a user's role in a specific wiki
 
 =head1 VERSION
 
-version 0.28
+version 0.29
 
 =head1 AUTHOR
 

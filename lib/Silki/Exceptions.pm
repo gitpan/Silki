@@ -1,6 +1,6 @@
 package Silki::Exceptions;
 {
-  $Silki::Exceptions::VERSION = '0.28';
+  $Silki::Exceptions::VERSION = '0.29';
 }
 
 use strict;
@@ -28,7 +28,7 @@ BEGIN {
 
     package Silki::Exception::DataValidation;
 {
-  $Silki::Exception::DataValidation::VERSION = '0.28';
+  $Silki::Exception::DataValidation::VERSION = '0.29';
 }
 
     sub messages { @{ $_[0]->errors || [] } }
@@ -65,7 +65,7 @@ Silki::Exceptions - Exception classes used by Silki
 
 =head1 VERSION
 
-version 0.28
+version 0.29
 
 =head1 AUTHOR
 
